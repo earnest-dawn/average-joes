@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2';
-import './HomePage.css';
+// import './HomePage.css';
 import denzelSuit from '../../assets/images/denzelSuit.jpg';
 import denzelAward from '../../assets/images/denzelAward.jpg';
 

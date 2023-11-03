@@ -1,15 +1,14 @@
 import { Outlet } from 'react-router-dom';
-import SearchAppBar from './components/inputs/NavbarInputs/NavbarInput';
 import Footer from './components/Footer';
 import BasicGrid from './pages/newPage';
+import Navbar from './components/Navbar';
+import HomePage from './pages/HomePage';
 // import './App.css';
 
 export default function App() {
     return (
         <>
-            <SearchAppBar />
-            <BasicGrid />
-            <Footer />
+            <Outlet />
         </>
     );
 }
