@@ -1,0 +1,39 @@
+#home {
+    background-color: #004c4c;
+}
+
+#cards li {
+    display: flex;
+    display: inline-block;
+    justify-content: center;
+    padding: 30px;
+
+}
+
+.homeImages {
+    width: 300px;
+    height: 300px;
+    float: left;
+}
+
+#about section {
+    display: block;
+}
+
+.title {
+    color: white;
+    border-color: #d60000;
+    border-radius: 5px;
+    border-style: groove;
+}
+.captions {
+    border-color: #d60000;
+    border-radius: 3px;
+    border-style: solid;
+}
+
+.HomePage .captions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
