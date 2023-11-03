@@ -8,7 +8,7 @@ export default function HomePage() {
     return (
         <div id="home">
             <title>Average Joe's Burgers</title>
-            <div id="about">
+            <div>
                 <section>
                     <div className="abouts">
                         <h1 className="title">The Chef Himself</h1>

@@ -1,35 +1,25 @@
-#home {
-    background-color: #004c4c;
-}
-
-#cards li {
-    display: flex;
-    display: inline-block;
-    justify-content: center;
-    padding: 30px;
-
+#about {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin-left: 400px;
 }
 
 .homeImages {
-    width: 300px;
-    height: 300px;
-    float: left;
+  display: flex;
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
 }
 
-#about section {
-    display: block;
-}
-
-.title {
-    color: white;
-    border-color: #d60000;
-    border-radius: 5px;
-    border-style: groove;
-}
 .captions {
-    border-color: #d60000;
-    border-radius: 3px;
-    border-style: solid;
+  border-color: #d60000;
+  border-radius: 3px;
+  border-style: solid;
+  display: flex;
+  align-items: center;
 }
 
 .HomePage .captions {
