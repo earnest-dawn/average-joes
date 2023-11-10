@@ -1,0 +1,80 @@
+[
+    {
+        "title": "Him serious combo",
+        "menuItems": [
+            "507f1f77bcf86cd799439011",
+            "507f1f77bcf86cd799439012"
+        ],
+        "price": 10
+    },
+    {
+        "title": "Needs meats Combo",
+        "cards": [
+            "507f1f77bcf86cd799439015",
+            "507f1f77bcf86cd799439016",
+            "507f1f77bcf86cd799439017"
+        ],
+        "price": 10
+    },
+    {
+        "title": "Couples Deal 1",
+        "cards": [
+            "507f1f77bcf86cd799439019",
+            "507f1f77bcf86cd79943901a",
+            "507f1f77bcf86cd79943901b",
+            "507f1f77bcf86cd79943901c"
+        ],
+        "price": 10
+    },
+    {
+        "title": "Couples deal 2",
+        "cards": [
+            "507f1f77bcf86cd79943901d",
+            "507f1f77bcf86cd79943901e",
+            "507f1f77bcf86cd79943901f"
+        ],
+        "price": 10
+    },
+    {
+        "title": "Delightly Delectible Combo",
+        "cards": [
+            "507f1f77bcf86cd799439021",
+            "507f1f77bcf86cd799439022"
+        ],
+        "price": 10
+    },
+    {
+        "title": "Order numba semn",
+        "cards": [
+            "507f1f77bcf86cd799439025",
+            "507f1f77bcf86cd799439026",
+            "507f1f77bcf86cd799439027",
+            "507f1f77bcf86cd799439028"
+        ],
+        "price": 10
+    },
+    {
+        "title": "Family Deal 1",
+        "cards": [
+            "507f1f77bcf86cd799439029",
+            "507f1f77bcf86cd79943902a",
+            "507f1f77bcf86cd79943902b",
+            "507f1f77bcf86cd79943902c",
+            "507f1f77bcf86cd79943902e",
+            "507f1f77bcf86cd79943902f"
+        ],
+        "price": 10
+    },
+    {
+        "title": "Family Deal 2",
+        "cards": [
+            "507f1f77bcf86cd79943902d",
+            "507f1f77bcf86cd79943902e",
+            "507f1f77bcf86cd79943902f",
+            "507f1f77bcf86cd799439030",
+            "507f1f77bcf86cd799439021",
+            "507f1f77bcf86cd799439022"
+        ],
+        "price": 10
+    }
+]

@@ -1,0 +1,322 @@
+[
+    {
+        "_id": "507f1f77bcf86cd799439011",
+        "price": 10,
+        "name": "storm Claw",
+        "ingredients": "Wind",
+        "calories": 89,
+        "caption": 64
+    },
+    {
+        "_id": "507f1f77bcf86cd799439012",
+        "price": 10,
+        "name": "Gale Strider",
+        "ingredients": "Wind",
+        "calories": 97,
+        "caption": 57
+    },
+    {
+        "_id": "507f1f77bcf86cd799439013",
+        "price": 10,
+        "name": "Air Bender",
+        "ingredients": "Wind",
+        "calories": 92,
+        "caption": 50
+    },
+    {
+        "_id": "507f1f77bcf86cd799439014",
+        "price": 10,
+        "name": "Cyclone Rider",
+        "ingredients": "Wind",
+        "calories": 80,
+        "caption": 56
+    },
+    {
+        "_id": "507f1f77bcf86cd799439015",
+        "price": 10,
+        "name": "Storm Chaser",
+        "ingredients": "Wind",
+        "calories": 77,
+        "caption": 52
+    },
+    {
+        "_id": "507f1f77bcf86cd799439016",
+        "price": 10,
+        "name": "Terra Guardian",
+        "ingredients": "Earth",
+        "calories": 30,
+        "caption": 78
+    },
+    {
+        "_id": "507f1f77bcf86cd799439017",
+        "price": 10,
+        "name": "Golem Master",
+        "ingredients": "Earth",
+        "calories": 38,
+        "caption": 99
+    },
+    {
+        "_id": "507f1f77bcf86cd799439018",
+        "price": 10,
+        "name": "Earthquake Slayer",
+        "ingredients": "Earth",
+        "calories": 45,
+        "caption": 94
+    },
+    {
+        "_id": "507f1f77bcf86cd799439019",
+        "price": 10,
+        "name": "Gaia Defender",
+        "ingredients": "Earth",
+        "calories": 53,
+        "caption": 85
+    },
+    {
+        "_id": "507f1f77bcf86cd79943901a",
+        "price": 10,
+        "name": "Stone Sentinel",
+        "ingredients": "Earth",
+        "calories": 62,
+        "caption": 72
+    },
+    {
+        "_id": "507f1f77bcf86cd79943901b",
+        "price": 10,
+        "name": "Aqua Knight",
+        "ingredients": "Water",
+        "calories": 9,
+        "caption": 90
+    },
+    {
+        "_id": "507f1f77bcf86cd79943901c",
+        "price": 10,
+        "name": "Tidal Sorceress",
+        "ingredients": "Water",
+        "calories": 15,
+        "caption": 84
+    },
+    {
+        "_id": "507f1f77bcf86cd79943901d",
+        "price": 10,
+        "name": "Hydro Guardian",
+        "ingredients": "Water",
+        "calories": 24,
+        "caption": 75
+    },
+    {
+        "_id": "507f1f77bcf86cd79943901e",
+        "price": 10,
+        "name": "Wave Warden",
+        "ingredients": "Water",
+        "calories": 31,
+        "caption": 66
+    },
+    {
+        "_id": "507f1f77bcf86cd79943901f",
+        "price": 10,
+        "name": "Neptune's Champion",
+        "ingredients": "Water",
+        "calories": 45,
+        "caption": 58
+    },
+    {
+        "_id": "507f1f77bcf86cd799439020",
+        "price": 10,
+        "name": "Blaze heart",
+        "ingredients": "Fire",
+        "calories": 5,
+        "caption": 100
+    },
+    {
+        "_id": "507f1f77bcf86cd799439021",
+        "price": 10,
+        "name": "Inferno Knight",
+        "ingredients": "Fire",
+        "calories": 12,
+        "caption": 94
+    },
+    {
+        "_id": "507f1f77bcf86cd799439022",
+        "price": 10,
+        "name": "Pyro Phoenix",
+        "ingredients": "Fire",
+        "calories": 28,
+        "caption": 85
+    },
+    {
+        "_id": "507f1f77bcf86cd799439023",
+        "price": 10,
+        "name": "Ember strike",
+        "ingredients": "Fire",
+        "calories": 34,
+        "caption": 77
+    },
+    {
+        "_id": "507f1f77bcf86cd799439024",
+        "price": 10,
+        "name": "Flare blade",
+        "ingredients": "Fire",
+        "calories": 40,
+        "caption": 66
+    },
+    {
+        "_id": "507f1f77bcf86cd799439025",
+        "price": 10,
+        "name": "Whirlwind Specter",
+        "ingredients": "Wind",
+        "calories": 98,
+        "caption": 58
+    },
+    {
+        "_id": "507f1f77bcf86cd799439026",
+        "price": 10,
+        "name": "BreezyShade",
+        "ingredients": "Wind",
+        "calories": 89,
+        "caption": 62
+    },
+    {
+        "_id": "507f1f77bcf86cd799439027",
+        "price": 10,
+        "name": "TornadoGust",
+        "ingredients": "Wind",
+        "calories": 75,
+        "caption": 67
+    },
+    {
+        "_id": "507f1f77bcf86cd799439028",
+        "price": 10,
+        "name": "SkySoarer",
+        "ingredients": "Wind",
+        "calories": 64,
+        "caption": 71
+    },
+    {
+        "_id": "507f1f77bcf86cd799439029",
+        "price": 10,
+        "name": "GustGoblin",
+        "ingredients": "Wind",
+        "calories": 50,
+        "caption": 82
+    },
+    {
+        "_id": "507f1f77bcf86cd79943902a",
+        "price": 10,
+        "name": "RockMuncher",
+        "ingredients": "Earth",
+        "calories": 92,
+        "caption": 56
+    },
+    {
+        "_id": "507f1f77bcf86cd79943902b",
+        "price": 10,
+        "name": "Terracrawler",
+        "ingredients": "Earth",
+        "calories": 84,
+        "caption": 61
+    },
+    {
+        "_id": "507f1f77bcf86cd79943902c",
+        "price": 10,
+        "name": "MudGolem",
+        "ingredients": "Earth",
+        "calories": 78,
+        "caption": 65
+    },
+    {
+        "_id": "507f1f77bcf86cd79943902d",
+        "price": 10,
+        "name": "BoulderBeast",
+        "ingredients": "Earth",
+        "calories": 70,
+        "caption": 70
+    },
+    {
+        "_id": "507f1f77bcf86cd79943902e",
+        "price": 10,
+        "name": "QuakeTitan",
+        "ingredients": "Earth",
+        "calories": 64,
+        "caption": 75
+    },
+    {
+        "_id": "507f1f77bcf86cd79943902f",
+        "price": 10,
+        "name": "Leviathan",
+        "ingredients": "Water",
+        "calories": 100,
+        "caption": 51
+    },
+    {
+        "_id": "507f1f77bcf86cd799439030",
+        "price": 10,
+        "name": "Serpentoid",
+        "ingredients": "Water",
+        "calories": 95,
+        "caption": 56
+    },
+    {
+        "_id": "507f1f77bcf86cd799439031",
+        "price": 10,
+        "name": "AquaKraken",
+        "ingredients": "Water",
+        "calories": 88,
+        "caption": 61
+    },
+    {
+        "_id": "507f1f77bcf86cd799439032",
+        "price": 10,
+        "name": "DeepseaHorror",
+        "ingredients": "Water",
+        "calories": 80,
+        "caption": 67
+    },
+    {
+        "_id": "507f1f77bcf86cd799439033",
+        "price": 10,
+        "name": "MarianaBeast",
+        "ingredients": "Water",
+        "calories": 73,
+        "caption": 72
+    },
+    {
+        "_id": "507f1f77bcf86cd799439034",
+        "price": 10,
+        "name": "Ignarok",
+        "ingredients": "Fire",
+        "calories": 98,
+        "caption": 58
+    },
+    {
+        "_id": "507f1f77bcf86cd799439035",
+        "price": 10,
+        "name": "Emberfang",
+        "ingredients": "Fire",
+        "calories": 94,
+        "caption": 62
+    },
+    {
+        "_id": "507f1f77bcf86cd799439036",
+        "price": 10,
+        "name": "Pyroclaw",
+        "ingredients": "Fire",
+        "calories": 85,
+        "caption": 67
+    },
+    {
+        "_id": "507f1f77bcf86cd799439037",
+        "price": 10,
+        "name": "Volcanix",
+        "ingredients": "Fire",
+        "calories": 77,
+        "caption": 71
+    },
+    {
+        "_id": "507f1f77bcf86cd799439038",
+        "price": 10,
+        "name": "Flamara",
+        "ingredients": "Fire",
+        "calories": 69,
+        "caption": 75
+    }
+]
