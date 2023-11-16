@@ -34,7 +34,21 @@ function fetchFunction(params, variables) {
             variables,
         }),
     });
-
+    function fetchQuery(operation, variables, cacheConfig, uploadables) {
+        return fetch('/graphql', {
+            method: 'POST',
+            headers: {
+                // Add authentication and other headers here
+                'content-type': 'application/json',
+            },
+            body: JSON.stringify({
+                query: operation.text, // GraphQL text from input
+                variables,
+            }),
+        }).then((response) => {
+            return response.json();
+        });
+    }
     return Observable.from(response.then((data) => data.json()));
 }
 
