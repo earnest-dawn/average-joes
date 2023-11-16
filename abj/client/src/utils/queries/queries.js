@@ -1,9 +1,9 @@
-import { gql } from '@apollo/client';
+import { graphql } from '@apollo/client';
 
-export const QUERY_MENU_ITEMS = gql`
-    query menuItems {
+export const QUERY_MENU_ITEMS = graphql`
+    query queriesMenuItemsQuery {
         menuItems {
-            _id
+            id
             name
             ingredients
             calories
@@ -13,13 +13,13 @@ export const QUERY_MENU_ITEMS = gql`
     }
 `;
 
-export const QUERY_COMBOS = gql`
-    query combos {
+export const QUERY_COMBOS = graphql`
+    query queriesCombosQuery {
         combos {
-            _id
+            id
             title
             menuItems {
-                _id
+                id
                 name
                 ingredients
                 calories
@@ -30,18 +30,18 @@ export const QUERY_COMBOS = gql`
     }
 `;
 
-export const QUERY_USERS = gql`
-    query users {
+export const QUERY_USERS = graphql`
+    query queriesUsersQuery {
         users {
-            _id
+            id
             username
             email
         }
     }
 `;
 
-export const ME = gql`
-    query me {
+export const ME = graphql`
+    query queriesMeQuery {
         me {
             username
             friends {

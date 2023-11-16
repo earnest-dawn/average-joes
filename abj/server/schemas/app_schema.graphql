@@ -1,0 +1,153 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+interface Node {
+    id: ID!
+}
+
+interface MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+}
+
+type MenuItems implements Node {
+    id: ID!
+    name: String!
+    ingredients: String!
+    calories: Int
+    price: Int!
+    caption: String!
+}
+
+type Friend implements Node {
+    id: ID!
+    username: String!
+}
+
+type Combos implements Node {
+    id: ID!
+    title: String!
+    menuItems: [MenuItems]
+    price: Int
+}
+
+type User implements Node {
+    id: ID!
+    username: String!
+    password: String!
+    email: String!
+    friends: [Friend]
+}
+
+type Auth {
+    token: ID!
+    user: User
+}
+
+type Query {
+    node(id: ID!): Node
+    me: User
+    menuItems: [MenuItems]
+    users: [User]
+    combos: [Combos]
+}
+
+type Mutation {
+    register(input: RegisterInput!): RegisterPayload
+    login(input: LoginInput!): LoginPayload
+    createCombos(input: CreateCombosInput!): CreateCombosPayload
+    deleteCombos(input: DeleteCombosInput!): DeleteCombosPayload
+    addToCombos(input: AddToCombosInput!): AddToCombosPayload
+    removeFromCombos(input: RemoveFromCombosInput!): RemoveFromCombosPayload
+}
+
+input RegisterInput {
+    username: String!
+    password: String!
+    email: String!
+    clientMutationId: String
+}
+
+type RegisterPayload implements MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+    token: ID
+    user: User
+    clientMutationId: String
+}
+
+input LoginInput {
+    username: String!
+    password: String!
+    clientMutationId: String
+}
+
+type LoginPayload implements MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+    token: ID
+    user: User
+    clientMutationId: String
+}
+
+input CreateCombosInput {
+    title: String!
+    menuItems: [ID]!
+    price: Int!
+    clientMutationId: String
+}
+
+type CreateCombosPayload implements MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+    combos: Combos
+    clientMutationId: String
+}
+
+input DeleteCombosInput {
+    id: ID!
+    clientMutationId: String
+}
+
+type DeleteCombosPayload implements MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+    combos: Combos
+    clientMutationId: String
+}
+
+input AddToCombosInput {
+    message: String
+    combosId: ID!
+    menuItems: ID!
+    clientMutationId: String
+}
+
+type AddToCombosPayload implements MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+    combos: Combos
+    clientMutationId: String
+}
+
+input RemoveFromCombosInput {
+    combosId: ID!
+    menuItems: ID!
+    clientMutationId: String
+}
+
+type RemoveFromCombosPayload implements MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+    combos: Combos
+    clientMutationId: String
+}

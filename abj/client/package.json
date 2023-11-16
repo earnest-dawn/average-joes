@@ -11,13 +11,19 @@
         "@testing-library/jest-dom": "^5.17.0",
         "@testing-library/react": "^13.4.0",
         "@testing-library/user-event": "^13.5.0",
-        "react": "^17.0.0 || ^18.0.0",
-        "react-dom": "^17.0.0 || ^18.0.0",
+        "babel-plugin-relay": "^16.0.0",
+        "graphql": "^16.8.1",
+        "nodemon": "^3.0.1",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-relay": "^16.0.0",
         "react-router-dom": "^6.18.0",
         "react-scripts": "^5.0.1",
+        "relay-compiler": "^16.0.0",
         "web-vitals": "^2.1.4"
     },
     "scripts": {
+        "relay": "relay-compiler",
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
@@ -41,8 +47,17 @@
             "last 1 safari version"
         ]
     },
-    "peerDependencies": {
-        "react": "^17.0.0 || ^18.0.0",
-        "react-dom": "^17.0.0 || ^18.0.0"
+    "plugins": [
+        "relay"
+    ],
+    "relay": {
+        "src": "./src",
+        "schema": "../server/schemas/app_schema.graphql",
+        "language": "javascript",
+        "excludes": [
+            "/node_modules/",
+            "/__mocks__/",
+            "/__generated__/"
+        ]
     }
 }
