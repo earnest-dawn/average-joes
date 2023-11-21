@@ -1,6 +1,7 @@
 const express = require('express');
 const { ApolloServer } = require('@apollo/server');
 const { expressMiddleware } = require('@apollo/server/express4');
+
 const path = require('path');
 
 const { authMiddleware } = require('./utils/auth');
@@ -8,7 +9,8 @@ const { typeDefs, resolvers } = require('./schemas'); // instead of this one?
 const db = require('./config/connection');
 
 const PORT = process.env.PORT || 3001;
-const app = express();
+const cors = require('cors');
+
 const server = new ApolloServer({
     typeDefs,
     resolvers,
@@ -23,11 +25,15 @@ const server = new ApolloServer({
     },
 });
 
+const app = express();
+
 const startApolloServer = async () => {
     await server.start();
 
     app.use(express.urlencoded({ extended: true }));
     app.use(express.json());
+
+    app.use(cors());
 
     app.use(
         '/graphql',

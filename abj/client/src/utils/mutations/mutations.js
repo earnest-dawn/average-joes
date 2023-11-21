@@ -21,10 +21,8 @@ export const LOGIN = graphql`
             user {
                 username
                 password
-
-                email
-                id
             }
+            clientMutationId
         }
     }
 `;

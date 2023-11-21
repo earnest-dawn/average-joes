@@ -40,20 +40,37 @@ export default function LoginPage() {
         }
 
         try {
-            const response = await commitMutation({
-                variables: {
-                    username: userFormData.username,
-                    password: userFormData.password,
-                },
+            const response = await new Promise((resolve, reject) => {
+                commitMutation({
+                    variables: {
+                        input: {
+                            username: userFormData.username, // Use userFormData here
+                            password: userFormData.password, // Use userFormData here
+                        },
+                    },
+                    onCompleted: (response, errors) => {
+                        if (errors) {
+                            reject(errors);
+                        } else {
+                            resolve(response);
+                        }
+                    },
+                    onError: reject,
+                });
             });
 
             if (response && response.login) {
                 Auth.login(response.login.token);
+                console.log(userFormData.username); // Use userFormData here
+                console.log(userFormData.password); // Use userFormData here
             } else {
                 console.error('Login response is not defined');
             }
         } catch (e) {
-            console.error(e);
+            console.error('login submit error');
+            console.log(userFormData.username); // Use userFormData here
+            console.log(userFormData.password); // Use userFormData here
+            console.log(userFormData); // Use userFormData here
             setShowAlert(true);
         }
 
