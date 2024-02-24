@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fb0bb29463a3a803446b77abcf687f5d>>
+ * @generated SignedSource<<25dd907bc1e92d17a215b2b580714e9e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -43,13 +43,6 @@ v4 = {
   "kind": "ScalarField",
   "name": "password",
   "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "clientMutationId",
-  "storageKey": null
 };
 return {
   "fragment": {
@@ -79,8 +72,7 @@ return {
               (v4/*: any*/)
             ],
             "storageKey": null
-          },
-          (v5/*: any*/)
+          }
         ],
         "storageKey": null
       }
@@ -122,24 +114,23 @@ return {
               }
             ],
             "storageKey": null
-          },
-          (v5/*: any*/)
+          }
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "4bac690af8802ad9701eb110a1307436",
+    "cacheID": "992efd6c6a5f2af5d485f133997be501",
     "id": null,
     "metadata": {},
     "name": "mutationsLoginMutation",
     "operationKind": "mutation",
-    "text": "mutation mutationsLoginMutation(\n  $input: LoginInput!\n) {\n  login(input: $input) {\n    token\n    user {\n      username\n      password\n      id\n    }\n    clientMutationId\n  }\n}\n"
+    "text": "mutation mutationsLoginMutation(\n  $input: LoginInput!\n) {\n  login(input: $input) {\n    token\n    user {\n      username\n      password\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-node.hash = "77568a32d315b426f1d59d346cbb0387";
+node.hash = "a61fed6af8919abe5451c4b49b3f2a80";
 
 module.exports = node;

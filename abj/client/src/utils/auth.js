@@ -5,8 +5,12 @@ import * as decode from 'jwt-decode';
 class AuthService {
     // get user data
     getProfile() {
-        return decode(this.getToken());
-    }
+        try {
+            return decode(this.getToken());
+        } catch (err) {
+            console.error('Error decoding token:', err);
+            return null;
+        }    }
 
     // check if user's logged in
     loggedIn() {
@@ -33,11 +37,15 @@ class AuthService {
     }
 
     login(idToken) {
-        // Saves user token to localStorage
-
-        localStorage.setItem('id_token', idToken);
-        window.location.assign('/');
+        try {
+            localStorage.setItem('id_token', idToken);
+            window.location.assign('/');
+        } catch (err) {
+            console.error('Error saving token:', err);
+            // Handle the error appropriately, e.g., show an error message to the user
+        }
     }
+    
 
     logout() {
         // Clear user token and profile data from localStorage

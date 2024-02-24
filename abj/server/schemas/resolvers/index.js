@@ -29,12 +29,14 @@ const resolvers = {
         // },
 
         register: async (parent, args) => {
-            // const hashedPassword = await bcrypt.hash(password, 10);
-            const user = await User.create(args);
+            console.log('Received input:', args.input);
+            const { username, password, email } = args.input;
+            const user = await User.create({ username, password, email });
             const token = signToken(user);
             console.log(user);
             return { token, user };
-        },
+        }
+        ,
         createCombos: async (parent, { title, menuItems, price }, context) => {
             if (context.user) {
                 let newCombo = await Combos.create({ title, menuItems, price });
@@ -95,19 +97,22 @@ const resolvers = {
         // createCardCharacter:
         login: async (parent, { username, password }) => {
             const user = await User.findOne({ username });
-
+        
             if (!user) {
-                throw AuthenticationError;
+                throw new AuthenticationError('Incorrect credentials');
             }
+        
             const correctPw = await user.isCorrectPassword(password);
             if (!correctPw) {
-                throw AuthenticationError;
+                throw new AuthenticationError('Incorrect credentials');
             }
-
+        
             const token = signToken(user);
-
-            return { token, user };
-        },
+        
+            // Do not include the password in the response
+            return { token, user: { username: user.username } };
+        }
+        ,
         // getSingleUser: async (parent, args, context) => {
         //     const desiredUser = await User.findById({ _id: context.user._id });
         // },

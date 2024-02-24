@@ -1,3 +1,4 @@
+import { AuthenticationError } from "../../../../server/utils/auth";
 /**
  * @RelayResolver Mutation.createCombos(input: CreateCombosInput!): CreateCombosPayload
  */

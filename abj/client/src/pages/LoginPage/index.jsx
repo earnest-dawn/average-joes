@@ -6,6 +6,7 @@ import { LOGIN } from '../../utils/mutations/mutations';
 import { useMutation } from 'react-relay/hooks';
 import { graphql } from 'babel-plugin-relay/macro';
 
+import RegistrationForm from '../../components/RegistrationForm';
 import Auth from '../../utils/auth';
 
 export default function LoginPage() {
@@ -125,6 +126,7 @@ export default function LoginPage() {
                     Signup?
                 </Link>
             </form>
+            <form ></form>
         </>
     );
 }

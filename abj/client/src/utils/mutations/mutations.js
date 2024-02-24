@@ -14,6 +14,8 @@ export const REGISTER = graphql`
     }
 `;
 
+
+
 export const LOGIN = graphql`
     mutation mutationsLoginMutation($input: LoginInput!) {
         login(input: $input) {
@@ -22,7 +24,6 @@ export const LOGIN = graphql`
                 username
                 password
             }
-            clientMutationId
         }
     }
 `;

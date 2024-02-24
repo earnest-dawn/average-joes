@@ -22,6 +22,8 @@ async function me(parent, args, context) {
  * @RelayResolver Mutation.register(input: RegisterInput!): RegisterPayload
  */
 async function register(parent, args) {
+    const { username, password, email } = args.input;
+
     const user = await User.create(args.input);
     const token = signToken(user);
     return {

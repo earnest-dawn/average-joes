@@ -4,13 +4,13 @@ import {
     Box,
     Divider,
     Drawer,
-    IconButton,
+    // IconButton,
     Toolbar,
     Typography,
 } from '@mui/material';
 import averageLogo from '../../assets/images/averageLogo.png';
 
-import MenuIcon from '@mui/icons-material/Menu';
+// import MenuIcon from '@mui/icons-material/Menu';
 import { NavLink } from 'react-router-dom';
 import './Navbar.css';
 
@@ -43,7 +43,7 @@ export default function Navbar() {
             <ul className="mobile-navigation">
                 <li>
                     <NavLink
-                        activeClassName="active"
+                   
                         to={'/'}
                     >
                         Home
@@ -92,7 +92,6 @@ export default function Navbar() {
                             <ul className="navigation-menu">
                                 <li>
                                     <NavLink
-                                        activeClassName="active"
                                         to={'/'}
                                     >
                                         Home

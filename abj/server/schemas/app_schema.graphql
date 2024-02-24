@@ -55,14 +55,7 @@ type Query {
     combos: [Combos]
 }
 
-type Mutation {
-    register(input: RegisterInput!): RegisterPayload
-    login(input: LoginInput!): LoginPayload
-    createCombos(input: CreateCombosInput!): CreateCombosPayload
-    deleteCombos(input: DeleteCombosInput!): DeleteCombosPayload
-    addToCombos(input: AddToCombosInput!): AddToCombosPayload
-    removeFromCombos(input: RemoveFromCombosInput!): RemoveFromCombosPayload
-}
+
 
 input RegisterInput {
     username: String!
@@ -150,4 +143,13 @@ type RemoveFromCombosPayload implements MutationResponse {
     message: String!
     combos: Combos
     clientMutationId: String
+}
+
+type Mutation {
+    register(input: RegisterInput!): RegisterPayload
+    login(input: LoginInput!): LoginPayload
+    createCombos(input: CreateCombosInput!): CreateCombosPayload
+    deleteCombos(input: DeleteCombosInput!): DeleteCombosPayload
+    addToCombos(input: AddToCombosInput!): AddToCombosPayload
+    removeFromCombos(input: RemoveFromCombosInput!): RemoveFromCombosPayload
 }
