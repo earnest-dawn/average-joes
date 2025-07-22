@@ -1,31 +1,33 @@
-#wholeHome {
- margin: 0;
+@import '../../App.css';
 
+#wholeHome {
+  margin: 0;
 }
 
 .orderNowButton {
   text-decoration: none;
-  animation: orderNow 3s linear 0s infinite normal forwards;
+  transition: none; 
 }
 
-@keyframes orderNow {
+@keyframes growShrink {
   0% {
-    transform: translateY(0);
+    transform: scale(0.9);
   }
   50% {
-    transform: translateY(-10px);
+    transform: scale(1);
   }
   100% {
-    transform: translateY(0);
+    transform: scale(0.9);
   }
 }
 
 .orderNowButton.animate-in {
-  animation: orderNow 3s linear 0s infinite normal forwards;
+  animation: growShrink 2s infinite forwards;
+              
 }
 
 .home {
-      height: 90vh;
+  height: 90vh;
   display: flex;
   justify-content: center;
   align-items: left;
@@ -68,19 +70,20 @@
   text-decoration: none;
   color: white;
   font-size: 20px;
+  display: block; 
+  box-sizing: border-box; 
 }
 
 .headerContainer button:hover {
   background-color: #07090a;
   cursor: pointer;
   transition: 0.3s ease-in;
+  border: 1px groove var(--col4);
 }
 
-/* mobile view  */
-
+/* mobile view  */
 @media only screen and (max-width: 600px) {
   .home {
-    /* width: 100%; */
     justify-content: center;
     align-items: center;
   }
@@ -107,7 +110,7 @@
   }
   .headerContainer button {
     background-color: white;
-    color: #121619;
+    color: #121619; 
     margin-bottom: 30px;
   }
 }

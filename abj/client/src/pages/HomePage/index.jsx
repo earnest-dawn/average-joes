@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from "react";
 import Layout from '../../components/Layout';
 import { Link } from 'react-router-dom';
 import denzelLogoBackground from '../../assets/images/denzelLogoBackground.png';
@@ -9,8 +9,12 @@ import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import useActivateAnimation from '../../hooks/useActivateAnimation';
 
 export default function HomePage() {
-    useActivateAnimation('.orderNowButton');
-    return (
+    const [animate, setAnimate] = useState(false);
+
+    useEffect(() => {
+        setAnimate(true);
+    }, []);
+      return (
         <>
             <div id="wholeHome">
                 <div
@@ -22,8 +26,8 @@ export default function HomePage() {
                     <div className="headerContainer">
                         <h1>Average Joe's Burgers</h1>
                         <p>Best Burgers on the West Coast!</p>
-                        <Link to="/orderOnline" className="orderNowButton">
-                            <button>ORDER NOW</button>
+                        <Link to="/orderOnline">
+                            <button className={`orderNowButton${animate ? " animate-in" : ""}`}>ORDER NOW</button>
                         </Link>
                     </div>
                 </div>
