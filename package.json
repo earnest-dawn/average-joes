@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "@apollo/client": "^3.9.5",
-    "apollo-server": "^3.13.0"
-  }
-}

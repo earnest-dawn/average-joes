@@ -3,6 +3,27 @@
 
 }
 
+.orderNowButton {
+  text-decoration: none;
+  animation: orderNow 3s linear 0s infinite normal forwards;
+}
+
+@keyframes orderNow {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.orderNowButton.animate-in {
+  animation: orderNow 3s linear 0s infinite normal forwards;
+}
+
 .home {
       height: 90vh;
   display: flex;
