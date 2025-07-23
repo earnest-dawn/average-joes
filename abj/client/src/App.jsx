@@ -8,6 +8,7 @@ import React from 'react';
 const { RelayEnvironmentProvider } = require('react-relay');
 
 export default function App() {
+
     return (
         <RelayEnvironmentProvider environment={environment1}>
             <Layout>

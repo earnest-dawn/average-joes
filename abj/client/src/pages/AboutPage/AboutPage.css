@@ -24,8 +24,21 @@
     }
 }
 
+@keyframes growShrink {
+    0% {
+        transform: scale(0.9);
+    }
+    50% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(0.9);
+    }
+}
+
 /* Root container for the About page */
 #wholeAbout {
+    height: 200%; /* Make the page long enough to scroll */
     background-color: var(--col1); /* Using CSS variable for dark teal background */
     min-height: 100vh; /* Ensure it takes full viewport height */
     padding: 20px 0 40px 0; /* Top, Right, Bottom, Left padding */
@@ -38,6 +51,35 @@
     /* REMOVE opacity and animation from here */
 }
 
+#aboutButton.animate-in {
+    animation: growShrink 2s infinite forwards; /* Apply the grow/shrink animation */
+}
+
+/* Base styles for the actual <button> element inside the Link */
+#aboutButton {
+    text-decoration: none; /* Remove underline from Link */
+    background-color: var(--col2); /* Using CSS variable for button color */
+    color: var(--col6); /* Using CSS variable for text color */
+    padding: 12px 24px; /* Padding for the button */
+    border-radius: 8px; /* Rounded corners */
+    font-size: 1.2rem; /* Font size for the button text */
+    font-weight: bold; /* Bold text for emphasis */
+    transition: background-color 0.3s ease-in, transform 0.3s ease-in; /* Smooth transitions */
+    overflow: hidden; /* Hide overflowing text during stretch */
+    white-space: nowrap; /* Prevent text wrapping */
+    text-overflow: ellipsis; /* Add ellipsis if text overflows */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+
+}
+/* Hover effect for the button */
+#aboutButton:hover {
+    background-color: #07090a; /* Slightly darker on hover */
+    cursor: pointer;
+    transition: 0.3s ease-in; /* Smooth transition for hover effects */
+    border: 1px groove var(--col4); /* Border on hover using CSS variable */
+}
+
 .fade-out {
     animation: fadeOut 0.8s ease-out forwards; /* Fade out when this class is added */
     pointer-events: none; /* Optional: Disable clicks during fade-out */
@@ -47,7 +89,7 @@
 /* Add a class for fade-in */
 .fade-in {
     opacity: 0;
-    animation: fadeIn 0.8s ease-out forwards;
+    animation: fadeIn 1s ease-out forwards;
 }
 
 /* Main content container (replaces Material-UI Container's max-width) */
@@ -61,28 +103,15 @@
 
 /* Paper-like styling for the main content block */
 .about-paper-block.MuiPaper-root {
-    background-color: var(--col6); /* White background for content */
+    background-color: #FFFFFF; /* White background for content */
     color: var(--col6); /* Dark text color */
     padding: 32px; /* Default padding for medium/large screens */
     margin-top: 32px; /* Default top margin */
-    margin-bottom: 48px; /* Default bottom margin */
+    margin-bottom: 0px; /* FIXED: Set to 0 to remove space below the main paper block */
     border-radius: 12px; /* Slightly rounded corners */
     box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2); /* More pronounced shadow */
     text-align: center;
-    box-sizing: border-sizing;
-}
-
-/* Back Button Styling */
-.about-back-button {
-    background-color: #FFD700; /* Goldenrod color */
-    color: var(--col6); /* Dark text */
-    font-weight: bold;
-    padding: 10px 25px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-bottom: 32px; /* Spacing below the button */
-    transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+    box-sizing: border-box; /* Corrected typo: border-sizing to border-box */
 }
 
 
@@ -90,10 +119,6 @@
     display: none; /* Hide elements with this class */
 }
 
-.about-back-button:hover {
-    background-color: #E5C100; /* Darker on hover */
-    transform: scale(1.02); /* Slight grow effect on hover */
-}
 
 /* Typography styles for titles */
 .aboutTitles {
@@ -115,6 +140,7 @@
 /* Image Styling */
 .about-image {
     max-width: 70%;
+    height: auto; /* Ensure height adjusts proportionally */
     border-radius: 8px; /* Slightly rounded corners for images */
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for images */
     margin-top: 15px; /* Space above image */
@@ -122,7 +148,7 @@
 
 /* Section Spacing */
 .about-section-spacing {
-    margin-bottom: 40px; /* Space between sections */
+    margin-bottom: 0px; /* FIXED: Set to 0 to remove space below this section */
 }
 
 /* --- Animations (Existing) --- */
@@ -131,11 +157,9 @@
 @keyframes slideInFromLeft {
     from {
         opacity: 0;
-        transform: translateX(-50px);
     }
     to {
         opacity: 1;
-        transform: translateX(0);
     }
 }
 
@@ -143,11 +167,9 @@
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(20px);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
     }
 }
 
@@ -179,29 +201,36 @@
     opacity: 0; /* Start hidden */
 }
 
-
+/* Styling for the nested Paper around captions */
 .about-paper-caption.MuiPaper-root {
-    background-color: var(--col1); /* White background for content */
-    color: var(--col6); /* Dark text color */
-    padding: 32px; /* Default padding for medium/large screens */
-    margin-top: 32px; /* Default top margin */
-    margin-bottom: 48px; /* Default bottom margin */
-    border-radius: 12px; /* Slightly rounded corners */
-    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2); /* More pronounced shadow */
-    text-align: center;
-    box-sizing: border-sizing;
+    background-color: var(--col1); /* Dark teal background for the caption box */
+    color: #FFFFFF; /* White text color for contrast */
+    padding: 24px; /* Padding inside the caption box */
+    margin-top: 24px; /* Space above this caption box, adjust as needed */
+    margin-bottom: 0px; /* No bottom margin, let parent Box handle it */
+    border-radius: 8px; /* Slightly smaller border-radius for nested element */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    text-align: justify; /* Justify text inside this paper */
+    max-width: 800px; /* Match caption max-width */
+    margin-left: auto; /* Center the paper block */
+    margin-right: auto; /* Center the paper block */
+    box-sizing: border-box;
 }
 
 /* --- Responsive Adjustments --- */
 
 @media (max-width: 960px) { /* Adjust for smaller desktops/large tablets */
-    .about-paper-block {
+    .about-paper-block.MuiPaper-root {
         padding: 24px;
         margin-top: 24px;
-        margin-bottom: 32px;
+        margin-bottom: 0px; /* FIXED: Responsive margin-bottom */
     }
     .aboutTitles {
         font-size: 2.2rem;
+    }
+    .about-paper-caption.MuiPaper-root {
+        padding: 20px;
+        margin-top: 20px;
     }
 }
 
@@ -209,16 +238,11 @@
     #wholeAbout {
         padding: 10px 0 20px 0;
     }
-    .about-paper-block {
+    .about-paper-block.MuiPaper-root {
         padding: 16px;
         margin-top: 16px;
-        margin-bottom: 24px;
-        border-radius: 8px; /* Slightly less rounded on small screens */
-    }
-    .about-back-button {
-        padding: 8px 20px;
-        font-size: 0.9rem;
-        margin-bottom: 24px;
+        margin-bottom: 0px; /* FIXED: Responsive margin-bottom */
+        border-radius: 8px;
     }
     .aboutTitles {
         font-size: 1.8rem;
@@ -230,7 +254,14 @@
         padding: 0 8px;
     }
     .about-section-spacing {
-        margin-bottom: 30px;
+        margin-bottom: 0px; /* FIXED: Responsive margin-bottom */
+    }
+    .about-paper-caption.MuiPaper-root {
+        padding: 16px;
+        margin-top: 16px;
+    }
+    .about-image {
+        max-width: 90%;
     }
 }
 

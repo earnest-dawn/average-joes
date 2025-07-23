@@ -1,0 +1,114 @@
+/* StretchingHeader.css */
+
+@import "../../App.css"; /* Assuming this imports your :root variables */
+
+body {
+    margin: 0;
+    font-family: "Inter", sans-serif; /* Using Inter font */
+    background-color: #f0f2f5;
+    min-height: 200vh; /* Ensure enough content to scroll */
+    color: #333;
+}
+
+/* Keyframes for the grow/shrink (jiggle) animation */
+@keyframes growShrink {
+    0% { transform: scale(0.9); }
+    50% { transform: scale(1); }
+    100% { transform: scale(0.9); }
+}
+
+/* Sticky Header Wrapper */
+.sticky-header-wrapper {
+    position: sticky; /* Makes the element stick to the top */
+    top: 0; /* Sticks to the very top of the viewport */
+    z-index: 1000; /* Ensures it stays on top of other content */
+    background-color: transparent;
+    padding-bottom: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Styles for the button when scrolled to the top (scrollY <= 50) */
+.topScrollComplete {
+    background-color: var(--col5);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin: 0 auto;
+}
+
+/* Base styles for the stretching button (when scrolled down) */
+.stretchingButtonDefault {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px auto 0 auto;
+}
+
+/* Hover effects */
+.stretchingButtonDefault:hover {
+    background-color: #2563eb;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.topScrollComplete:hover {
+    background-color: var(--col3);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+}
+
+/* Inner span for text stretching effect */
+#buttonTextSpan {
+    display: inline-block;
+    transition: transform 0.1s linear; /* Smooth text scaling */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* NEW: Class to apply the growShrink animation only when idle */
+.idle-grow-shrink {
+    animation: growShrink 2s infinite forwards; /* Apply the grow/shrink animation */
+    /* Add a transition for transform here, so it smoothly stops/starts */
+    transition: transform 0.2s ease-out; /* Smooth transition for when animation starts/stops */
+}
+
+
+/* --- Placeholder content for demonstration --- */
+.content {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.6;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-top: 100px;
+}
+
+.placeholder-content {
+    height: 500px;
+    background-image: linear-gradient(to bottom, #e0e7ff, #bfdbfe);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    color: #1e40af;
+    border-radius: 8px;
+    margin-top: 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}

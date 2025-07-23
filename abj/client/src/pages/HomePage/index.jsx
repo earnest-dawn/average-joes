@@ -13,6 +13,7 @@ export default function HomePage() {
     useEffect(() => {
         setAnimateButton(true);
     }, []);
+    
 
     // Effect for scroll detection to navigate to About page
     useEffect(() => {
@@ -23,7 +24,7 @@ export default function HomePage() {
             if (isAtBottom && !hasNavigatedToAbout.current) {
                 hasNavigatedToAbout.current = true; // Mark as navigated
                 navigate('/about'); // Navigate to the About page route
-                
+                window.scrollTo(0, 0); // Scrolls to x=0, y=0
             }
         };
 

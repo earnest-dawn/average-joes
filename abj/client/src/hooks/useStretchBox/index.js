@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'; // Import useState here
+import { useEffect, useRef } from 'react';
 
 /**
  * Custom React Hook to create a scroll-dependent stretching header effect.
@@ -18,9 +18,9 @@ import { useEffect, useRef, useState } from 'react'; // Import useState here
  * @param {number} [options.initialButtonWidth=90] - Button width (%) when scrolled down.
  * @param {number} [options.finalButtonWidth=100] - Button width (%) when at the very top.
  * @param {'linear' | 'easeInCubic'} [options.easing='linear'] - The easing function to apply to the scroll progress.
- * @returns {boolean} isStretchingActive - True if the stretching effect is currently active (within activationThreshold).
  */
 const useStretchingHeader = (buttonId, textSpanId, options = {}) => {
+    // Destructure options with default values
     const {
         activationThreshold = 200,
         initialButtonHeight = 60,
@@ -31,19 +31,17 @@ const useStretchingHeader = (buttonId, textSpanId, options = {}) => {
         finalTextScale = 1.2,
         initialButtonWidth = 90,
         finalButtonWidth = 100,
-        easing = 'linear',
+        easing = 'linear', // NEW: Easing option
     } = options;
 
     const buttonRef = useRef(null);
     const textSpanRef = useRef(null);
 
-    // NEW: State to track if the stretching effect is currently active
-    const [isStretchingActive, setIsStretchingActive] = useState(false);
-
+    // Helper function for easing
     const getEasedProgress = (p, easingType) => {
         switch (easingType) {
             case 'easeInCubic':
-                return p * p * p;
+                return p * p * p; // Cubic ease-in
             case 'linear':
             default:
                 return p;
@@ -67,23 +65,31 @@ const useStretchingHeader = (buttonId, textSpanId, options = {}) => {
 
             const scrollY = window.scrollY;
 
-            // Determine if the effect should be active
-            const shouldBeActive = scrollY < activationThreshold;
-            setIsStretchingActive(shouldBeActive); // Update the state
-
-            // Calculate progress based on scrollY within the threshold
+            // Calculate linear progress (0 to 1, as scrollY goes from activationThreshold to 0)
             const linearProgress = 1 - Math.min(1, Math.max(0, scrollY / activationThreshold));
-            const progress = getEasedProgress(linearProgress, easing);
 
-            // Apply styles based on progress
-            stretchingButton.style.height = `${initialButtonHeight + (finalButtonHeight - initialButtonHeight) * progress}px`;
-            stretchingButton.style.width = `${initialButtonWidth + (finalButtonWidth - initialButtonWidth) * progress}%`;
-            stretchingButton.style.fontSize = `${initialFontSize + (finalFontSize - initialFontSize) * progress}rem`;
-            buttonTextSpan.style.transform = `scale(${initialTextScale + (finalTextScale - initialTextScale) * progress})`;
+            // Apply easing function to the linear progress
+            const progress = getEasedProgress(linearProgress, easing); // NEW: Apply easing
+
+            // Interpolate button height
+            const currentHeight = initialButtonHeight + (finalButtonHeight - initialButtonHeight) * progress;
+            stretchingButton.style.height = `${currentHeight}px`;
+
+            // Interpolate button width
+            const currentWidth = initialButtonWidth + (finalButtonWidth - initialButtonWidth) * progress;
+            stretchingButton.style.width = `${currentWidth}%`;
+
+            // Interpolate font size
+            const currentFontSize = initialFontSize + (finalFontSize - initialFontSize) * progress;
+            stretchingButton.style.fontSize = `${currentFontSize}rem`;
+
+            // Interpolate text scale (for the span inside)
+            const currentTextScale = initialTextScale + (finalTextScale - initialTextScale) * progress;
+            buttonTextSpan.style.transform = `scale(${currentTextScale})`;
         };
 
         window.addEventListener('scroll', updateButtonOnScroll);
-        updateButtonOnScroll(); // Call once on mount to set initial state
+        updateButtonOnScroll(); // Call once on mount
 
         return () => {
             window.removeEventListener('scroll', updateButtonOnScroll);
@@ -95,8 +101,6 @@ const useStretchingHeader = (buttonId, textSpanId, options = {}) => {
         initialTextScale, finalTextScale,
         initialButtonWidth, finalButtonWidth
     ]);
-
-    return isStretchingActive; // NEW: Return the active state
 };
 
 export default useStretchingHeader;
