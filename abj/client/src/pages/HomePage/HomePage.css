@@ -1,133 +1,178 @@
+/* HomePage.css */
+
+/* Import global CSS variables and base styles */
 @import '../../App.css';
 
+/* --- Global / Base Styles for HomePage --- */
+
 #wholeHome {
-  margin: 0;
+    margin: 0; /* Ensures no default margin on the main container */
 }
 
+/* Styles for the content divider that prompts scrolling */
 #contentDiv {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--col1);
-  color: var(--col6);
-}
-
-.buttonText {
-  font-size: 20px;
-  font-weight: bold;
-  color: var(--col6);
-  display: inline-block;
-  text-decoration: underline var(--col4) double 1px;
-}
-
-.orderNowButton {
-    transition: none; 
-}
-
-@keyframes growShrink {
-  0% {
-    transform: scale(0.9);
-  }
-  50% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(0.9);
-  }
-}
-
-.orderNowButton.animate-in {
-  animation: growShrink 2s infinite forwards;
-              
-}
-
-.home {
-  height: 90vh;
-  display: flex;
-  justify-content: center;
-  align-items: left;
-  flex-direction: column;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
-.headerContainer {
-  width: auto;
-  margin-left: 30px;
-}
-
-.home .headerContainer h1 {
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
-  font-size: 70px;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
-  color: white;
-}
-
-.home .headerContainer p {
-  margin-top: 15px;
-  padding: 0;
-  font-size: 40px;
-  font-weight: lighter;
-  color: white;
-}
-
-.headerContainer button {
-  background-color: #121619;
-  margin-top: 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  height: 50px;
-  width: 180px;
-  text-decoration: none;
-  color: white;
-  font-size: 20px;
-  display: block; 
-  box-sizing: border-box; 
-}
-
-.headerContainer button:hover {
-  background-color: #07090a;
-  cursor: pointer;
-  transition: 0.3s ease-in;
-  border: 1px groove var(--col4);
-}
-
-/* mobile view  */
-@media only screen and (max-width: 600px) {
-  .home {
-    justify-content: center;
-    align-items: center;
-  }
-  .headerContainer {
-    margin-left: 0;
-    border-radius: 10px;
-    width: 90%;
+    width: 100%;
+    height: 100vh; /* Make it take full viewport height for scrollability */
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-    background-color: #121619;
-    color: white;
-  }
-  .home .headerContainer h1 {
-    font-size: 40px;
-    height: 30px;
-    margin: 30px 0px;
-    color: white;
-  }
-  .home .headerContainer p {
-    font-size: 30px;
-    color: white;
-  }
-  .headerContainer button {
-    background-color: white;
-    color: #121619; 
-    margin-bottom: 30px;
-  }
+    background-color: var(--col1); /* Using CSS variable for dark teal */
+    color: var(--col6); /* Using CSS variable for text color */
+    font-size: 2rem; /* Larger font for visibility */
+    text-align: center;
+    padding: 20px; /* Add some padding */
+    box-sizing: border-box; /* Include padding in height */
 }
+
+/* Styles for the text inside the button */
+.buttonText {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--col6); /* Using CSS variable for text color */
+    display: inline-block; /* Essential for transform to work on span */
+    text-decoration: underline var(--col4) double 1px; /* Underline with accent color */
+}
+
+
+/* --- Order Now Button Animation --- */
+
+/* Keyframes for the grow/shrink (jiggle) animation */
+@keyframes growShrink {
+    0% {
+        transform: scale(0.9);
+    }
+    50% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(0.9);
+    }
+}
+
+/* Base styles for the .orderNowButton (the Link component) */
+/* This is the element that will receive the 'animate-in' class */
+.orderNowButton {
+    text-decoration: none;
+    /* Important: Ensure no transitions here that would conflict with the 'animate-in' */
+    transition: none;
+    /* If this button needs to fade in or slide in, its initial opacity/transform
+       should be set here, and the 'animate-in' class would trigger that.
+       Currently, growShrink just scales, so it assumes it's already visible.
+    */
+}
+
+/* Styles applied when 'animate-in' class is added to .orderNowButton */
+.orderNowButton.animate-in {
+    animation: growShrink 2s infinite forwards; /* Apply the continuous jiggle animation */
+    /* If you want an initial fade-in/slide-in, you'd chain it here:
+       animation: fadeIn 0.5s ease-out forwards, growShrink 2s 0.5s infinite forwards;
+       and ensure .orderNowButton has opacity: 0; transform: ...; initially.
+    */
+}
+
+
+/* --- Home Section Layout and Styling --- */
+
+.home {
+    height: 90vh; /* Takes 90% of the viewport height */
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: flex-start; /* Align to the left (start of cross axis) */
+    flex-direction: column; /* Stack children vertically */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover; /* Cover the entire area */
+}
+
+.headerContainer {
+    width: auto;
+    margin-left: 30px; /* Indent content from the left */
+}
+
+.home .headerContainer h1 {
+    /* Styles for the main heading */
+    justify-content: center; /* No effect with flex-direction: column on parent */
+    align-items: center; /* No effect with flex-direction: column on parent */
+    font-weight: bold;
+    font-size: 70px;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+    color: white;
+}
+
+.home .headerContainer p {
+    /* Styles for the subheading/tagline */
+    margin-top: 15px;
+    padding: 0;
+    font-size: 40px;
+    font-weight: lighter;
+    color: white;
+}
+
+/* Base styles for the actual <button> element inside the Link */
+.headerContainer button {
+    background-color: #121619; /* Dark background */
+    margin-top: 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    height: 50px;
+    width: 180px;
+    text-decoration: none; /* No underline from the button itself */
+    color: white; /* Text color */
+    font-size: 20px;
+    display: block; /* Make it a block element to respect width/height */
+    box-sizing: border-box; /* Include padding/border in width/height */
+}
+
+/* Hover effect for the button */
+.headerContainer button:hover {
+    background-color: #07090a; /* Slightly darker on hover */
+    cursor: pointer;
+    transition: 0.3s ease-in; /* Smooth transition for hover effects */
+    border: 1px groove var(--col4); /* Border on hover using CSS variable */
+}
+
+
+/* --- Mobile View Adjustments (max-width: 600px) --- */
+
+@media only screen and (max-width: 600px) {
+    .home {
+        justify-content: center; /* Center content vertically in mobile */
+        align-items: center; /* Center content horizontally in mobile */
+    }
+    .headerContainer {
+        margin-left: 0; /* Remove left margin for mobile */
+        border-radius: 10px;
+        width: 90%; /* Take up 90% width */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        background-color: #121619;
+        color: white;
+        padding: 20px; /* Add padding to the header container itself */
+        box-sizing: border-box;
+    }
+    .home .headerContainer h1 {
+        font-size: 40px; /* Smaller font size for heading on mobile */
+        height: auto; /* Allow height to adjust based on content */
+        margin: 20px 0px; /* Adjusted margins */
+    }
+    .home .headerContainer p {
+        font-size: 30px; /* Smaller font size for subheading on mobile */
+        margin-top: 10px;
+    }
+    .headerContainer button {
+        background-color: white; /* Button background changes to white on mobile */
+        color: #121619; /* Button text changes to dark on mobile */
+        margin-bottom: 20px; /* Adjusted margin */
+        width: 150px; /* Slightly smaller button on mobile */
+        height: 45px;
+    }
+    .buttonText {
+        font-size: 18px; /* Smaller text inside button on mobile */
+    }
+}
+
+/* You might want to add more media queries for tablets (e.g., max-width: 900px)
+   or specific device sizes for finer control. */

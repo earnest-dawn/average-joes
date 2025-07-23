@@ -26,14 +26,6 @@ export default function ContactPage() {
                         '& h4': { fontWeight: 'bold', mb: 2 },
                     }}
                 >
-                    <Typography variant="h4">Contact My Resturant</Typography>
-                    <p>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Rem odio beatae ducimus magni nobis culpa praesentium
-                        velit expedita quae, corrupti, pariatur inventore
-                        laboriosam consectetur modi impedit error, repudiandae
-                        obcaecati doloribus.
-                    </p>
                 </Box>
                 <Box
                     sx={{
@@ -45,7 +37,8 @@ export default function ContactPage() {
                         },
                     }}
                 >
-                    <TableContainer component={Paper}>
+                    <Typography variant="h4">Contact My Resturant</Typography>
+<TableContainer component={Paper}>
                         <Table aria-label="contact table">
                             <TableHead>
                                 <TableRow>
