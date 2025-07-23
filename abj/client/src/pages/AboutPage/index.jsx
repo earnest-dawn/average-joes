@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState, useRef, onBack } from "react";
 import Layout from '../../components/Layout';
 import { Box, Typography } from '@mui/material';
 import FoodBankIcon from '@mui/icons-material/FoodBank';
@@ -6,7 +6,7 @@ import denzelAward from '../../assets/images/denzelAward.jpg';
 import denzelSuit from '../../assets/images/denzelSuit.jpg';
 import insideFooTruck from '../../assets/images/insideFooTruck.jpg';
 import './AboutPage.css';
-export default function About() {
+export default function About({onBack}) {
     return (
         <div
             style={{
@@ -35,6 +35,7 @@ export default function About() {
                         },
                     }}
                 >
+                    <button onClick={onBack}>Home</button>
                     <Typography
                         variant="h4"
                         className="aboutTitles"
