@@ -41,7 +41,7 @@
     height: 200%; /* Make the page long enough to scroll */
     background-color: var(--col1); /* Using CSS variable for dark teal background */
     min-height: 100vh; /* Ensure it takes full viewport height */
-    padding: 20px 0 40px 0; /* Top, Right, Bottom, Left padding */
+    padding: 80px 0 40px 0; /* Top, Right, Bottom, Left padding */
     display: flex; /* Use flexbox to center content vertically */
     flex-direction: column;
     justify-content: center;

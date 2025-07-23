@@ -20,7 +20,7 @@ const StretchingHeader = () => {
     useEffect(() => {
         const buttonColorChange = () => {
             const scrollY = window.scrollY;
-            if (scrollY <= 50) {
+            if (scrollY <= 85) {
                 setButtonColor(true); // Applies 'topScrollComplete' class
             } else {
                 setButtonColor(false); // Applies 'stretchingButtonDefault' class
