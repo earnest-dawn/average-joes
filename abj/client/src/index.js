@@ -9,6 +9,7 @@ import OrderOnline from './pages/OrderOnlinePage';
 import About from './pages/AboutPage';
 import ErrorPage from './pages/errorPage';
 import LogInPage from './pages/LoginPage';
+import LocationPage from './pages/LocationPage';
 
 const router = createBrowserRouter([
     {
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
             { path: '/contact', element: <ContactPage /> },
             { path: '/orderOnline', element: <OrderOnline /> },
             { path: '/about', element: <About /> },
+            { path: '/location', element: <LocationPage /> },
             { path: '/yougoodbro?', element: <ErrorPage /> },
             { path: '/login?', element: <LogInPage /> },
         ],

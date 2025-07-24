@@ -99,7 +99,6 @@ export default function About() {
             className={isFadingOut ? 'fade-out' : 'fade-in'}
 
         >
-            <Layout>
                 <Box className="about-content-container" >
                     <Paper className="about-paper-block">
                         
@@ -151,7 +150,7 @@ export default function About() {
                         <ContactPage sx={{ mt: 0, ml: { xs: 0, md: 10 } }} />
                     </Paper>
                 </Box>
-            </Layout>
+
         </div>
 
     );
