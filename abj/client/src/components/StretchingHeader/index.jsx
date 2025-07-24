@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import useStretchingHeader from '../../hooks/useStretchBox'; // Corrected import path for the hook
-import { Box, Typography } from '@mui/material'; // Keep Box, Typography if they are used elsewhere in your project
+import useScrollTransformEffect from '../../hooks/useScrollTransformEffect'; // Updated import path and name
+import { Box, Typography } from '@mui/material';
 
-import './StretchingHeader.css'; // Assuming you have some styles for the header
+import './StretchingHeader.css';
 
 const StretchingHeader = () => {
     const [buttonColor, setButtonColor] = useState(false);
 
-    // Call the custom stretching hook and get its active state
-    const isStretchingActive = useStretchingHeader('stretchingButton', 'buttonTextSpan', {
-        activationThreshold: 300,
-        finalButtonHeight: 180,
+    // Call the generalized hook for the header
+    const isHeaderStretchingActive = useScrollTransformEffect('stretchingButton', 'buttonTextSpan', {
+        direction: 'up', // Specify 'up' for header
+        thresholdOffset: 300,
+        initialHeight: 60,
+        finalHeight: 180,
+        initialFontSize: 1.2,
         finalFontSize: 2.5,
+        initialTextScale: 1,
         finalTextScale: 1.3,
         easing: 'easeInCubic',
     });
@@ -20,7 +24,7 @@ const StretchingHeader = () => {
     useEffect(() => {
         const buttonColorChange = () => {
             const scrollY = window.scrollY;
-            if (scrollY <= 85) {
+            if (scrollY <= 50) {
                 setButtonColor(true); // Applies 'topScrollComplete' class
             } else {
                 setButtonColor(false); // Applies 'stretchingButtonDefault' class
@@ -28,24 +32,22 @@ const StretchingHeader = () => {
         };
 
         window.addEventListener('scroll', buttonColorChange);
-        buttonColorChange(); // Initial call to set the color based on current scroll position
+        buttonColorChange();
 
         return () => {
             window.removeEventListener('scroll', buttonColorChange);
         };
-    }, []); // Empty dependency array: runs once on mount
+    }, []);
 
-    // Determine if the idle animation should be active
-    // It should be active ONLY when the stretching effect is NOT active
-    const showIdleAnimation = !isStretchingActive;
+    // Determine if the idle animation should be active for the header button
+    const showHeaderIdleAnimation = !isHeaderStretchingActive;
 
     return (
         <>
             <div className="sticky-header-wrapper">
                 <button
                     id="stretchingButton"
-                    // Apply conditional classes: color-change class AND idle animation class
-                    className={`${buttonColor ? 'topScrollComplete' : 'stretchingButtonDefault'} ${showIdleAnimation ? 'idle-grow-shrink' : ''}`}
+                    className={`${buttonColor ? 'topScrollComplete' : 'stretchingButtonDefault'} ${showHeaderIdleAnimation ? 'idle-grow-shrink' : ''}`}
                 >
                     <span id="buttonTextSpan">Scroll Up To View Home</span>
                 </button>

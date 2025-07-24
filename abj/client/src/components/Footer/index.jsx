@@ -47,6 +47,8 @@ const Footer = () => {
                     All Rights Reserved &copy; Techinfo YT
                 </Typography>
             </Box>
+            <Box sx={{ height: 50, backgroundColor: '#1A1A19' }} />
+            
         </>
     );
 };

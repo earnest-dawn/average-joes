@@ -57,7 +57,7 @@ export default function Navbar() {
                     <NavLink to={'/contact'}>Contact</NavLink>
                 </li>
                 <li>
-                    <NavLink to={'/login'}>Admin</NavLink>
+                    <NavLink to={'/login'}>Login</NavLink>
                 </li>
             </ul>
         </Box>
@@ -65,7 +65,7 @@ export default function Navbar() {
 
     return (
         <>
-            <Box>
+            <Box >
                 <AppBar
                     component={'nav'}
                     sx={{ bgcolor: 'black' }}
@@ -105,7 +105,7 @@ export default function Navbar() {
                                     <NavLink to={'/contact'}>Contact</NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to={'/login'}>Admin</NavLink>
+                                    <NavLink to={'/login'}>Login</NavLink>
                                 </li>
                             </ul>
                         </Box>
@@ -131,6 +131,7 @@ export default function Navbar() {
                     <Toolbar />
                 </Box>
             </Box>
+            <Box sx={{ height: 40, backgroundColor: 'black' }} />
         </>
     );
 }

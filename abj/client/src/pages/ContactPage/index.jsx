@@ -18,7 +18,6 @@ import {
 export default function ContactPage() {
     return (
         <div>
-            <Layout>
                 <Box
                     sx={{
                         my: 5,
@@ -82,7 +81,6 @@ export default function ContactPage() {
                         </Table>
                     </TableContainer>
                 </Box>
-            </Layout>
         </div>
     );
 }

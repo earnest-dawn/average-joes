@@ -1,0 +1,48 @@
+/* StretchingFooter.css */
+
+.sticky-footer-wrapper {
+    position: sticky;
+    bottom: 0; /* Sticks to the bottom of the viewport */
+    z-index: 999; /* Slightly lower z-index than header if they overlap */
+    width: 100%;
+    background-color: transparent; /* Or a color that matches your page */
+    padding-top: 10px; /* Small padding above the button */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #10b981; /* Tailwind emerald-500 */
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.15); /* Shadow on top */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease;
+    margin: 0 auto; /* Center horizontally */
+    /* Height, width, font-size, transform are controlled by JS hook */
+}
+
+.footer-button span {
+    display: inline-block;
+    transition: transform 0.1s linear;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Optional: Styles for when the footer is actively stretching */
+.footer-stretching-active {
+    background-color: #059669; /* Darker green when active */
+    border-radius: 6px;
+    box-shadow: 0 -6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.footer-stretching-default:hover {
+    background-color: #047857; /* Even darker green on hover */
+    box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.25);
+}

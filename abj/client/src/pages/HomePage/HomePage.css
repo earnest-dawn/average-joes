@@ -49,6 +49,27 @@
     }
 }
 
+#imgBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: var(--col1);
+    color: var(--col6);
+
+}
+
+.homeImgs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 80%;
+    height: auto; /* Ensure height adjusts proportionally */
+    border-radius: 8px; /* Slightly rounded corners for images */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for images */
+    margin-top: 15px; /* Space above image */
+}
+
 /* Base styles for the .orderNowButton (the Link component) */
 /* This is the element that will receive the 'animate-in' class */
 .orderNowButton {
