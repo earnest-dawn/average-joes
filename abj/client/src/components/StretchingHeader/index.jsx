@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import useScrollTransformEffect from '../../hooks/useScrollTransformEffect'; // Updated import path and name
+import useScrollTransformEffect from '../../hooks/useStretchBox'; // Updated import path and name
 import { Box, Typography } from '@mui/material';
 
 import './StretchingHeader.css';

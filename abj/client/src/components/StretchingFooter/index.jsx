@@ -1,5 +1,5 @@
 import React from 'react';
-import useScrollTransformEffect from '../../hooks/useScrollTransformEffect'; // Import the generalized hook
+import useScrollTransformEffect from '../../hooks/useStretchBox'; // Import the generalized hook
 import { Box, Typography } from '@mui/material';
 
 import './StretchingFooter.css'; // Create a new CSS file for footer specific styles

@@ -1,15 +1,22 @@
 const jwt = require('jsonwebtoken');
-const { GraphQLError } = require('graphql');
+const { GraphQLError } = require('graphql'); // Import GraphQLError to extend it
 const secret = 'mysecretsshhhhh';
 const expiration = '2h';
 
+// Define AuthenticationError as a class that extends GraphQLError
+class AuthenticationError extends GraphQLError {
+    constructor(message = 'Could not authenticate user.') { // Allow custom messages
+        super(message, {
+            extensions: {
+                code: 'UNAUTHENTICATED',
+            },
+        });
+        this.name = 'AuthenticationError'; // Set the name of the error
+    }
+}
 
 module.exports = {
-    AuthenticationError: new GraphQLError('Could not authenticate user.', {
-        extensions: {
-            code: 'UNAUTHENTICATED',
-        },
-    }),
+    AuthenticationError, // Export the class itself, not an instance
     authMiddleware: function ({ req }) {
         // allows token to be sent via req.body, req.query, or headers
         let token =
@@ -29,6 +36,8 @@ module.exports = {
             req.user = data;
         } catch {
             console.log('Invalid token');
+            // If you want to throw an error here for invalid token, use the class:
+            // throw new AuthenticationError('Invalid token provided.');
         }
 
         return req;

@@ -1,16 +1,29 @@
 import './LogIn.css';
 
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Alert, Link, Box } from '@mui/material'; // Added Box for layout
-import { LOGIN } from '../../utils/mutations/mutations'; // Assuming this is a Relay mutation definition
+import { TextField, Button, Alert, Link, Box } from '@mui/material';
 import { useMutation } from 'react-relay/hooks';
-import { graphql } from 'babel-plugin-relay/macro'; // Keep if you use it for other mutations/queries
+import { graphql } from 'babel-plugin-relay/macro';
 
-import RegistrationForm from '../../components/RegistrationForm'; // Make sure this path is correct
-import Auth from '../../utils/auth'; // Assuming Auth utility
+import RegistrationForm from '../../components/RegistrationForm';
+import Auth from '../../utils/auth';
+
+// Helper function to safely get error message from Relay errors array
+const getRelayErrorMessage = (errors) => {
+    if (!errors || errors.length === 0) {
+        return "An unknown error occurred (no error details provided).";
+    }
+
+    // Prioritize the message from the first error object
+    if (errors[0] && typeof errors[0].message === 'string' && errors[0].message.trim() !== '') {
+        return errors[0].message;
+    }
+
+    // Fallback if the first error doesn't have a clear message
+    return "An unexpected error occurred (could not extract specific message).";
+};
 
 export default function LoginPage() {
-    // State to toggle between login and registration forms
     const [registrationForm, setRegistrationForm] = useState(false);
 
     const [userFormData, setUserFormData] = useState({
@@ -18,30 +31,20 @@ export default function LoginPage() {
         password: '',
     });
     const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertSeverity, setAlertSeverity] = useState('error');
 
-    // Assuming LOGIN is a Relay fragment or query defined with graphql`...`
-    // If LOGIN is just a string, you might need to adjust useMutation usage
-    const [commitMutation, isLoading, error] = useMutation(
-        graphql`
-            mutation LoginPageLoginMutation($input: LoginInput!) {
-                login(input: $input) {
-                    token
-                    user {
-                        id
-                        username
-                    }
+    const [commitMutation, isLoading] = useMutation(graphql`
+        mutation LoginPageLoginMutation($input: LoginInput!) {
+            login(input: $input) {
+                token
+                user {
+                    id
+                    username
                 }
             }
-        ` // Placeholder for your LOGIN mutation definition
-    );
-
-    useEffect(() => {
-        if (error) {
-            setShowAlert(true);
-        } else {
-            setShowAlert(false);
         }
-    }, [error]);
+    `);
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -51,49 +54,64 @@ export default function LoginPage() {
     const handleFormSubmit = async (event) => {
         event.preventDefault();
 
+        setShowAlert(false); // Hide any previous alerts
+        setAlertMessage('');
+        setAlertSeverity('error');
+
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
             event.preventDefault();
             event.stopPropagation();
+            setAlertMessage("Please fill in all required fields.");
+            setShowAlert(true);
+            return;
         }
 
         try {
-            const response = await new Promise((resolve, reject) => {
-                commitMutation({
-                    variables: {
-                        input: {
-                            username: userFormData.username,
-                            password: userFormData.password,
-                        },
+            commitMutation({
+                variables: {
+                    input: {
+                        username: userFormData.username,
+                        password: userFormData.password,
                     },
-                    onCompleted: (response, errors) => {
-                        if (errors) {
-                            reject(errors);
-                        } else {
-                            resolve(response);
-                        }
-                    },
-                    onError: reject,
-                });
+                },
+                onCompleted: (response, errors) => {
+                    if (errors && errors.length > 0) {
+                        console.error('Login GraphQL errors (full object):', errors);
+                        const extractedMessage = getRelayErrorMessage(errors);
+                        console.log('Extracted Alert Message:', extractedMessage);
+                        setAlertMessage(extractedMessage);
+                        setAlertSeverity('error');
+                        setShowAlert(true); // Show alert on error
+                    } else if (response && response.login && response.login.token) {
+                        Auth.login(response.login.token);
+                        console.log('Login successful for user:', response.login.user.username);
+                        setAlertMessage("Login successful!");
+                        setAlertSeverity('success');
+                        setShowAlert(true); // Show alert on success (optional, or redirect)
+                        // Redirect or update UI as needed
+                    } else {
+                        console.error('Login response is not defined or missing token:', response);
+                        setAlertMessage('Login failed: Invalid response from server or missing token.');
+                        setAlertSeverity('error');
+                        setShowAlert(true);
+                    }
+                },
+                onError: (err) => {
+                    console.error('Login network or unexpected error:', err);
+                    setAlertMessage(`Login failed: ${err.message || 'Network error'}`);
+                    setAlertSeverity('error');
+                    setShowAlert(true);
+                },
             });
 
-            if (response && response.login) {
-                Auth.login(response.login.token);
-                console.log(userFormData.username);
-                console.log(userFormData.password);
-                // Redirect or update UI after successful login
-            } else {
-                console.error('Login response is not defined');
-            }
         } catch (e) {
-            console.error('Login submit error:', e); // Log the actual error
-            console.log(userFormData.username);
-            console.log(userFormData.password);
-            console.log(userFormData);
+            console.error('Unexpected error during login process setup:', e);
+            setAlertMessage(`An unexpected error occurred: ${e.message}`);
+            setAlertSeverity('error');
             setShowAlert(true);
         }
 
-        // clear form values
         setUserFormData({
             username: '',
             password: '',
@@ -101,42 +119,60 @@ export default function LoginPage() {
     };
 
     return (
-        <Box className="login-page-container"> {/* Use a container for styling */}
-            {/* Conditionally render Login Form or Registration Form */}
+        <Box className="login-page-container">
             {registrationForm ? (
-                // Render Registration Form
                 <RegistrationForm onSwitchToLogin={() => setRegistrationForm(false)} />
             ) : (
-                // Render Login Form
                 <form
                     onSubmit={handleFormSubmit}
-                    id="login-form" // Changed id from 'body' to 'login-form' for clarity
-                    className="login-form" // Add a class for styling
+                    id="login-form"
+                    className="login-form"
                 >
-                    <Alert
-                        onClose={() => setShowAlert(false)}
-                        severity="error"
-                        // The 'open' prop is not standard for Alert. You might mean 'hidden' or 'display' style.
-                        // For Material-UI Alert, you typically control visibility with conditional rendering.
-                        style={{ display: showAlert ? 'flex' : 'none', marginBottom: '16px' }}
-                    >
-                        Something went wrong with your login credentials!
-                        {error && ` Error: ${error.message}`} {/* Display actual error message */}
-                    </Alert>
+                    {/* Conditional rendering of the Alert */}
+                    {showAlert && (
+                        <Alert
+                            onClose={() => setShowAlert(false)}
+                            severity={alertSeverity}
+                            // NEW: Aggressive styling to force visibility
+                            sx={{
+                                mb: 2,
+                                width: '100%', // Ensure it takes full width
+                                position: 'relative', // Ensure z-index works
+                                zIndex: 1000, // High z-index to be on top
+                                backgroundColor: alertSeverity === 'error' ? '#ffebee' : '#e8f5e9', // Light red/green background
+                                border: `2px solid ${alertSeverity === 'error' ? '#ef9a9a' : '#a5d6a7'}`, // Clear border
+                                color: alertSeverity === 'error' ? '#d32f2f' : '#2e7d32', // Darker text color
+                                fontWeight: 'bold',
+                                opacity: 1, // Ensure full opacity
+                                display: 'flex', // Ensure it's a flex container
+                                alignItems: 'center', // Vertically center content
+                                justifyContent: 'space-between', // Space out content and close button
+                                padding: '12px 16px', // Standard padding
+                                borderRadius: '4px', // Standard border radius
+                                animation: 'fadeIn 0.5s ease-out forwards', // Add a fade-in animation
+                                '@keyframes fadeIn': {
+                                    '0%': { opacity: 0, transform: 'translateY(-10px)' },
+                                    '100%': { opacity: 1, transform: 'translateY(0)' },
+                                },
+                            }}
+                        >
+                            {alertMessage}
+                        </Alert>
+                    )}
 
                     <TextField
-                        label="Username" // Added label for better UX
+                        label="Username"
                         type="text"
                         placeholder="Your username"
                         name="username"
                         onChange={handleInputChange}
                         value={userFormData.username}
                         required
-                        fullWidth // Makes TextField take full width
-                        margin="normal" // Adds default margin
+                        fullWidth
+                        margin="normal"
                     />
                     <TextField
-                        label="Password" // Added label for better UX
+                        label="Password"
                         type="password"
                         placeholder="Your password"
                         name="password"
@@ -150,17 +186,17 @@ export default function LoginPage() {
                         type="submit"
                         variant="contained"
                         color="primary"
-                        disabled={isLoading} // Disable button while loading
+                        disabled={isLoading}
                         fullWidth
-                        sx={{ mt: 2, mb: 1 }} // Margin top and bottom using sx prop
+                        sx={{ mt: 2, mb: 1 }}
                     >
                         {isLoading ? 'Logging In...' : 'Login'}
                     </Button>
                     <Button
-                        type='button' // Changed to 'button' to prevent form submission
+                        type='button'
                         onClick={() => setRegistrationForm(true)}
-                        variant="text" // Text button style
-                        color="secondary" // Secondary color
+                        variant="text"
+                        color="secondary"
                         fullWidth
                     >
                         Don't have an account? Sign Up!
