@@ -86,10 +86,6 @@ export default function SearchAppBar() {
         };
         // This initial check ensures the state is correct on mount
         checkLoginStatus();
-
-        // If Auth.loggedIn() state changes dynamically (e.g., after login/logout on the same page),
-        // you might need a more robust mechanism like a custom event listener or React Context
-        // to trigger updates here. For simple token-based auth, re-render on route change often suffices.
     }, []);
 
     // Handle logout
@@ -99,10 +95,11 @@ export default function SearchAppBar() {
         navigate('/'); // Redirect to home page after logout
     };
 
-    // Toggle mobile drawer
+    // Toggle mobile drawer - this function returns an event handler
     const toggleDrawer = (anchor, open) => (event) => {
+        // Safely check if event exists before accessing its properties
         if (
-            event.type === 'keydown' &&
+            event && event.type === 'keydown' &&
             (event.key === 'Tab' || event.key === 'Shift')
         ) {
             return;
@@ -119,7 +116,7 @@ export default function SearchAppBar() {
 
     // Function to handle navigation and close the drawer
     const handleDrawerNavLinkClick = (path) => {
-        toggleDrawer('left', false)(); // Close the drawer
+        setMobileOpen(false); // FIX: Directly close the drawer, no event object needed here
         navigate(path); // Navigate to the specified path
     };
 
@@ -129,6 +126,8 @@ export default function SearchAppBar() {
             sx={{ textAlign: 'center', width: 250, bgcolor: 'black', color: 'goldenrod', height: '100%' }}
             role="presentation"
             // No need for onClick/onKeyDown here if ListItemButton handles clicks and closes drawer
+            // If you want to close the drawer when clicking anywhere on the backdrop/drawer content,
+            // you'd typically use the onClose prop of the Drawer component itself.
         >
             {/* Logo and Title in Drawer Header */}
             <Typography
@@ -194,7 +193,7 @@ export default function SearchAppBar() {
                         color="inherit"
                         aria-label="open drawer"
                         sx={{ mr: 2, display: { sm: 'none' } }}
-                        onClick={toggleDrawer('left', true)} // Open drawer from left
+                        onClick={toggleDrawer('left', true)} // Correct: React passes event to the returned function
                     >
                         <MenuIcon />
                     </IconButton>
@@ -276,7 +275,7 @@ export default function SearchAppBar() {
             <Drawer
                 anchor="left"
                 open={mobileOpen}
-                onClose={toggleDrawer('left', false)}
+                onClose={toggleDrawer('left', false)} // Correct: React passes event to the returned function
                 ModalProps={{
                     keepMounted: true, // Better open performance on mobile.
                 }}

@@ -20,8 +20,9 @@ export default function TemporaryDrawer({ state, setState, toggleDrawer }) {
                 width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250,
             }}
             role="presentation"
-            onClick={toggleDrawer(anchor, false)}
-            onKeyDown={toggleDrawer(anchor, false)}
+            // FIX: Wrap toggleDrawer calls in arrow functions
+            onClick={() => toggleDrawer(anchor, false)}
+            onKeyDown={() => toggleDrawer(anchor, false)}
         >
             <List>
                 {['Home', 'Contact', 'Order Online'].map((text, index) => (
@@ -60,7 +61,8 @@ export default function TemporaryDrawer({ state, setState, toggleDrawer }) {
                     <Drawer
                         anchor={anchor}
                         open={state[anchor]}
-                        onClose={toggleDrawer(anchor, false)}
+                        // FIX: Wrap toggleDrawer call in an arrow function
+                        onClose={() => toggleDrawer(anchor, false)}
                         PaperProps={{
                             sx: {
                                 backgroundColor: '#005c5c',
