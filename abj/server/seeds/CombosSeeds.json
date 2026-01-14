@@ -9,7 +9,7 @@
     },
     {
         "title": "Needs meats Combo",
-        "cards": [
+        "menuItems": [
             "507f1f77bcf86cd799439015",
             "507f1f77bcf86cd799439016",
             "507f1f77bcf86cd799439017"
@@ -18,7 +18,7 @@
     },
     {
         "title": "Couples Deal 1",
-        "cards": [
+        "menuItems": [
             "507f1f77bcf86cd799439019",
             "507f1f77bcf86cd79943901a",
             "507f1f77bcf86cd79943901b",
@@ -28,7 +28,7 @@
     },
     {
         "title": "Couples deal 2",
-        "cards": [
+        "menuItems": [
             "507f1f77bcf86cd79943901d",
             "507f1f77bcf86cd79943901e",
             "507f1f77bcf86cd79943901f"
@@ -37,7 +37,7 @@
     },
     {
         "title": "Delightly Delectible Combo",
-        "cards": [
+        "menuItems": [
             "507f1f77bcf86cd799439021",
             "507f1f77bcf86cd799439022"
         ],
@@ -45,7 +45,7 @@
     },
     {
         "title": "Order numba semn",
-        "cards": [
+        "menuItems": [
             "507f1f77bcf86cd799439025",
             "507f1f77bcf86cd799439026",
             "507f1f77bcf86cd799439027",
@@ -55,7 +55,7 @@
     },
     {
         "title": "Family Deal 1",
-        "cards": [
+        "menuItems": [
             "507f1f77bcf86cd799439029",
             "507f1f77bcf86cd79943902a",
             "507f1f77bcf86cd79943902b",
@@ -67,7 +67,7 @@
     },
     {
         "title": "Family Deal 2",
-        "cards": [
+        "menuItems": [
             "507f1f77bcf86cd79943902d",
             "507f1f77bcf86cd79943902e",
             "507f1f77bcf86cd79943902f",

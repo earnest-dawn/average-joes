@@ -58,9 +58,9 @@ const resolvers = {
             }
             throw new AuthenticationError('You need to be logged in to create combos!');
         },
-        deleteCombos: async (parent, { id }, context) => {
+        deleteCombos: async (parent, { title }, context) => {
             if (context.user) {
-                const deletedCombos = await Combos.findByIdAndDelete(id, {
+                const deletedCombos = await Combos.findOneAndDelete({ title }, {
                     new: true,
                 });
                 return deletedCombos;
@@ -105,6 +105,71 @@ const resolvers = {
             const token = signToken(user);
 
             return { token, user: { username: user.username, id: user._id } };
+        },
+        createMenuItems: async (parent, { price, name, ingredients, calories, caption, image }, context) => {
+            if (context.user) {
+                let newCombo = await MenuItems.create({ price, name, ingredients, calories, caption, image });
+                newCombo = await newCombo.populate('menuItems');
+                return newCombo;
+            }
+            throw new AuthenticationError('You need to be logged in to create combos!');
+        },
+        deleteMenuItems: async (parent, { name: inputObject }, context) => {
+      
+      // 2. Auth Check
+      if (!context.user) {
+        throw new AuthenticationError('You must be logged in.');
+      }
+
+      try {
+        // 3. EXTRACTION (The Missing Link)
+        // We take the string value out of the input object.
+        const actualNameString = inputObject.name;
+
+        // 4. Mongoose Query
+        // Now we pass the pure string "storm Claw" to Mongoose.
+        const deletedItem = await MenuItems.findOneAndDelete({ name: actualNameString });
+
+        if (!deletedItem) {
+          return {
+            code: '404',
+            success: false,
+            message: `Item "${actualNameString}" not found.`,
+            menuItem: null
+          };
+        }
+
+        return {
+          code: '200',
+          success: true,
+          message: 'Item deleted.',
+          menuItem: deletedItem
+        };
+
+      } catch (err) {
+        console.error("Mongoose Error:", err);
+        return {
+          code: '500',
+          success: false,
+          message: err.message,
+          menuItem: null
+        };
+      }
+    },
+        addMenuItems: async (parent, args, context) => {
+            if (context.user) {
+                const updatedMenuItems = await MenuItems.findByIdAndUpdate(
+                    args.MenuItemsId,
+                    {
+                        $push: {
+                            menuItems: args.menuItemsId,
+                        },
+                    },
+                    { new: true }
+                );
+                return updatedMenuItems;
+            }
+            throw new AuthenticationError('You need to be logged in to add to combos!');
         },
     },
 };

@@ -6,6 +6,7 @@ const typeDefs = `
     calories: Int
     price: Int!
     caption: String!
+    image: String!
   }
 
   type Friend {
@@ -81,6 +82,7 @@ const typeDefs = `
 
   input DeleteComboInput {
     id: ID!
+    name: String!
     clientMutationId: String
   }
 
@@ -120,6 +122,51 @@ const typeDefs = `
     clientMutationId: String
   }
 
+  input CreateMenuItemInput {
+    title: String!
+    name: String!
+    ingredients: String!
+    calories: Int
+    price: Int!
+    image: String!
+    clientMutationId: String
+  }
+
+  type CreateMenuItemPayload {
+    code: String!
+    success: Boolean!
+    message: String!
+    menuItem: MenuItem
+    clientMutationId: String
+  }
+
+  input DeleteMenuItemInput {
+    name: String!
+    clientMutationId: String
+  }
+
+  type DeleteMenuItemPayload {
+    code: String!
+    success: Boolean!
+    message: String!
+    menuItem: MenuItem
+    clientMutationId: String
+  }
+
+  input AddMenuItemInput {
+    comboId: ID!
+    name: String!
+    clientMutationId: String
+  }
+
+  type AddMenuItemPayload {
+    code: String!
+    success: Boolean!
+    message: String!
+    menuItem: MenuItem
+    clientMutationId: String
+  }
+
   type Query {
     me: User
     menuItems: [MenuItem]
@@ -130,10 +177,13 @@ const typeDefs = `
   type Mutation {
     register(input: RegisterInput!): RegisterPayload
     login(input: LoginInput!): LoginPayload
-    createCombos(input: CreateComboInput!): CreateComboPayload
-    deleteCombos(input: DeleteComboInput!): DeleteComboPayload
-    addToCombos(input: AddToComboInput!): AddToComboPayload
-    removeFromCombos(input: RemoveFromComboInput!): RemoveFromComboPayload
+    createCombos(title: CreateComboInput!): CreateComboPayload
+    deleteCombos(title: DeleteComboInput!): DeleteComboPayload
+    addToCombos(title: AddToComboInput!): AddToComboPayload
+    removeFromCombos(title: RemoveFromComboInput!): RemoveFromComboPayload
+    createMenuItems(name: CreateMenuItemInput!): CreateMenuItemPayload
+    deleteMenuItems(name: DeleteMenuItemInput!): DeleteMenuItemPayload
+    addMenuItems(name: AddMenuItemInput!): AddMenuItemPayload
   }
 
   scalar ID

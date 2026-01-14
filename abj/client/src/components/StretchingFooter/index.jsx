@@ -1,37 +1,68 @@
-import React from 'react';
-import useScrollTransformEffect from '../../hooks/useStretchBox'; // Import the generalized hook
-import { Box, Typography } from '@mui/material';
+import React, { useState, useEffect, useRef } from 'react';
+import './StretchingFooter.css';
 
-import './StretchingFooter.css'; // Create a new CSS file for footer specific styles
+const CONFIG = {
+  initialHeight: 60,   
+  finalHeight: 180,    
+  initialFontSize: 1.1,
+  finalFontSize: 2.2,
+  threshold: 300,      
+};
 
-const StretchingFooter = () => {
-    // Call the generalized hook for the footer
-    const isFooterStretchingActive = useScrollTransformEffect('stretchingFooterButton', 'footerTextSpan', {
-        direction: 'down', // Specify 'down' for footer
-        thresholdOffset: 250, // Effect starts 250px from the bottom of the page
-        initialHeight: 50,
-        finalHeight: 120,
-        initialFontSize: 1.0,
-        finalFontSize: 2.2,
-        initialTextScale: 1,
-        finalTextScale: 1.1,
-        easing: 'easeInCubic',
-    });
+const StretchingFooter = ({ onReachBottom }) => {
+  const [isAtBottom, setIsAtBottom] = useState(false);
+  const [isStretching, setIsStretching] = useState(false);
+  const btnRef = useRef(null);
+  const txtRef = useRef(null);
 
-    // You can add conditional styling for the footer button too, similar to the header
-    // For simplicity, I'm just applying a base class here.
-    const footerButtonClass = isFooterStretchingActive ? 'footer-stretching-active' : 'footer-stretching-default';
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!btnRef.current || !txtRef.current) return;
 
-    return (
-        <div className="sticky-footer-wrapper">
-            <button
-                id="stretchingFooterButton"
-                className={`footer-button ${footerButtonClass}`}
-            >
-                <span id="footerTextSpan">Reach the Bottom for More!</span>
-            </button>
-        </div>
-    );
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const docHeight = document.documentElement.scrollHeight;
+      
+      // Calculate distance from bottom of viewport to bottom of page
+      const distanceFromBottom = docHeight - (scrollY + windowHeight);
+      
+      // Progress: 1 at the very bottom, 0 when above threshold
+      const progress = Math.max(0, 1 - (distanceFromBottom / CONFIG.threshold));
+      const clampedProgress = Math.min(Math.max(progress, 0), 1);
+
+      // Sync state for jiggle vs stretch
+      setIsStretching(clampedProgress > 0.05);
+      setIsAtBottom(distanceFromBottom <= 10);
+
+      // Match the Header's direct DOM manipulation for performance
+      btnRef.current.style.height = `${CONFIG.initialHeight + (CONFIG.finalHeight - CONFIG.initialHeight) * clampedProgress}px`;
+      txtRef.current.style.fontSize = `${CONFIG.initialFontSize + (CONFIG.finalFontSize - CONFIG.initialFontSize) * clampedProgress}rem`;
+
+      if (distanceFromBottom < 5 && onReachBottom) onReachBottom();
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll);
+    handleScroll();
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, [onReachBottom]);
+
+  return (
+    <div className="footer-sticky-container">
+      <button
+        ref={btnRef}
+        className={`footer-button ${isAtBottom ? 'active-green' : 'idle-blue'} ${!isStretching ? 'idle-jiggle' : ''}`}
+      >
+        <span ref={txtRef} className="footer-text">
+          Scroll Down For Chef Bio
+        </span>
+      </button>
+    </div>
+  );
 };
 
 export default StretchingFooter;

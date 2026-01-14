@@ -104,7 +104,7 @@ type CreateCombosPayload implements MutationResponse {
 }
 
 input DeleteCombosInput {
-    id: ID!
+    title: String!
     clientMutationId: String
 }
 
@@ -118,7 +118,7 @@ type DeleteCombosPayload implements MutationResponse {
 
 input AddToCombosInput {
     message: String
-    combosId: ID!
+    title: String!
     menuItems: ID!
     clientMutationId: String
 }
@@ -132,7 +132,7 @@ type AddToCombosPayload implements MutationResponse {
 }
 
 input RemoveFromCombosInput {
-    combosId: ID!
+    title: String!
     menuItems: ID!
     clientMutationId: String
 }
@@ -144,7 +144,47 @@ type RemoveFromCombosPayload implements MutationResponse {
     combos: Combos
     clientMutationId: String
 }
+  input CreateMenuItemInput {
+    title: String!
+    menuItems: [ID]!
+    price: Int!
+    clientMutationId: String
+  }
 
+  type CreateMenuItemPayload implements MutationResponse  {
+    code: String!
+    success: Boolean!
+    message: String!
+    menuItem: MenuItems
+    clientMutationId: String
+  }
+
+  input DeleteMenuItemInput {
+    name: String!
+    clientMutationId: String
+  }
+
+  type DeleteMenuItemPayload implements MutationResponse  {
+    code: String!
+    success: Boolean!
+    message: String!
+    menuItem: MenuItems
+    clientMutationId: String
+  }
+
+  input AddMenuItemInput {
+    comboId: ID!
+    name: String!
+    clientMutationId: String
+  }
+
+  type AddMenuItemPayload implements MutationResponse  {
+    code: String!
+    success: Boolean!
+    message: String!
+    menuItem: MenuItems
+    clientMutationId: String
+  }
 type Mutation {
     register(input: RegisterInput!): RegisterPayload
     login(input: LoginInput!): LoginPayload
@@ -152,4 +192,8 @@ type Mutation {
     deleteCombos(input: DeleteCombosInput!): DeleteCombosPayload
     addToCombos(input: AddToCombosInput!): AddToCombosPayload
     removeFromCombos(input: RemoveFromCombosInput!): RemoveFromCombosPayload
+    createMenuItems(input: CreateMenuItemInput!): CreateMenuItemPayload
+    deleteMenuItems(input: DeleteMenuItemInput!): DeleteMenuItemPayload
+    addMenuItems(input: AddMenuItemInput!): AddMenuItemPayload
+  
 }

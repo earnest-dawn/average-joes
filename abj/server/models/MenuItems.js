@@ -16,6 +16,9 @@ const menuItemSchema = new Schema({
     caption: {
         type: String,
     },
+    image: {
+        type: String,
+    },
 });
 
 const MenuItems = model(`MenuItems`, menuItemSchema);

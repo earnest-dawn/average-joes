@@ -1,48 +1,66 @@
-/* StretchingFooter.css */
+.layout-root {
+          min-height: 250vh;
+          background-color: #f1f5f9;
+          font-family: system-ui, sans-serif;
+          display: flex;
+          flex-direction: column;
+        }
+        
+        /* Sticky Footer Wrapper */
+        .footer-sticky-container {
+          position: sticky;
+          bottom: 0;
+          z-index: 50;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          padding: 20px 0;
+          pointer-events: none;
+          margin-top: auto;
+        }
 
-.sticky-footer-wrapper {
-    position: sticky;
-    bottom: 0; /* Sticks to the bottom of the viewport */
-    z-index: 999; /* Slightly lower z-index than header if they overlap */
-    width: 100%;
-    background-color: transparent; /* Or a color that matches your page */
-    padding-top: 10px; /* Small padding above the button */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+        .footer-button {
+          pointer-events: auto;
+          width: 90%;
+          max-width: 600px;
+          border: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-weight: 700;
+          box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.1);
+          transition: background-color 0.3s ease, border-radius 0.3s ease;
+        }
 
-.footer-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #10b981; /* Tailwind emerald-500 */
-    color: white;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.15); /* Shadow on top */
-    transition: background-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease;
-    margin: 0 auto; /* Center horizontally */
-    /* Height, width, font-size, transform are controlled by JS hook */
-}
+        .idle-blue {
+          background-color: #2563eb;
+          border-radius: 16px;
+        }
 
-.footer-button span {
-    display: inline-block;
-    transition: transform 0.1s linear;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+        .active-green {
+          background-color: #059669;
+          border-radius: 8px;
+        }
 
-/* Optional: Styles for when the footer is actively stretching */
-.footer-stretching-active {
-    background-color: #059669; /* Darker green when active */
-    border-radius: 6px;
-    box-shadow: 0 -6px 15px rgba(0, 0, 0, 0.2);
-}
+        .footer-text {
+          display: inline-block;
+          white-space: nowrap;
+        }
 
-.footer-stretching-default:hover {
-    background-color: #047857; /* Even darker green on hover */
-    box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.25);
-}
+        /* Idle Animation - Must match Header exactly */
+        /* @keyframes sharedJiggle {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(0.97); }
+        } */
+
+        /* .idle-jiggle {
+          animation: sharedJiggle 2s infinite ease-in-out;
+        } */
+
+        .spacer {
+          text-align: center;
+          padding: 100px 20px;
+          color: #64748b;
+          flex: 1;
+        }
