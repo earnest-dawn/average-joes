@@ -26,6 +26,7 @@ const userSchema = new Schema({
             ref: 'Friend',
         },
     ],
+    
 });
 
 userSchema.pre('save', async function (next) {

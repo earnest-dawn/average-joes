@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8ef4739b88ff82fdb0544782ece5b19f>>
+ * @generated SignedSource<<e194908d096abb14d0d2d6ef7473d625>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,52 +26,52 @@ v1 = [
         "variableName": "input"
       }
     ],
-    "concreteType": "RegisterPayload",
+    "concreteType": "ToggleStockStatusPayload",
     "kind": "LinkedField",
-    "name": "register",
+    "name": "toggleStockStatus",
     "plural": false,
     "selections": [
       {
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "token",
+        "name": "code",
         "storageKey": null
       },
       {
         "alias": null,
         "args": null,
-        "concreteType": "User",
+        "kind": "ScalarField",
+        "name": "success",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "message",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "MenuItems",
         "kind": "LinkedField",
-        "name": "user",
+        "name": "menuItem",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "username",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "password",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "email",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
             "name": "id",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "inStock",
             "storageKey": null
           }
         ],
@@ -86,7 +86,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "mutationsRegisterMutation",
+    "name": "mutationsToggleStockStatusMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -95,20 +95,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "mutationsRegisterMutation",
+    "name": "mutationsToggleStockStatusMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "f61cf3081ff592d16559abe1d29c72a1",
+    "cacheID": "d99f3af6b2727180a713f9f09c0d79ef",
     "id": null,
     "metadata": {},
-    "name": "mutationsRegisterMutation",
+    "name": "mutationsToggleStockStatusMutation",
     "operationKind": "mutation",
-    "text": "mutation mutationsRegisterMutation(\n  $input: RegisterInput!\n) {\n  register(input: $input) {\n    token\n    user {\n      username\n      password\n      email\n      id\n    }\n  }\n}\n"
+    "text": "mutation mutationsToggleStockStatusMutation(\n  $input: ToggleStockStatusInput!\n) {\n  toggleStockStatus(input: $input) {\n    code\n    success\n    message\n    menuItem {\n      id\n      inStock\n    }\n  }\n}\n"
   }
 };
 })();
 
-node.hash = "b3f66bc18ff12e87dff0988e1bc72782";
+node.hash = "b5e3b9967e1a4db2d953dbd7055b2c36";
 
 module.exports = node;

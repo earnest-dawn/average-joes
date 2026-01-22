@@ -1,0 +1,9 @@
+.in-stock {
+    background-color: #d0f0c0;
+    color: #2e7d32;
+}
+
+.out-of-stock {
+    background-color: #f0c0c0;
+    color: #c62828;
+}

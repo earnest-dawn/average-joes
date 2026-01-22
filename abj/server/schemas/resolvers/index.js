@@ -1,177 +1,366 @@
-const { MenuItems, User, Combos } = require('../../models');
-const { signToken } = require('../../utils/auth');
-const bcrypt = require('bcrypt');
-// Change this line:
-// const { AuthenticationError } = require('apollo-server-express');
-// To this:
-const { GraphQLError } = require('graphql'); // Apollo Server v4 uses GraphQLError directly for custom errors
+const { MenuItems, User, Combos, Rating, Restaurant } = require("../../models");
+const { create } = require("../../models/MenuItems");
+const { signToken } = require("../../utils/auth");
+const bcrypt = require("bcrypt");
 
-// Define a custom AuthenticationError that extends GraphQLError
-// This is the recommended way to handle custom errors in Apollo Server v4
+const { GraphQLError } = require("graphql");
+
 class AuthenticationError extends GraphQLError {
-    constructor(message = 'Not authenticated') {
-        super(message, {
-            extensions: {
-                code: 'UNAUTHENTICATED',
-                http: { status: 401 }, // Optional: add HTTP status code
-            },
-        });
-        this.name = 'AuthenticationError';
-    }
+  constructor(message = "Not authenticated") {
+    super(message, {
+      extensions: {
+        code: "UNAUTHENTICATED",
+        http: { status: 401 }, // Optional: add HTTP status code
+      },
+    });
+    this.name = "AuthenticationError";
+  }
 }
 
-
 const resolvers = {
-    Query: {
-        me: async (parent, args, context) => {
-            if (context.user) {
-                const userData = await User.findOne({ _id: context.user._id });
-                return userData;
-            }
-            throw new AuthenticationError('You need to be logged in!');
-        },
-
-        menuItems: async (parent, args) => {
-            return await MenuItems.find({});
-        },
-        combos: async () => {
-            return Combos.find({}).populate('menuItems');
-        },
-        users: async () => {
-            return User.find({});
-        },
+  Query: {
+    me: async (parent, args, context) => {
+      if (context.user) {
+        const userData = await User.findOne({ id: context.user.id });
+        return userData;
+      }
+      throw new AuthenticationError("You need to be logged in!");
     },
-    Mutation: {
-        register: async (parent, args) => {
-            console.log('Received input:', args.input);
-            const { username, password, email } = args.input;
-            const user = await User.create({ username, password, email });
-            const token = signToken(user);
-            console.log(user);
-            return { token, user };
-        },
-        createCombos: async (parent, { title, menuItems, price }, context) => {
-            if (context.user) {
-                let newCombo = await Combos.create({ title, menuItems, price });
-                newCombo = await newCombo.populate('menuItems');
-                return newCombo;
-            }
-            throw new AuthenticationError('You need to be logged in to create combos!');
-        },
-        deleteCombos: async (parent, { title }, context) => {
-            if (context.user) {
-                const deletedCombos = await Combos.findOneAndDelete({ title }, {
-                    new: true,
-                });
-                return deletedCombos;
-            }
-            throw new AuthenticationError('You need to be logged in to delete combos!');
-        },
-        addToCombos: async (parent, args, context) => {
-            if (context.user) {
-                const updatedCombos = await Combos.findByIdAndUpdate(
-                    args.CombosId,
-                    {
-                        $push: {
-                            menuItems: args.menuItemsId,
-                        },
-                    },
-                    { new: true }
-                );
-                return updatedCombos;
-            }
-            throw new AuthenticationError('You need to be logged in to add to combos!');
-        },
-        login: async (parent, { input }) => {
-            const { username, password } = input;
-            console.log('Attempting login for username:', username);
-            const user = await User.findOne({ username });
 
-            if (!user) {
-                console.log('User not found for username:', username);
-                throw new AuthenticationError('Incorrect credentials');
-            }
-            console.log('User found:', user.username);
+    menuItems: async (parent, args) => {
+      return await MenuItems.find({});
+    },
+    combos: async () => {
+      return Combos.find({}).populate("menuItems");
+    },
+    users: async () => {
+      return User.find({});
+    },
+    ratings: async () => {
+      return Rating.find({}).populate("user").populate("ratedId");
+    },
+    restaurants: async () => {
+      return Restaurant.find({}).populate("menuItems").populate("combos");
+    },
+  },
+  Mutation: {
+    toggleStockStatus: async (parent, { input }, context) => {
+      if (context.user) {
+        const menuItem = await MenuItems.findById(input.id);
+        if (!menuItem) {
+          throw new Error("Menu item not found");
+        }
+        menuItem.inStock = !menuItem.inStock;
+        await menuItem.save();
+        return {
+      code: 200,
+      success: true,
+      message: "Stock status updated!",
+      menuItem: menuItem // This allows Relay to see the change
+    };
+  
+      }
+      throw new AuthenticationError(
+        "You need to be logged in to toggle stock status!",
+      );
+    },
+    register: async (parent, args) => {
+      console.log("Received input:", args.input);
+      const { username, password, email } = args.input;
+      const user = await User.create({ username, password, email });
+      const token = signToken(user);
+      console.log(user);
+      return { token, user };
+    },
+    createCombos: async (parent, { title, menuItems, price }, context) => {
+      if (context.user) {
+        let newCombo = await Combos.create({ title, menuItems, price });
+        newCombo = await newCombo.populate("menuItems");
+        return newCombo;
+      }
+      throw new AuthenticationError(
+        "You need to be logged in to create combos!",
+      );
+    },
+    deleteCombos: async (parent, { title }, context) => {
+      if (context.user) {
+        const deletedCombos = await Combos.findOneAndDelete(
+          { title },
+          {
+            new: true,
+          },
+        );
+        return deletedCombos;
+      }
+      throw new AuthenticationError(
+        "You need to be logged in to delete combos!",
+      );
+    },
+    addToCombos: async (parent, args, context) => {
+      if (context.user) {
+        const updatedCombos = await Combos.findByIdAndUpdate(
+          args.CombosId,
+          {
+            $push: {
+              menuItems: args.menuItemsId,
+            },
+          },
+          { new: true },
+        );
+        return updatedCombos;
+      }
+      throw new AuthenticationError(
+        "You need to be logged in to add to combos!",
+      );
+    },
+    login: async (parent, { input }) => {
+      const { username, password } = input;
+      console.log("Attempting login for username:", username);
+      const user = await User.findOne({ username });
 
-            console.log('Comparing password for user:', user.username);
-            const correctPw = await user.isCorrectPassword(password);
+      if (!user) {
+        console.log("User not found for username:", username);
+        throw new AuthenticationError("Incorrect credentials");
+      }
+      console.log("User found:", user.username);
 
-            if (!correctPw) {
-                console.log('Password comparison failed for user:', user.username);
-                throw new AuthenticationError('Incorrect credentials');
-            }
-            console.log('Password comparison successful!');
+      console.log("Comparing password for user:", user.username);
+      const correctPw = await user.isCorrectPassword(password);
 
-            const token = signToken(user);
+      if (!correctPw) {
+        console.log("Password comparison failed for user:", user.username);
+        throw new AuthenticationError("Incorrect credentials");
+      }
+      console.log("Password comparison successful!");
 
-            return { token, user: { username: user.username, id: user._id } };
-        },
-        createMenuItems: async (parent, { price, name, ingredients, calories, caption, image }, context) => {
-            if (context.user) {
-                let newCombo = await MenuItems.create({ price, name, ingredients, calories, caption, image });
-                newCombo = await newCombo.populate('menuItems');
-                return newCombo;
-            }
-            throw new AuthenticationError('You need to be logged in to create combos!');
-        },
-        deleteMenuItems: async (parent, { name: inputObject }, context) => {
-      
-      // 2. Auth Check
+      const token = signToken(user);
+
+      return { token, user: { username: user.username, id: user.id } };
+    },
+    createMenuItems: async (parent, { input }, context) => {
       if (!context.user) {
-        throw new AuthenticationError('You must be logged in.');
+        throw new AuthenticationError(
+          "You need to be logged in to create menu items!",
+        );
       }
 
       try {
-        // 3. EXTRACTION (The Missing Link)
-        // We take the string value out of the input object.
-        const actualNameString = inputObject.name;
-
-        // 4. Mongoose Query
-        // Now we pass the pure string "storm Claw" to Mongoose.
-        const deletedItem = await MenuItems.findOneAndDelete({ name: actualNameString });
-
-        if (!deletedItem) {
-          return {
-            code: '404',
-            success: false,
-            message: `Item "${actualNameString}" not found.`,
-            menuItem: null
-          };
-        }
+        let newMenuItem = await MenuItems.create({
+          ...input,
+        });
 
         return {
-          code: '200',
-          success: true,
-          message: 'Item deleted.',
-          menuItem: deletedItem
+          menuItem: newMenuItem,
+          input: input,
         };
-
       } catch (err) {
-        console.error("Mongoose Error:", err);
-        return {
-          code: '500',
-          success: false,
-          message: err.message,
-          menuItem: null
-        };
+        console.error(err);
+        throw new Error("Failed to create menu item");
       }
     },
-        addMenuItems: async (parent, args, context) => {
-            if (context.user) {
-                const updatedMenuItems = await MenuItems.findByIdAndUpdate(
-                    args.MenuItemsId,
-                    {
-                        $push: {
-                            menuItems: args.menuItemsId,
-                        },
-                    },
-                    { new: true }
-                );
-                return updatedMenuItems;
-            }
-            throw new AuthenticationError('You need to be logged in to add to combos!');
-        },
+    deleteMenuItems: async (parent, { input }, context) => {
+      if (!context.user) {
+        throw new AuthenticationError("You must be logged in to delete items!");
+      }
+
+      // Extract the name from the input object
+      const { name } = input;
+      const deletedItem = await MenuItems.findOneAndDelete({ name });
+
+      if (!deletedItem) {
+        return {
+          code: "404",
+          success: false,
+          message: "Item not found",
+        };
+      }
+
+      return {
+        code: "200",
+        success: true,
+        message: "Successfully deleted",
+        menuItem: deletedItem,
+      };
     },
+    addMenuItems: async (parent, args, context) => {
+      if (context.user) {
+        const updatedMenuItems = await MenuItems.findByIdAndUpdate(
+          args.MenuItemsId,
+          {
+            $push: {
+              menuItems: args.menuItemsId,
+            },
+          },
+          { new: true },
+        );
+        return updatedMenuItems;
+      }
+      throw new AuthenticationError(
+        "You need to be logged in to add to combos!",
+      );
+    },
+    createRating: async (parent, { input }, context) => {
+      if (context.user) {
+        let finalRatedId = input.ratedId;
+
+        // 2. HELPER: If the user passed a Name (like "Storm Claw") instead of an ID,
+        // we should try to find the ID first, otherwise Mongoose validation fails.
+        if (input.onModel === "MenuItems" && input.ratedId.length !== 24) {
+          const foundItem = await MenuItems.findOne({ name: input.ratedId });
+          if (foundItem) finalRatedId = foundItem.id;
+        } else if (
+          input.onModel === "Restaurant" &&
+          input.ratedId.length !== 24
+        ) {
+          const foundRest = await Restaurant.findOne({ name: input.ratedId });
+          if (foundRest) finalRatedId = foundRest.id;
+        }
+
+        // 3. Create the rating with EXPLICIT keys
+        // Using explicit keys (emoji: input.emoji) is safer than spreading (...input)
+        const newRating = await Rating.create({
+          user: context.user._id || context.user.id,
+          ratedId: finalRatedId,
+          onModel: input.onModel,
+          emoji: input.emoji,
+          ratingText: input.ratingText,
+          images: input.images || [],
+        });
+
+        // 4. Return and populate user
+        const savedRating = await newRating.populate("user");
+        return {
+          code: 200,
+          success: true,
+          message: "Rating created!",
+          rating: savedRating, 
+        };
+      }
+      throw new AuthenticationError(
+        "You need to be logged in to create a rating!",
+      );
+    },
+    deleteRating: async (parent, { id }, context) => {
+      if (context.user) {
+        const ratingToDelete = await Rating.findById(id);
+        if (!ratingToDelete) {
+          return {
+            code: "404",
+            success: false,
+            message: "Rating not found.",
+            rating: null,
+          };
+        }
+        if (ratingToDelete.user.toString() !== context.user.id) {
+          return {
+            code: "403",
+            success: false,
+            message: "You are not authorized to delete this rating.",
+            rating: null,
+          };
+        }
+        await Rating.findByIdAndDelete(id);
+        return {
+          code: "200",
+          success: true,
+          message: "Rating deleted successfully.",
+          rating: ratingToDelete,
+        };
+      }
+      throw new AuthenticationError(
+        "You need to be logged in to delete a rating!",
+      );
+    },
+    createRestaurant: async (parent, { input }, context) => {
+      if (!context.user) {
+        throw new AuthenticationError(
+          "You need to be logged in to create restaurant!",
+        );
+      }
+
+      try {
+        let newRestaurant = await Restaurant.create({
+          ...input,
+        });
+
+        return {
+          restaurant: newRestaurant,
+          input: input,
+        };
+      } catch (err) {
+        console.error(err);
+        throw new Error("Failed to create restaurant");
+      }
+    },
+    deleteRestaurant: async (parent, { input }, context) => {
+      if (!context.user) {
+        throw new AuthenticationError("You must be logged in to delete Restaurants!");
+      }
+
+      // Extract the name from the input object
+      const { name } = input;
+      const deletedItem = await Restaurant.findOneAndDelete({ name });
+
+      if (!deletedItem) {
+        return {
+          code: "404",
+          success: false,
+          message: "restaurant not found",
+        };
+      }
+
+      return {
+        code: "200",
+        success: true,
+        message: "Successfully deleted",
+        restaurant: deletedItem,
+      };
+    },
+    addRestaurant: async (parent, args, context) => {
+      if (context.user) {
+        const updatedRestaurant = await Restaurant.findByIdAndUpdate(
+          args.RestaurantId,
+          {
+            $push: {
+              restaurant: args.restaurantId,
+            },
+          },
+          { new: true },
+        );
+        return updatedRestaurant;
+      }
+      throw new AuthenticationError(
+        "You need to be logged in to add a restaurant!",
+      );
+    },
+  },
+  Rating: {
+    ratedId: async (parent) => {
+      if (!parent.onModel || !parent.ratedId) return null;
+
+      // Dynamically select the model based on the 'onModel' string stored in DB
+      const models = {
+        MenuItems: MenuItems,
+        Combos: Combos,
+      };
+
+      const SelectedModel = models[parent.onModel];
+
+      if (!SelectedModel) return null;
+
+      return await SelectedModel.findById(parent.ratedId);
+    },
+  },
+  RatedObject: {
+    __resolveType(obj) {
+      // Check for specific fields to identify the type
+      if (obj.price) return "MenuItems";
+      if (obj.location || obj.cuisine) return "Restaurant";
+      if (obj.items) return "Combo";
+      return null;
+    },
+  },
+  
 };
 
 module.exports = resolvers;

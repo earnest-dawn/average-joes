@@ -18,6 +18,7 @@ const httpServer = http.createServer(app);
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+    csrfPrevention: false, 
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
 
@@ -27,18 +28,18 @@ const startApolloServer = async () => {
   // Basic Express setup
   app.use(express.urlencoded({ extended: true }));
   app.use(cors());
-
-  /**
-   * FIX: Apollo 4 expressMiddleware with explicit body-parser json.
-   * We apply the json() middleware specifically to the /graphql route.
-   */
   app.use(
     "/graphql",
     cors(),
-    json(), // This ensures the body is parsed before expressMiddleware sees it
+    json(),
     expressMiddleware(server, {
       context: async ({ req }) => {
         const authReq = authMiddleware({ req });
+        if (authReq.user) {
+        console.log(`✅ Authenticated: ${authReq.user.username}`);
+      } else {
+        console.log("❌ No user found in context");
+      }
         return { user: authReq.user };
       },
     })

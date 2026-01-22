@@ -11,44 +11,51 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import HomeIcon from '@mui/icons-material/Home';
 import FastfoodIcon from '@mui/icons-material/Fastfood';
 import ContactsIcon from '@mui/icons-material/Contacts';
+import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
 import averageLogo from '../../../assets/images/averageLogo.png';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
-export default function TemporaryDrawer({ state, setState, toggleDrawer }) {
-    const list = (anchor) => (
+export default function TemporaryDrawer({ state = { left: false }, setState, toggleDrawer }) {
+    const MENU_ITEMS = [
+  { text: 'Home', icon: <HomeIcon />, path: '/' },
+  { text: 'Admin', icon: <WorkOutlineIcon />, path: '/admin' },
+  { text: 'Contact', icon: <ContactsIcon />, path: '/contact' },
+  { text: 'Order Online', icon: <FastfoodIcon />, path: '/order online' },
+];
+const list = (anchor) => (
         <Box
             sx={{
                 width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250,
             }}
             role="presentation"
             // FIX: Wrap toggleDrawer calls in arrow functions
-            onClick={() => toggleDrawer(anchor, false)}
+            onClick={toggleDrawer(anchor, false)}
             onKeyDown={() => toggleDrawer(anchor, false)}
         >
             <List>
-                {['Home', 'Contact', 'Order Online'].map((text, index) => (
-                    <ListItem
-                        key={text}
-                        disablePadding
-                    >
-                        <ListItemButton href={`/${text.toLowerCase()}`}>
-                            <ListItemIcon sx={{ color: '#d60000' }}>
-                                {(() => {
-                                    switch (text) {
-                                        case 'Home':
-                                            return <HomeIcon />;
-                                        case 'Contact':
-                                            return <ContactsIcon />;
-                                        case 'Order Online':
-                                            return <FastfoodIcon />;
-                                        default:
-                                            return <InboxIcon />;
-                                    }
-                                })()}
-                            </ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
+                {MENU_ITEMS.map((item) => (
+    <ListItem key={item.text} disablePadding>
+      <ListItemButton href={item.path}>
+        <ListItemIcon sx={{ color: '#d60000' }}>
+          {item.icon}
+        </ListItemIcon>
+        <ListItemText primary={item.text} />
+      </ListItemButton>
+    </ListItem>
+    
+    
+  ))}
+  <ListItem disablePadding>
+    <ListItemButton 
+      onClick={toggleDrawer('left', false)} 
+      sx={{ justifyContent: 'flex-end', color: 'white' }}
+    >
+      <ListItemIcon sx={{ color: 'white', minWidth: 'auto', mr: 1 }}>
+        <ChevronLeftIcon />
+      </ListItemIcon>
+      <ListItemText primary="Close Menu" sx={{ textAlign: 'right' }} />
+    </ListItemButton>
+  </ListItem>
             </List>
             <Divider />
         </Box>

@@ -10,7 +10,8 @@ import About from './pages/AboutPage';
 import ErrorPage from './pages/errorPage';
 import LogInPage from './pages/LoginPage';
 import LocationPage from './pages/LocationPage';
-
+import AdminPage from './pages/AdminPage';
+import environment from "./network";
 const router = createBrowserRouter([
     {
         path: '/',
@@ -24,6 +25,7 @@ const router = createBrowserRouter([
             { path: '/location', element: <LocationPage /> },
             { path: '/yougoodbro?', element: <ErrorPage /> },
             { path: '/login?', element: <LogInPage /> },
+            { path: '/admin?', element: <AdminPage />}
         ],
     },
 ]);

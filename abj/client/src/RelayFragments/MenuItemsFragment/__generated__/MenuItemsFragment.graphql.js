@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<df964b50b5a0b78b5bea7366a3efe9d9>>
+ * @generated SignedSource<<7b4fa335bf25f686b4b18e5a25e67b02>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -55,12 +55,49 @@ var node = {
       "kind": "ScalarField",
       "name": "caption",
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "images",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Rating",
+      "kind": "LinkedField",
+      "name": "ratings",
+      "plural": true,
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "RatingFragment"
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "category",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "inStock",
+      "storageKey": null
     }
   ],
   "type": "MenuItems",
   "abstractKey": null
 };
 
-node.hash = "8b6139e24b6f5b94915f53e7454668a1";
+node.hash = "daedd7e74a7ea6f916327d0d8535091e";
 
 module.exports = node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a07e3d4878549cd181961e44e5b9e281>>
+ * @generated SignedSource<<a54b9e90dca127bd5844170e97d2c155>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,41 +26,30 @@ v1 = [
         "variableName": "input"
       }
     ],
-    "concreteType": "LoginPayload",
+    "concreteType": "CreateRestaurantPayload",
     "kind": "LinkedField",
-    "name": "login",
+    "name": "createRestaurant",
     "plural": false,
     "selections": [
       {
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "token",
+        "name": "code",
         "storageKey": null
       },
       {
         "alias": null,
         "args": null,
-        "concreteType": "User",
-        "kind": "LinkedField",
-        "name": "user",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "username",
-            "storageKey": null
-          }
-        ],
+        "kind": "ScalarField",
+        "name": "success",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "message",
         "storageKey": null
       }
     ],
@@ -72,7 +61,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "LoginPageLoginMutation",
+    "name": "mutationsCreateRestaurantMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -81,20 +70,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "LoginPageLoginMutation",
+    "name": "mutationsCreateRestaurantMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "4cfc4f65a0137b5308b3ca03e349bbbd",
+    "cacheID": "8e448aca03962a800a8b0270d2dd94af",
     "id": null,
     "metadata": {},
-    "name": "LoginPageLoginMutation",
+    "name": "mutationsCreateRestaurantMutation",
     "operationKind": "mutation",
-    "text": "mutation LoginPageLoginMutation(\n  $input: LoginInput!\n) {\n  login(input: $input) {\n    token\n    user {\n      id\n      username\n    }\n  }\n}\n"
+    "text": "mutation mutationsCreateRestaurantMutation(\n  $input: CreateRestaurantInput!\n) {\n  createRestaurant(input: $input) {\n    code\n    success\n    message\n  }\n}\n"
   }
 };
 })();
 
-node.hash = "2d86adc9a29939682852f6011b39b1f8";
+node.hash = "3a20cf9f5f948aad6ca2917e0fa94fe1";
 
 module.exports = node;

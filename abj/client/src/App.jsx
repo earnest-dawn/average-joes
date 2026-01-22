@@ -1,18 +1,21 @@
-import environment1 from './network';
+import environment from './network';
 import { Outlet } from 'react-router-dom';
 
 import './App.css';
 import Layout from './components/Layout';
-import React from 'react';
+import  {CircularProgress } from '@mui/material';
+import React, {Suspense} from 'react';
 
 const { RelayEnvironmentProvider } = require('react-relay');
 
 export default function App() {
 
     return (
-        <RelayEnvironmentProvider environment={environment1}>
+        <RelayEnvironmentProvider environment={environment}>
             <Layout>
-                <Outlet />
+                <Suspense fallback={<CircularProgress />}>
+                    <Outlet />
+                </Suspense>
             </Layout>
         </RelayEnvironmentProvider>
     );

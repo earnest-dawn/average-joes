@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { commitMutation } from 'react-relay';
-import environment1 from '../../network'; // Assuming this is your Relay environment setup
+import environment from '../../network'; // Assuming this is your Relay environment setup
 import graphql from 'babel-plugin-relay/macro'; // Keep if you use it for other mutations/queries
 import { useNavigate } from 'react-router-dom'; // Import useNavigate hook for programmatic navigation
 
@@ -61,7 +61,7 @@ function RegistrationForm({ onSwitchToLogin }) { // Accept onSwitchToLogin prop
     const registerInput = createRegisterInput(username, email, password);
 
     // Send the `registerInput` object to your server using the register mutation
-    commitMutation(environment1, {
+    commitMutation(environment, {
       mutation,
       variables: {
         input: registerInput,

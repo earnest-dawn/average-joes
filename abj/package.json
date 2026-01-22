@@ -5,7 +5,7 @@
   "description": "Monorepo for Average Joe's Burger Joint (Tech Matchup App)",
   "main": "server/server.js",
   "scripts": {
-    "dev": "concurrently \"npm run watch --workspace=server\" \"npm run start --workspace=client\"",
+    "dev": "GENERATE_SOURCEMAP=false concurrently \"npm run watch --workspace=server\" \"npm run start --workspace=client\"",
     "install-all": "npm install",
     "seed": "npm run seed --workspace=server",
     "build": "npm run build --workspace=client",
@@ -14,7 +14,8 @@
     "start-server": "npm run start --workspace=server",
     "test-client": "npm test --workspace=client",
     "test-server": "npm test --workspace=server",
-    "relay": "relay-compiler"
+    "relay": "relay-compiler",
+    "compile": "concurrently \"npm run relay\" \"npm run seed --workspace=server\""
   },
   "keywords": [],
   "author": "",
@@ -24,6 +25,7 @@
     "nodemon": "^3.1.10"
   },
   "dependencies": {
+    "@apollo/client": "^4.0.13",
     "@as-integrations/express5": "^1.1.2",
     "@testing-library/react": "^13.4.0",
     "babel-plugin-relay": "^16.0.0",

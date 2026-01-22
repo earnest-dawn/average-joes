@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4e926ad77672cab03bacbd8e11d4fa97>>
+ * @generated SignedSource<<1bc207a400ec8fe092a4eff66770c6d4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,27 +12,38 @@ var node = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "UserFragment",
+  "name": "OrderOnlinePageFragment",
   "selections": [
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "id",
+      "concreteType": "MenuItems",
+      "kind": "LinkedField",
+      "name": "menuItems",
+      "plural": true,
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "MenuItemsFragment"
+        }
+      ],
       "storageKey": null
     },
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "username",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "email",
+      "concreteType": "Rating",
+      "kind": "LinkedField",
+      "name": "ratings",
+      "plural": true,
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "RatingFragment"
+        }
+      ],
       "storageKey": null
     },
     {
@@ -52,10 +63,10 @@ var node = {
       "storageKey": null
     }
   ],
-  "type": "User",
+  "type": "Query",
   "abstractKey": null
 };
 
-node.hash = "94d8ff813a2401eabbd0bd732f57050f";
+node.hash = "a3c6fa703c6e3917f2725bd144ab84ac";
 
 module.exports = node;

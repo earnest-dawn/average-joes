@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import Layout from "../../components/Layout";
+import { graphql } from "babel-plugin-relay/macro";
+import { useLazyLoadQuery } from "react-relay";
+import OrderOnlinePageFragment from "../../RelayFragments/OrderOnlinePageFragment/index.jsx";
 import {
   Box,
   Card,
@@ -9,105 +12,71 @@ import {
   Typography,
   Chip,
   Grid,
-  CircularProgress, 
+  CircularProgress,
   Divider,
   Alert,
 } from "@mui/material";
+import "./OrderOnline.css";
+import {TOGGLE_STOCK_STATUS} from "../../utils/mutations/mutations.js";
+import { useMutation } from "react-relay";
+
+const OrderOnlinePageQuery=graphql`
+  query OrderOnlinePageQuery {
+    menuItems {
+      ...MenuItemsFragment
+}
+      ratings {
+        ...RatingFragment
+      }
+      friends {
+        ...FriendFragment
+      }
+    
+  }`;
 
 export default function OrderOnline() {
-  const [menuItems, setMenuItems] = useState([]);
-  const [combos, setCombos] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchAllData = async () => {
-      try {
-     
-        const menuUrl = new URL("/MenuItemsSeeds.json", window.location.origin)
-          .href;
-        const combosUrl = new URL("/CombosSeeds.json", window.location.origin)
-          .href;
-
-        const [menuResult, combosResult] = await Promise.allSettled([
-          fetch(menuUrl).then(async (res) => {
-            if (!res.ok)
-              throw new Error(
-                `Status ${res.status}: MenuItemsSeeds.json not found.`
-              );
-            return res.json();
-          }),
-          fetch(combosUrl).then(async (res) => {
-            if (!res.ok)
-              throw new Error(
-                `Status ${res.status}: CombosSeeds.json not found.`
-              );
-            return res.json();
-          }),
-        ]);
-
-        let combinedErrorMessage = "";
-
-        // Process Menu Items result
-        if (menuResult.status === "fulfilled") {
-          setMenuItems(menuResult.value);
-        } else {
-          console.error("Menu Items Error:", menuResult.reason.message);
-          combinedErrorMessage += "Menu Items failed to load. ";
-        }
-
-        // Process Combos result
-        if (combosResult.status === "fulfilled") {
-          setCombos(combosResult.value);
-        } else {
-          console.error("Combos Error:", combosResult.reason.message);
-          combinedErrorMessage += "Combos failed to load. ";
-        }
-
-        if (
-          menuResult.status === "rejected" &&
-          combosResult.status === "rejected"
-        ) {
-          setError(
-            "Total Load Failure: Check if symlinks exist in 'client/public'."
-          );
-        } else if (combinedErrorMessage) {
-          setError(combinedErrorMessage);
-        }
-      } catch (err) {
-        console.error("General Error:", err);
-        setError("Unexpected error: " + err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAllData();
-  }, []);
-  if (loading)
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          bgcolor: "#004c4c",
-        }}
-      >
-        <CircularProgress color="inherit" sx={{ color: "white" }} />
-      </Box>
-    );
+  const data = useLazyLoadQuery(OrderOnlinePageQuery, {});
+const [setToggleStock, isToggleStockInFlight] = useMutation(TOGGLE_STOCK_STATUS);
+  const mongoMenu = data?.menuItems || [];
+  // const mongoMenu = data?.menuItems || [];
+  
+  const toggleStockStatus = (id, currentStockStatus) => {
+    // Trigger the mutation on the server
+    setToggleStock({
+      variables: {
+        input: {
+          id: id,
+          inStock: !currentStockStatus,
+        },
+      },
+      optimisticResponse: {
+        toggleStockStatus: {
+          menuItem: {
+            id: id,
+            inStock: !currentStockStatus,
+          },
+          code: 200,
+          success: true,
+          message: "Optimistic Update",
+        },
+      },
+      onCompleted: (response) => {
+        console.log("Stock toggled!");
+      },
+      onError: (err) => console.error(err),
+    });
+  };
+  
   return (
     <div style={{ backgroundColor: "#004c4c" }}>
-      <Layout>
+      
         <Box
-          sx={{ backgroundColor: "#004c4c", minHeight: "100vh", py: 4, px: 2 }}
+          sx={{display: "flow-root", backgroundColor: "#00", minHeight: "100vh", py: 4, px: 2 }}
         >
           <Typography
             variant="h3"
             align="center"
-            sx={{ color: "white", mb: 4, fontWeight: 700 }}
+            sx={{ color: "white", mb: 4, mt: 0, fontWeight: 700 }}
           >
             Elemental Menu
           </Typography>
@@ -120,9 +89,9 @@ export default function OrderOnline() {
               justifyContent: "center",
             }}
           >
-            {menuItems.map((item) => (
+            {mongoMenu.map((item) => (
               <Card
-                key={item._id}
+                key={item.id}
                 sx={{
                   width: "320px",
                   display: "flex",
@@ -163,9 +132,17 @@ export default function OrderOnline() {
 
                     <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
                       <Chip
-                        label={item.ingredients}
+                        onClick={() => toggleStockStatus(item.id, item.inStock)}
+                        label={`${item.inStock ? "Available" : "Out of Stock"}`}
                         size="small"
                         variant="outlined"
+                        key={item.id}
+                        item={item}
+                        onToggle={toggleStockStatus}
+                        className={[
+                          item.inStock ? "in-stock" : "out-of-stock",
+                          "toggleStock",
+                        ].join(" ")}
                       />
                       <Chip
                         label={`${item.calories} Cal`}
@@ -182,13 +159,19 @@ export default function OrderOnline() {
                     >
                       Powerful essence with a caption score of {item.caption}.
                     </Typography>
+                    <Typography
+                      variant="body3"
+                      color="text.secondary"
+                      sx={{ fontStyle: "italic" }}
+                    >
+                      Contains: {item.ingredients}.
+                    </Typography>
                   </CardContent>
                 </CardActionArea>
               </Card>
             ))}
           </Box>
         </Box>
-      </Layout>
     </div>
   );
 }

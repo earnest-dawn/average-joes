@@ -18,6 +18,13 @@ const combosSchema = new Schema({
     },
 });
 
+combosSchema.virtual('ratings', {
+  ref: 'Rating',
+  localField: '_id',
+  foreignField: 'menuItem'
+});
+combosSchema.set("toObject", { virtuals: true });
+combosSchema.set("toJSON", { virtuals: true });
 const Combos = model('Combos', combosSchema);
 
 module.exports = Combos;

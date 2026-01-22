@@ -1,199 +1,358 @@
 schema {
-    query: Query
-    mutation: Mutation
+  query: Query
+  mutation: Mutation
 }
 
 interface Node {
-    id: ID!
+  id: ID!
 }
 
 interface MutationResponse {
-    code: String!
-    success: Boolean!
-    message: String!
+  code: String!
+  success: Boolean!
+  message: String!
 }
 
 type MenuItems implements Node {
-    id: ID!
-    name: String!
-    ingredients: String!
-    calories: Int
-    price: Int!
-    caption: String!
+  id: ID!
+  name: String!
+  ingredients: String!
+  calories: Int
+  price: Float!
+  caption: String!
+  ratings: [Rating]
+  category: String!
+  images: [String]
+  inStock: Boolean!
 }
 
 type Friend implements Node {
-    id: ID!
-    username: String!
+  id: ID!
+  username: String!
 }
 
 type Combos implements Node {
-    id: ID!
-    title: String!
-    menuItems: [MenuItems]
-    price: Int
+  id: ID!
+  title: String!
+  menuItems: [MenuItems]
+  price: Float!
 }
 
 type User implements Node {
-    id: ID!
-    username: String!
-    password: String!
-    email: String!
-    friends: [Friend]
+  id: ID!
+  username: String!
+  password: String!
+  email: String!
+  friends: [Friend]
 }
+
+type Rating implements Node {
+  id: ID
+  emoji: String
+  ratingText: String
+  user: User
+  createdAt: String
+  images: [String]
+  menuItem: MenuItems
+  ratedId: RatedObject
+}
+
+union RatedObject = MenuItems | Combos
 
 type Auth {
-    token: ID!
-    user: User
+  token: ID!
+  user: User
 }
 
-type Query {
-    node(id: ID!): Node
-    me: User
-    menuItems: [MenuItems]
-    users: [User]
-    combos: [Combos]
+input CreateRatingInput {
+  ratedId: ID!
+  emoji: String!
+  ratingText: String
+  images: [String]
+  clientMutationId: String
 }
 
+type CreateRatingPayload implements MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+  rating: Rating
 
+  clientMutationId: String
+}
+input DeleteRatingInput {
+  id: ID!
+  name: String!
+  clientMutationId: String
+}
+
+type DeleteRatingPayload implements MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+  rating: Rating
+  clientMutationId: String
+}
 
 input RegisterInput {
-    username: String!
-    password: String!
-    email: String!
-    clientMutationId: String
+  username: String!
+  password: String!
+  email: String!
+  clientMutationId: String
 }
 
 type RegisterPayload implements MutationResponse {
-    code: String!
-    success: Boolean!
-    message: String!
-    token: ID
-    user: User
-    clientMutationId: String
+  code: String!
+  success: Boolean!
+  message: String!
+  token: ID
+  user: User
+  clientMutationId: String
 }
 
 input LoginInput {
-    username: String!
-    password: String!
-    clientMutationId: String
+  username: String!
+  password: String!
+  clientMutationId: String
 }
 
 type LoginPayload implements MutationResponse {
-    code: String!
-    success: Boolean!
-    message: String!
-    token: ID
-    user: User
-    clientMutationId: String
+  code: String!
+  success: Boolean!
+  message: String!
+  token: ID
+  user: User
+  clientMutationId: String
 }
 
 input CreateCombosInput {
-    title: String!
-    menuItems: [ID]!
-    price: Int!
-    clientMutationId: String
+  title: String!
+  menuItems: [ID]!
+  price: Float!
+  clientMutationId: String
 }
 
 type CreateCombosPayload implements MutationResponse {
-    code: String!
-    success: Boolean!
-    message: String!
-    combos: Combos
-    clientMutationId: String
+  code: String!
+  success: Boolean!
+  message: String!
+  combos: Combos
+  clientMutationId: String
 }
 
 input DeleteCombosInput {
-    title: String!
-    clientMutationId: String
+  title: String!
+  clientMutationId: String
 }
 
 type DeleteCombosPayload implements MutationResponse {
-    code: String!
-    success: Boolean!
-    message: String!
-    combos: Combos
-    clientMutationId: String
+  code: String!
+  success: Boolean!
+  message: String!
+  combos: Combos
+  clientMutationId: String
 }
 
 input AddToCombosInput {
-    message: String
-    title: String!
-    menuItems: ID!
-    clientMutationId: String
+  message: String
+  title: String!
+  menuItems: ID!
+  clientMutationId: String
 }
 
 type AddToCombosPayload implements MutationResponse {
-    code: String!
-    success: Boolean!
-    message: String!
-    combos: Combos
-    clientMutationId: String
+  code: String!
+  success: Boolean!
+  message: String!
+  combos: Combos
+  clientMutationId: String
 }
 
 input RemoveFromCombosInput {
-    title: String!
-    menuItems: ID!
-    clientMutationId: String
+  title: String!
+  menuItems: ID!
+  clientMutationId: String
 }
 
 type RemoveFromCombosPayload implements MutationResponse {
-    code: String!
-    success: Boolean!
-    message: String!
-    combos: Combos
-    clientMutationId: String
+  code: String!
+  success: Boolean!
+  message: String!
+  combos: Combos
+  clientMutationId: String
 }
-  input CreateMenuItemInput {
-    title: String!
-    menuItems: [ID]!
-    price: Int!
-    clientMutationId: String
-  }
+input CreateMenuItemInput {
+  name: String!
+  ingredients: String!
+  calories: Int
+  price: Float!
+  category: String!
+  clientMutationId: String
+}
 
-  type CreateMenuItemPayload implements MutationResponse  {
-    code: String!
-    success: Boolean!
-    message: String!
-    menuItem: MenuItems
-    clientMutationId: String
-  }
+type CreateMenuItemPayload implements MutationResponse {
+  input: CreateMenuItemInput
+  code: String!
+  success: Boolean!
+  message: String!
+  menuItem: MenuItems
+  clientMutationId: String
+}
 
-  input DeleteMenuItemInput {
-    name: String!
-    clientMutationId: String
-  }
+input DeleteMenuItemInput {
+  name: String!
+  clientMutationId: String
+}
 
-  type DeleteMenuItemPayload implements MutationResponse  {
-    code: String!
-    success: Boolean!
-    message: String!
-    menuItem: MenuItems
-    clientMutationId: String
-  }
+type DeleteMenuItemPayload implements MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+  menuItem: MenuItems
+  clientMutationId: String
+}
 
-  input AddMenuItemInput {
-    comboId: ID!
-    name: String!
-    clientMutationId: String
-  }
+input AddMenuItemInput {
+  comboId: ID!
+  name: String!
+  clientMutationId: String
+}
 
-  type AddMenuItemPayload implements MutationResponse  {
-    code: String!
-    success: Boolean!
-    message: String!
-    menuItem: MenuItems
-    clientMutationId: String
-  }
+type AddMenuItemPayload implements MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+  menuItem: MenuItems
+  clientMutationId: String
+}
+input ToggleStockStatusInput {
+  inStock: Boolean!
+  clientMutationId: String
+}
+
+type Restaurant implements Node {
+  id: ID!
+  name: String!
+  menuItems: [MenuItems]
+  combos: [Combos]
+  ratings: [Rating]
+  category: String!
+  location: String!
+  contactInfo: String!
+  images: [String]
+  hours: String
+}
+
+input CreateRestaurantInput {
+  name: String!
+  menuItems: [ID]
+  combos: [ID]
+  category: String!
+  location: String!
+  contactInfo: String!
+  images: [String]
+    hours: String
+  clientMutationId: String
+}
+type CreateRestaurantPayload {
+  code: String!
+  success: Boolean!
+  message: String!
+  restaurant: Restaurant
+}
+input DeleteRestaurantInput {
+  id: ID!
+  name: String!
+  clientMutationId: String
+}
+
+type DeleteRestaurantPayload {
+  code: String!
+  success: Boolean!
+  message: String!
+  restaurant: Restaurant
+  clientMutationId: String
+}
+
+input AddRestaurantInput {
+  name: String!
+  menuItems: [ID]
+  combos: [ID]
+  ratings: [ID]
+  category: String!
+  location: String!
+  contactInfo: String!
+  images: [String]
+    hours: String
+
+  clientMutationId: String
+}
+
+type AddRestaurantPayload {
+  code: String!
+  success: Boolean!
+  message: String!
+  restaurant: Restaurant
+  clientMutationId: String
+}
+
+input EditRestaurantInput {
+  id: ID!
+  name: String
+  menuItems: [ID]
+  combos: [ID]
+  ratings: [ID]
+  category: String
+  location: String
+  contactInfo: String
+  images: [String]
+    hours: String
+
+  clientMutationId: String
+}
+
+type EditRestaurantPayload {
+  code: String!
+  success: Boolean!
+  message: String!
+  restaurant: Restaurant
+  clientMutationId: String
+}
+
+type ToggleStockStatusPayload implements MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+  menuItem: MenuItems
+  clientMutationId: String
+}
+
+type Query {
+  node(id: ID!): Node
+  me: User
+  menuItems: [MenuItems]
+  users: [User]
+  combos: [Combos]
+  ratings: [Rating]
+  restaurants: [Restaurant]
+  friends: [Friend]
+}
+
 type Mutation {
-    register(input: RegisterInput!): RegisterPayload
-    login(input: LoginInput!): LoginPayload
-    createCombos(input: CreateCombosInput!): CreateCombosPayload
-    deleteCombos(input: DeleteCombosInput!): DeleteCombosPayload
-    addToCombos(input: AddToCombosInput!): AddToCombosPayload
-    removeFromCombos(input: RemoveFromCombosInput!): RemoveFromCombosPayload
-    createMenuItems(input: CreateMenuItemInput!): CreateMenuItemPayload
-    deleteMenuItems(input: DeleteMenuItemInput!): DeleteMenuItemPayload
-    addMenuItems(input: AddMenuItemInput!): AddMenuItemPayload
-  
+  register(input: RegisterInput!): RegisterPayload
+  login(input: LoginInput!): LoginPayload
+  createCombos(input: CreateCombosInput!): CreateCombosPayload
+  deleteCombos(input: DeleteCombosInput!): DeleteCombosPayload
+  addToCombos(input: AddToCombosInput!): AddToCombosPayload
+  removeFromCombos(input: RemoveFromCombosInput!): RemoveFromCombosPayload
+  createMenuItems(input: CreateMenuItemInput!): CreateMenuItemPayload
+  deleteMenuItems(input: DeleteMenuItemInput!): DeleteMenuItemPayload
+  addMenuItems(input: AddMenuItemInput!): AddMenuItemPayload
+  createRating(input: CreateRatingInput!): CreateRatingPayload
+  deleteRating(input: DeleteRatingInput!): DeleteRatingPayload
+  toggleStockStatus(input: ToggleStockStatusInput!): ToggleStockStatusPayload
+  createRestaurant(input: CreateRestaurantInput!): CreateRestaurantPayload
+  editRestaurant(input: EditRestaurantInput!): EditRestaurantPayload
+  deleteRestaurant(input: DeleteRestaurantInput!): DeleteRestaurantPayload
+  addRestaurant(input: AddRestaurantInput!): AddRestaurantPayload
 }
