@@ -15,12 +15,12 @@ import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
 import averageLogo from '../../../assets/images/averageLogo.png';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
-export default function TemporaryDrawer({ state = { left: false }, setState, toggleDrawer }) {
+export default function TemporaryDrawer({ state = { left: false }, toggleDrawer }) {
     const MENU_ITEMS = [
   { text: 'Home', icon: <HomeIcon />, path: '/' },
   { text: 'Admin', icon: <WorkOutlineIcon />, path: '/admin' },
   { text: 'Contact', icon: <ContactsIcon />, path: '/contact' },
-  { text: 'Order Online', icon: <FastfoodIcon />, path: '/order online' },
+  { text: 'Order Online', icon: <FastfoodIcon />, path: '/orderOnline' },
 ];
 const list = (anchor) => (
         <Box

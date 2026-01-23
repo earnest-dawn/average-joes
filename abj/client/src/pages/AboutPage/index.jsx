@@ -146,8 +146,6 @@ export default function About() {
                             </Paper>
                         </Box>
 
-                        {/* This is the only line changed to fix whitespace */}
-                        <ContactPage sx={{ mt: 0, ml: { xs: 0, md: 10 } }} />
                     </Paper>
                 </Box>
 

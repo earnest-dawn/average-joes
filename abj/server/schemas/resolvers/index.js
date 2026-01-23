@@ -27,9 +27,23 @@ const resolvers = {
       throw new AuthenticationError("You need to be logged in!");
     },
 
-    menuItems: async (parent, args) => {
-      return await MenuItems.find({});
-    },
+    menuItems: async () => {
+  const items = await MenuItems.find();
+  return items.map(item => {
+    return {
+      id: item._id.toString(), // Explicit
+      name: item.name || "Unnamed Item", 
+      ingredients: item.ingredients || "",
+      calories: item.calories || 0,
+      price: item.price || 0,
+      caption: item.caption || "",
+      category: item.category || "entree",
+      inStock: item.inStock ?? true, // Use ?? to handle boolean false
+    };
+  });
+},
+
+
     combos: async () => {
       return Combos.find({}).populate("menuItems");
     },
@@ -53,12 +67,11 @@ const resolvers = {
         menuItem.inStock = !menuItem.inStock;
         await menuItem.save();
         return {
-      code: 200,
-      success: true,
-      message: "Stock status updated!",
-      menuItem: menuItem // This allows Relay to see the change
-    };
-  
+          code: 200,
+          success: true,
+          message: "Stock status updated!",
+          menuItem: menuItem, // This allows Relay to see the change
+        };
       }
       throw new AuthenticationError(
         "You need to be logged in to toggle stock status!",
@@ -150,8 +163,13 @@ const resolvers = {
         });
 
         return {
-          menuItem: newMenuItem,
-          input: input,
+          menuItem: {
+            ...newMenuItem._doc,
+            id: newMenuItem._id.toString(),
+          },
+          code: "201",
+          success: true,
+          message: "Menu item created successfully!",
         };
       } catch (err) {
         console.error(err);
@@ -233,7 +251,7 @@ const resolvers = {
           code: 200,
           success: true,
           message: "Rating created!",
-          rating: savedRating, 
+          rating: savedRating,
         };
       }
       throw new AuthenticationError(
@@ -294,7 +312,9 @@ const resolvers = {
     },
     deleteRestaurant: async (parent, { input }, context) => {
       if (!context.user) {
-        throw new AuthenticationError("You must be logged in to delete Restaurants!");
+        throw new AuthenticationError(
+          "You must be logged in to delete Restaurants!",
+        );
       }
 
       // Extract the name from the input object
@@ -360,7 +380,6 @@ const resolvers = {
       return null;
     },
   },
-  
 };
 
 module.exports = resolvers;

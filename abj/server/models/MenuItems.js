@@ -34,6 +34,7 @@ const menuItemSchema = new Schema({
     type: String,
   },  
   status: { type: String, default: "pending" },
+
 });
 
 menuItemSchema.virtual('ratings', {
@@ -43,7 +44,9 @@ menuItemSchema.virtual('ratings', {
 });
 menuItemSchema.set("toObject", { virtuals: true });
 menuItemSchema.set("toJSON", { virtuals: true });
-
+menuItemSchema.virtual('id').get(function() {
+  return this._id.toHexString();
+});
 const MenuItems = model(`MenuItems`, menuItemSchema);
 
 module.exports = MenuItems;

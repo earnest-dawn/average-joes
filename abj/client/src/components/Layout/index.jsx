@@ -4,6 +4,7 @@ import Header from '../Navbar';
 import SearchAppBar from '../inputs/NavbarInputs/NavbarInput';
 import AuthService from '../../utils/auth';
 import Navbar from '../Navbar';
+import './Layout.css';
 const Layout = ({ children }) => {
     if (AuthService.loggedIn()) {
         return (

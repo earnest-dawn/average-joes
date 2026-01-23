@@ -23,23 +23,29 @@ import { useMutation } from "react-relay";
 const OrderOnlinePageQuery=graphql`
   query OrderOnlinePageQuery {
     menuItems {
+      id
+      name
+      ingredients
+      calories
+      price
+      caption
+      images
+      category
+      inStock
       ...MenuItemsFragment
 }
-      ratings {
-        ...RatingFragment
-      }
-      friends {
-        ...FriendFragment
-      }
+     
     
   }`;
 
 export default function OrderOnline() {
   const data = useLazyLoadQuery(OrderOnlinePageQuery, {});
 const [setToggleStock, isToggleStockInFlight] = useMutation(TOGGLE_STOCK_STATUS);
-  const mongoMenu = data?.menuItems || [];
-  // const mongoMenu = data?.menuItems || [];
-  
+const mongoMenu = (data?.menuItems || []).filter(item => item !== null);  // const mongoMenu = data?.menuItems || [];
+  useEffect(() => {
+    console.log("Raw data from MongoDB:", data);
+    console.log("Menu Items Array:", mongoMenu);
+  }, [data, mongoMenu]);
   const toggleStockStatus = (id, currentStockStatus) => {
     // Trigger the mutation on the server
     setToggleStock({
@@ -89,7 +95,7 @@ const [setToggleStock, isToggleStockInFlight] = useMutation(TOGGLE_STOCK_STATUS)
               justifyContent: "center",
             }}
           >
-            {mongoMenu.map((item) => (
+            {mongoMenu.filter(item => item !== null).map((item) => (
               <Card
                 key={item.id}
                 sx={{

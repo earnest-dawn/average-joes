@@ -18,17 +18,10 @@ import {
 export default function ContactPage() {
     return (
         <div>
+                
                 <Box
                     sx={{
-                        my: 5,
-                        ml: 10,
-                        '& h4': { fontWeight: 'bold', mb: 2 },
-                    }}
-                >
-                </Box>
-                <Box
-                    sx={{
-                        m: 3,
+                        m: 0,
                         width: '600px',
                         ml: 10,
                         '@media (max-width:600px)': {

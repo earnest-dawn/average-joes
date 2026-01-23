@@ -1,5 +1,5 @@
 /**
- * @RelayResolver Query.node(id: ID!): Node
+ * @RelayResolver Query.node(id: ID): Node
  */
 function node(parent, args, context) {
     const { id } = args;

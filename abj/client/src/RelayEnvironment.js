@@ -1,20 +1,22 @@
 // RelayEnvironment.js
 import { Environment, Network, RecordSource, Store } from 'relay-runtime';
 import AuthService from './utils/auth';
-function fetchQuery(operation, variables) {
-  const token = AuthService.getToken();
 
-  return fetch('http://localhost:3001/graphql', {
+async function fetchQuery(operation, variables) {
+    const token = AuthService.getToken();
+    const response = await fetch('/graphql', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': token ? `Bearer ${token}` : '', 
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       query: operation.text,
       variables,
     }),
-  }).then(response => response.json());
+  });
+
+  const json = await response.json();
+
+ 
+  return json; 
 }
 
 const environment = new Environment({

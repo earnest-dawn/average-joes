@@ -10,7 +10,10 @@ import About from './pages/AboutPage';
 import ErrorPage from './pages/errorPage';
 import LogInPage from './pages/LoginPage';
 import LocationPage from './pages/LocationPage';
-import AdminPage from './pages/AdminPage';
+import AdminPage from './pages/AdminPages/AdminHomePage';
+import ManageMenuPage  from './pages/AdminPages/ManageMenuPage';
+import ManageCombosPage from './pages/AdminPages/ManageCombosPage ';
+import ManageRestaurantsPage from './pages/AdminPages/ManageRestaurantsPage';
 import environment from "./network";
 const router = createBrowserRouter([
     {
@@ -24,6 +27,9 @@ const router = createBrowserRouter([
             { path: '/about', element: <About /> },
             { path: '/location', element: <LocationPage /> },
             { path: '/yougoodbro?', element: <ErrorPage /> },
+            { path: '/manageMenu', element: <ManageMenuPage /> },
+            { path: '/manageCombos', element: <ManageCombosPage /> },
+            { path: '/manageRestaurants', element: <ManageRestaurantsPage /> },
             { path: '/login?', element: <LogInPage /> },
             { path: '/admin?', element: <AdminPage />}
         ],

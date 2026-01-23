@@ -1,0 +1,19 @@
+@import '../../../App.css';
+
+
+
+.aboutCaptions {
+    line-height: 1.7; /* Improve readability */
+    max-width: 800px; /* Limit text width for readability */
+    margin: 24px auto 0 auto; /* Top margin, auto horizontal margin to center */
+    text-align: justify; /* Justify text for paragraphs */
+    padding: 0 16px; /* Horizontal padding for paragraph */
+}
+
+.aboutHeadings {
+    max-width: 800px; /* Limit text width for readability */
+    margin: 24px auto 0 auto; /* Top margin, auto horizontal margin to center */
+    text-align: center; /* Justify text for paragraphs */
+    padding: 0 16px; /* Horizontal padding for paragraph */
+    color: --col6;
+}

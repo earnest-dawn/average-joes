@@ -1,9 +1,9 @@
 const typeDefs = `
   interface Node {
-  id: ID!
+  id: ID
 }
   type MenuItems implements Node {
-    id: ID!
+    id: ID
     name: String!
     ingredients: String!
     calories: Int
@@ -18,7 +18,7 @@ const typeDefs = `
   union RatedObject = MenuItems | Combos
   
   type Rating  implements Node {
-    id: ID!
+    id: ID
     emoji: String
     ratingText: String
     user: User
@@ -28,19 +28,19 @@ const typeDefs = `
   }
     
   type Friend implements Node  {
-    id: ID!
+    id: ID
     username: String!
   }
 
   type Combos implements Node  {
-    id: ID!
+    id: ID
     title: String!
     menuItems: [MenuItems]
     price: Float!
   }
 
   type User implements Node  {
-    id: ID!
+    id: ID
     username: String!
     password: String!
     email: String!
@@ -48,12 +48,12 @@ const typeDefs = `
   }
 
   type AuthPayload {
-    token: ID!
+    token: ID
     user: User
   }
 
   input CreateRatingInput {
-    ratedId: ID!
+    ratedId: ID
     onModel: String!
     emoji: String!
     ratingText: String
@@ -70,7 +70,7 @@ const typeDefs = `
   }
 
   input DeleteRatingInput {
-    id: ID!
+    id: ID
     name: String!
     clientMutationId: String
   }
@@ -130,7 +130,7 @@ const typeDefs = `
   }
 
   input DeleteComboInput {
-    id: ID!
+    id: ID
     name: String!
     clientMutationId: String
   }
@@ -144,8 +144,8 @@ const typeDefs = `
   }
 
   input AddToComboInput {
-    comboId: ID!
-    menuItemId: ID!
+    comboId: ID
+    menuItemId: ID
     clientMutationId: String
   }
 
@@ -158,8 +158,8 @@ const typeDefs = `
   }
 
   input RemoveFromComboInput {
-    comboId: ID!
-    menuItemId: ID!
+    comboId: ID
+    menuItemId: ID
     clientMutationId: String
   }
 
@@ -182,11 +182,10 @@ const typeDefs = `
   }
 
   type CreateMenuItemPayload {
-    input: ID!
+    menuItem: MenuItems
     code: String!
     success: Boolean!
     message: String!
-    menuItem: MenuItems
     clientMutationId: String
   }
 
@@ -204,7 +203,7 @@ const typeDefs = `
   }
 
   input AddMenuItemInput {
-    comboId: ID!
+    comboId: ID
     name: String!
     clientMutationId: String
   }
@@ -218,7 +217,7 @@ const typeDefs = `
   }
 
 type Restaurant implements Node {
-    id: ID!
+    id: ID
     name:  String!
     menuItems: [MenuItems]
     combos: [Combos]
@@ -247,7 +246,7 @@ type Restaurant implements Node {
     restaurant: Restaurant
   }
     input DeleteRestaurantInput {
-    id: ID!
+    id: ID
     name: String!
     clientMutationId: String
   }
@@ -283,7 +282,7 @@ type Restaurant implements Node {
   }
 
   input EditRestaurantInput {
-    id: ID!
+    id: ID
     name: String
     menuItems: [ID]
     combos: [ID]
@@ -307,7 +306,7 @@ type Restaurant implements Node {
 
   input ToggleStockStatusInput {
     inStock: Boolean!
-    id: ID!
+    id: ID
     clientMutationId: String
   }
 
