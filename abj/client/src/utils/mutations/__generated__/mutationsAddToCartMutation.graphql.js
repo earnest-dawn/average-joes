@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<17e3e45fb82acb75456d3806bf622ba0>>
+ * @generated SignedSource<<ff0b71949118b28f78dd5fae404bf362>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,9 +26,9 @@ v1 = [
         "variableName": "input"
       }
     ],
-    "concreteType": "AddMenuItemPayload",
+    "concreteType": "AddToCartPayload",
     "kind": "LinkedField",
-    "name": "addMenuItems",
+    "name": "addToCart",
     "plural": false,
     "selections": [
       {
@@ -61,7 +61,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "mutationsAddMenuItemMutation",
+    "name": "mutationsAddToCartMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -70,20 +70,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "mutationsAddMenuItemMutation",
+    "name": "mutationsAddToCartMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "5e64841ba55f68b096a3363acb62f6fb",
+    "cacheID": "642eb34c596c4ce1e6c4f5f74ce68057",
     "id": null,
     "metadata": {},
-    "name": "mutationsAddMenuItemMutation",
+    "name": "mutationsAddToCartMutation",
     "operationKind": "mutation",
-    "text": "mutation mutationsAddMenuItemMutation(\n  $input: AddMenuItemInput!\n) {\n  addMenuItems(input: $input) {\n    code\n    success\n    message\n  }\n}\n"
+    "text": "mutation mutationsAddToCartMutation(\n  $input: AddToCartInput!\n) {\n  addToCart(input: $input) {\n    code\n    success\n    message\n  }\n}\n"
   }
 };
 })();
 
-node.hash = "76e1a568204bb25a57d0c21fd3be6447";
+node.hash = "c2332cd09368095d9144073f79454507";
 
 module.exports = node;

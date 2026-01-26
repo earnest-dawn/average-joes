@@ -15,7 +15,9 @@
     "test-client": "npm test --workspace=client",
     "test-server": "npm test --workspace=server",
     "relay": "relay-compiler",
-    "compile": "concurrently \"npm run relay\" \"npm run seed --workspace=server\""
+    "compile": "concurrently \"npm run relay\" \"npm run seed --workspace=server\"",
+    "clean-build": "rimraf client/build server/dist",
+    "relay-fresh": "rimraf \"client/src/**/__generated__\" && npm run relay"
   },
   "keywords": [],
   "author": "",

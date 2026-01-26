@@ -33,6 +33,7 @@ type Friend implements Node {
 
 type Combos implements Node {
   id: ID
+  ratings: [Rating]
   title: String!
   menuItems: [MenuItems]
   price: Float!
@@ -44,6 +45,7 @@ type User implements Node {
   password: String!
   email: String!
   friends: [Friend]
+  cart: Cart
 }
 
 type Rating implements Node {
@@ -153,14 +155,14 @@ type DeleteCombosPayload implements MutationResponse {
   clientMutationId: String
 }
 
-input AddToCombosInput {
+input EditCombosInput {
   message: String
   title: String!
   menuItems: ID
   clientMutationId: String
 }
 
-type AddToCombosPayload implements MutationResponse {
+type EditCombosPayload implements MutationResponse {
   code: String!
   success: Boolean!
   message: String!
@@ -213,13 +215,13 @@ type DeleteMenuItemPayload implements MutationResponse {
   clientMutationId: String
 }
 
-input AddMenuItemInput {
+input EditMenuItemInput {
   comboId: ID
   name: String!
   clientMutationId: String
 }
 
-type AddMenuItemPayload implements MutationResponse {
+type EditMenuItemPayload implements MutationResponse {
   code: String!
   success: Boolean!
   message: String!
@@ -252,7 +254,7 @@ input CreateRestaurantInput {
   location: String!
   contactInfo: String!
   images: [String]
-    hours: String
+  hours: String
   clientMutationId: String
 }
 type CreateRestaurantPayload {
@@ -284,7 +286,7 @@ input AddRestaurantInput {
   location: String!
   contactInfo: String!
   images: [String]
-    hours: String
+  hours: String
 
   clientMutationId: String
 }
@@ -307,7 +309,7 @@ input EditRestaurantInput {
   location: String
   contactInfo: String
   images: [String]
-    hours: String
+  hours: String
 
   clientMutationId: String
 }
@@ -328,6 +330,43 @@ type ToggleStockStatusPayload implements MutationResponse {
   clientMutationId: String
 }
 
+type CartItem implements Node {
+  id: ID
+  menuItem: MenuItems
+  combo: Combos
+  quantity: Int
+}
+
+type Cart implements Node {
+  id: ID
+  items: [CartItem]
+  totalPrice: Float
+}
+input AddToCartInput {
+  id: ID!
+
+  clientMutationId: String
+}
+type AddToCartPayload implements MutationResponse {
+  input: AddToCartInput
+  code: String!
+  success: Boolean!
+  message: String!
+  clientMutationId: String
+}
+
+input RemoveFromCartInput {
+  id: [ID]
+  clientMutationId: String
+}
+type RemoveFromCartPayload implements MutationResponse {
+  input: RemoveFromCartInput
+  code: String!
+  success: Boolean!
+  message: String!
+  clientMutationId: String
+}
+
 type Query {
   node(id: ID): Node
   me: User
@@ -337,6 +376,7 @@ type Query {
   ratings: [Rating]
   restaurants: [Restaurant]
   friends: [Friend]
+  cart: Cart
 }
 
 type Mutation {
@@ -344,11 +384,10 @@ type Mutation {
   login(input: LoginInput!): LoginPayload
   createCombos(input: CreateCombosInput!): CreateCombosPayload
   deleteCombos(input: DeleteCombosInput!): DeleteCombosPayload
-  addToCombos(input: AddToCombosInput!): AddToCombosPayload
-  removeFromCombos(input: RemoveFromCombosInput!): RemoveFromCombosPayload
+  editCombos(input: EditCombosInput!): EditCombosPayload
   createMenuItems(input: CreateMenuItemInput!): CreateMenuItemPayload
   deleteMenuItems(input: DeleteMenuItemInput!): DeleteMenuItemPayload
-  addMenuItems(input: AddMenuItemInput!): AddMenuItemPayload
+  editMenuItems(input: EditMenuItemInput!): EditMenuItemPayload
   createRating(input: CreateRatingInput!): CreateRatingPayload
   deleteRating(input: DeleteRatingInput!): DeleteRatingPayload
   toggleStockStatus(input: ToggleStockStatusInput!): ToggleStockStatusPayload
@@ -356,4 +395,6 @@ type Mutation {
   editRestaurant(input: EditRestaurantInput!): EditRestaurantPayload
   deleteRestaurant(input: DeleteRestaurantInput!): DeleteRestaurantPayload
   addRestaurant(input: AddRestaurantInput!): AddRestaurantPayload
+  addToCart(input: AddToCartInput!): AddToCartPayload
+  removeFromCart(input: RemoveFromCartInput!): RemoveFromCartPayload
 }

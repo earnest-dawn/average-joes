@@ -1,4 +1,5 @@
 const { MenuItems, User, Combos, Rating, Restaurant } = require("../../models");
+const Cart = require("../../models/Cart");
 const { create } = require("../../models/MenuItems");
 const { signToken } = require("../../utils/auth");
 const bcrypt = require("bcrypt");
@@ -109,7 +110,7 @@ const resolvers = {
         "You need to be logged in to delete combos!",
       );
     },
-    addToCombos: async (parent, args, context) => {
+    editCombos: async (parent, args, context) => {
       if (context.user) {
         const updatedCombos = await Combos.findByIdAndUpdate(
           args.CombosId,
@@ -200,7 +201,7 @@ const resolvers = {
         menuItem: deletedItem,
       };
     },
-    addMenuItems: async (parent, args, context) => {
+    editMenuItems: async (parent, args, context) => {
       if (context.user) {
         const updatedMenuItems = await MenuItems.findByIdAndUpdate(
           args.MenuItemsId,
@@ -353,6 +354,65 @@ const resolvers = {
         "You need to be logged in to add a restaurant!",
       );
     },
+    addToCart: async (_, { input }, context) => {
+      const { itemId, itemType } = input;
+      if (!context.user) {
+        throw new Error("You must be logged in!");
+      }
+
+      const user = await User.findById(context.user._id);
+      
+      const existingItemIndex = user.cart.items.findIndex(item => {
+        const idToCompare = itemType === 'MenuItem' ? item.menuItem : item.combo;
+        return idToCompare?.toString() === itemId;
+      });
+
+      if (existingItemIndex > -1) {
+        // SCENARIO A: Item exists, increment quantity
+        user.cart.items[existingItemIndex].quantity += 1;
+      } else {
+        // SCENARIO B: Item is new, push to array
+        const newItem = {
+          quantity: 1,
+          [itemType === 'MenuItem' ? 'menuItem' : 'combo']: itemId
+        };
+        user.cart.items.push(newItem);
+      }
+
+      await user.populate('cart.items.menuItem cart.items.combo');
+      
+      user.cart.totalPrice = user.cart.items.reduce((total, item) => {
+        const price = itemType === 'MenuItem' ? item.menuItem.price : item.combo.price;
+        return total + (price * item.quantity);
+      }, 0);
+
+      await user.save();
+      return user;
+    },
+  removeFromCart: {
+    cart: async (parent, {input}, context) => {
+      if (!context.user) {
+        throw new AuthenticationError("You must be logged in to delete items!");
+      }
+            const { name } = input;
+
+        const deletedItem = await Cart.findOneAndDelete({ name });
+
+      if (!deletedItem) {
+        return {
+          code: "404",
+          success: false,
+          message: "Item not found",
+        };
+      }
+      return {
+        code: "200",
+        success: true,
+        message: "Successfully deleted",
+        menuItem: deletedItem,
+      };
+  }
+}
   },
   Rating: {
     ratedId: async (parent) => {
@@ -371,6 +431,7 @@ const resolvers = {
       return await SelectedModel.findById(parent.ratedId);
     },
   },
+ 
   RatedObject: {
     __resolveType(obj) {
       // Check for specific fields to identify the type

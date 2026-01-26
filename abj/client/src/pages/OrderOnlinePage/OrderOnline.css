@@ -7,3 +7,25 @@
     background-color: #f0c0c0;
     color: #c62828;
 }
+
+.inStock {
+    width: "320px";
+    display: "flex";
+    flex-direction: "column";
+    border-radius: 3;
+    transition: "transform 0.2s";
+    border: 10px solid var(--col5);
+}
+
+.orderOnlinePageMenu {
+    width: "320px";
+    display: "flex";
+    flex-direction: "column";
+    border-radius: 3;
+    transition: "transform 0.2s";
+}
+.outOfStock {
+    
+    border: 10px solid var(--col2);
+}
+

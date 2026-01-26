@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Layout from "../../components/Layout";
 import { graphql } from "babel-plugin-relay/macro";
 import { useLazyLoadQuery } from "react-relay";
-import OrderOnlinePageFragment from "../../RelayFragments/OrderOnlinePageFragment/index.jsx";
+import { ADD_TO_CART } from "../../utils/mutations/mutations.js";
 import {
   Box,
   Card,
@@ -14,7 +14,7 @@ import {
   Grid,
   CircularProgress,
   Divider,
-  Alert,
+  Alert, Button, Paper
 } from "@mui/material";
 import "./OrderOnline.css";
 import {TOGGLE_STOCK_STATUS} from "../../utils/mutations/mutations.js";
@@ -38,16 +38,34 @@ const OrderOnlinePageQuery=graphql`
     
   }`;
 
+
+
 export default function OrderOnline() {
   const data = useLazyLoadQuery(OrderOnlinePageQuery, {});
 const [setToggleStock, isToggleStockInFlight] = useMutation(TOGGLE_STOCK_STATUS);
-const mongoMenu = (data?.menuItems || []).filter(item => item !== null);  // const mongoMenu = data?.menuItems || [];
-  useEffect(() => {
+const mongoMenu = (data?.menuItems || []).filter(item => item !== null);  
+  
+const [commitAddToCart] = useMutation(ADD_TO_CART);
+
+  const handleAdd = (item) => {
+    commitAddToCart({
+      variables: {
+        itemId: item.id,
+        itemType: "MenuItem", 
+      },
+      onCompleted: (response) => {
+        console.log("Added to cart:", response);
+      },
+      onError: (err) => console.error(err),
+    });
+  };
+
+useEffect(() => {
     console.log("Raw data from MongoDB:", data);
     console.log("Menu Items Array:", mongoMenu);
   }, [data, mongoMenu]);
   const toggleStockStatus = (id, currentStockStatus) => {
-    // Trigger the mutation on the server
+    
     setToggleStock({
       variables: {
         input: {
@@ -79,13 +97,15 @@ const mongoMenu = (data?.menuItems || []).filter(item => item !== null);  // con
         <Box
           sx={{display: "flow-root", backgroundColor: "#00", minHeight: "100vh", py: 4, px: 2 }}
         >
-          <Typography
+          <Paper sx={{ mb: 4, p: 2, background: "var(--col9)" }}>
+            <Typography
             variant="h3"
             align="center"
-            sx={{ color: "white", mb: 4, mt: 0, fontWeight: 700 }}
+            sx={{ color: "var(--col7)", mb: 2, mt: 0, fontWeight: 700,  }}
           >
-            Elemental Menu
+            Menu
           </Typography>
+          </Paper> 
 
           <Box
             sx={{
@@ -99,19 +119,16 @@ const mongoMenu = (data?.menuItems || []).filter(item => item !== null);  // con
               <Card
                 key={item.id}
                 sx={{
-                  width: "320px",
-                  display: "flex",
-                  flexDirection: "column",
-                  borderRadius: 3,
-                  transition: "transform 0.2s",
+                  
                   "&:hover": { transform: "scale(1.02)" },
                 }}
+                className={item.inStock ? "inStock" : "outOfStock"}
               >
-                <CardActionArea>
+                <CardActionArea >
                   <CardMedia
                     component="img"
                     height="200"
-                    // Placeholder image since JSON doesn't have image URLs
+                    
                     image={`https://picsum.photos/seed/${item.name}/400/300`}
                     alt={item.name}
                   />
@@ -173,6 +190,11 @@ const mongoMenu = (data?.menuItems || []).filter(item => item !== null);  // con
                       Contains: {item.ingredients}.
                     </Typography>
                   </CardContent>
+                  <Button variant="contained" color="primary" fullWidth disabled={!item.inStock} onClick={handleAdd}
+      sx={{ mb: 2 }}>
+
+      {item.inStock ? "Add to Cart" : "Out of Stock"}
+                  </Button>
                 </CardActionArea>
               </Card>
             ))}

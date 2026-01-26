@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<15b8cd9758790b22bfeac8749a676d0f>>
+ * @generated SignedSource<<f1af905c5a29189806810fe06d553440>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,9 +26,9 @@ v1 = [
         "variableName": "input"
       }
     ],
-    "concreteType": "AddToCombosPayload",
+    "concreteType": "EditCombosPayload",
     "kind": "LinkedField",
-    "name": "addToCombos",
+    "name": "editCombos",
     "plural": false,
     "selections": [
       {
@@ -61,7 +61,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "mutationsAddToComboMutation",
+    "name": "mutationsEditComboMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -70,20 +70,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "mutationsAddToComboMutation",
+    "name": "mutationsEditComboMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "73a83aef775a4da2fed0a092798ff04c",
+    "cacheID": "604a24539f6e3014cf17ecd5b385fb04",
     "id": null,
     "metadata": {},
-    "name": "mutationsAddToComboMutation",
+    "name": "mutationsEditComboMutation",
     "operationKind": "mutation",
-    "text": "mutation mutationsAddToComboMutation(\n  $input: AddToCombosInput!\n) {\n  addToCombos(input: $input) {\n    code\n    success\n    message\n  }\n}\n"
+    "text": "mutation mutationsEditComboMutation(\n  $input: EditCombosInput!\n) {\n  editCombos(input: $input) {\n    code\n    success\n    message\n  }\n}\n"
   }
 };
 })();
 
-node.hash = "0c1ae6283b4ad63d77d0d2bf8ca1a6af";
+node.hash = "c35fd42dd8839307549b098b00482928";
 
 module.exports = node;

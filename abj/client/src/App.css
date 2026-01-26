@@ -3,12 +3,15 @@
 
 :root {
     --col1: #004c4c;
-    --col2: #990000;
+    --col2: #830202;
     --col3: #005c5c;
     --col4: #d60000;
     --col5: #008080;
     --col6: #000000;
     --col7: #ffffff;
+    --col8: conic-gradient(var(--col5), var(--col2), var(--col5));
+    --col9: conic-gradient(var(--col1)10deg, var(--col2) 200deg, var(--col1) 370deg, var(--col5) 100deg);
+    
 }
 
 * {
@@ -21,3 +24,11 @@ body {
   font-family: "roboto", sans-serif;
 }
 
+#wholeAbout {
+    position: relative;
+    z-index: 100; /* Ensure it stacks ABOVE the previous page */
+    background-color: var(--col1) !important;
+    min-height: 100vh;
+    width: 100%;
+    opacity: 1; /* Change this to 1 to test if the flicker stops */
+}

@@ -33,7 +33,7 @@ const ratingSchema = new Schema({
   onModel: {
     type: String,
     required: true,
-    enum: ["MenuItems", "Combos"],
+    enum: ["MenuItems", "Combos", "Restaurant"],
   },
   images: [
     {

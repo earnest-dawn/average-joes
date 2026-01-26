@@ -11,6 +11,7 @@ export default function HomePage() {
   const [animateButton, setAnimateButton] = useState(false);
   const hasNavigatedToAbout = useRef(false); // Ref to prevent multiple navigations
   const navigate = useNavigate(); // Initialize navigate hook
+  const [isExiting, setIsExiting] = useState(false);
 
   // Effect for the button animation
   useEffect(() => {
@@ -26,9 +27,14 @@ export default function HomePage() {
         document.body.offsetHeight - scrollThreshold;
 
       if (isAtBottom && !hasNavigatedToAbout.current) {
-        hasNavigatedToAbout.current = true; // Mark as navigated
-        navigate("/about"); // Navigate to the About page route
-        window.scrollTo(0, 0); // Scrolls to x=0, y=0
+        hasNavigatedToAbout.current = true;
+        setIsExiting(true); // Trigger a local fade-out first
+
+        // Small delay to allow the fade-out animation to start
+        setTimeout(() => {
+          navigate("/about");
+          window.scrollTo(0, 200);
+        }, 800);
       }
     };
 
@@ -41,31 +47,26 @@ export default function HomePage() {
 
   return (
     <>
-      <div id="wholeHome">
-        <div
-          className="home"
-          style={{
-            backgroundImage: `url(${denzelLogoBackground})`,
-          }}
-        >
+      <div id="wholeHome" className={isExiting ? "home-fade-out" : ""}>
+        <div className="home">
           <div className="headerContainer">
-            <h1>Average Joe's Burgers</h1>
-            <p>Best Burgers on the West Coast!</p>
-            <Link to="/orderOnline">
-              <button
-                className={`orderNowButton${
-                  animateButton ? " animate-in" : ""
-                }`}
-              >
-                <span className="buttonText">ORDER NOW</span>
-              </button>
-            </Link>
+            <div className="orderLink">
+              <Link to="/orderOnline">
+                <button
+                  className={`orderNowButton${
+                    animateButton ? " animate-in" : ""
+                  }`}
+                >
+                  <span className="buttonText">ORDER NOW</span>
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
-        <div    id="imgBox" >
-          <img className="homeImgs" src={denzelAward} alt="Denzel Washington holding an award" />
-            <StretchingFooter />
-        </div>
+     
+        <StretchingFooter pageName="About"/>
+
+        <div></div>
       </div>
     </>
   );

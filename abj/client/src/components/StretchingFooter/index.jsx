@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import './StretchingFooter.css';
 
 const CONFIG = {
@@ -9,11 +10,25 @@ const CONFIG = {
   threshold: 300,      
 };
 
-const StretchingFooter = ({ onReachBottom }) => {
+const StretchingFooter = ({ onReachBottom, pageName }) => {
   const [isAtBottom, setIsAtBottom] = useState(false);
   const [isStretching, setIsStretching] = useState(false);
   const btnRef = useRef(null);
   const txtRef = useRef(null);
+    const location = useLocation();
+
+  const pageNames = {
+    "/": "Home",
+    "/about": "About",
+    "/contact": "Contact",
+    "/orderOnline": "Order Online",
+     "/admin": "admin",
+    "/manageMenu": "Manage Menu",
+    "/manageCombos": "Manage Combos",
+    "/manageRestaurant": "Manage Restaurant",
+
+  };
+    const currentPage = pageNames[location.pathname] || "Unknown Page";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -58,7 +73,7 @@ const StretchingFooter = ({ onReachBottom }) => {
         className={`footer-button ${isAtBottom ? 'active-green' : 'idle-blue'} ${!isStretching ? 'idle-jiggle' : ''}`}
       >
         <span ref={txtRef} className="footer-text">
-          Scroll Down For Chef Bio
+          Scroll to {pageName}
         </span>
       </button>
     </div>

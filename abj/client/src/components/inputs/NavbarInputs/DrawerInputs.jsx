@@ -19,7 +19,6 @@ export default function TemporaryDrawer({ state = { left: false }, toggleDrawer 
     const MENU_ITEMS = [
   { text: 'Home', icon: <HomeIcon />, path: '/' },
   { text: 'Admin', icon: <WorkOutlineIcon />, path: '/admin' },
-  { text: 'Contact', icon: <ContactsIcon />, path: '/contact' },
   { text: 'Order Online', icon: <FastfoodIcon />, path: '/orderOnline' },
 ];
 const list = (anchor) => (

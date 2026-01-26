@@ -107,7 +107,12 @@ export const QUERY_RESTAURANTS = gql`
     restaurants {
       id
       name
-      menuItems {
+      category
+        location
+        contactInfo
+        hours
+        images
+        menuItems {
         id
         name
         ingredients
@@ -143,12 +148,42 @@ export const QUERY_RESTAURANTS = gql`
             username
           }
         }
-        category
-        location
-        contactInfo
-        hours
-        images
+        
       }
+    }
+  }
+`;
+
+export const QUERY_ORDER_INFO = gql`
+  query queriesOrderInfoQuery {
+    orderInfo {
+    combos {
+        id
+        title
+        menuItems {
+          id
+          name
+          ingredients
+          calories
+          price
+          caption
+          images
+          category
+          inStock
+        }
+}
+        menuItems {
+        id
+        name
+        ingredients
+        calories
+        price
+        caption
+        images
+        category
+        inStock
+      }
+      totalPrice
     }
   }
 `;

@@ -26,6 +26,10 @@ const userSchema = new Schema({
             ref: 'Friend',
         },
     ],
+    cart: {
+        type: Schema.Types.ObjectId,
+        ref: 'Cart',
+    }
     
 });
 

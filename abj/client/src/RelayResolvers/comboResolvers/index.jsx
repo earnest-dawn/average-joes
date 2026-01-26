@@ -62,30 +62,3 @@ async function addToCombos(
     throw new AuthenticationError('You need to be logged in!');
 }
 
-/**
- * @RelayResolver Mutation.removeFromCombos(input: RemoveFromCombosInput!): RemoveFromCombosPayload
- */
-async function removeFromCombos(
-    parent,
-    { input: { combosId, menuItems } },
-    context
-) {
-    if (context.user) {
-        const updatedCombos = await Combos.findByIdAndUpdate(
-            combosId,
-            {
-                $pull: {
-                    menuItems,
-                },
-            },
-            { new: true }
-        );
-        return {
-            code: '200',
-            success: true,
-            message: 'Removed from combos successfully!',
-            combos: updatedCombos,
-        };
-    }
-    throw new AuthenticationError('You need to be logged in!');
-}

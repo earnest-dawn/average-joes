@@ -27,13 +27,12 @@ import ContactsIcon from "@mui/icons-material/Contacts";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 
-import { NavLink, useNavigate } from "react-router-dom"; // For navigation
-import Auth from "../../../utils/auth"; // Auth utility
-import averageLogo from "../../../assets/images/averageLogo.png"; // Your logo
+import { NavLink, useNavigate } from "react-router-dom"; 
+import Auth from "../../../utils/auth"; 
+import averageLogo from "../../../assets/images/averageLogo.png"; 
 
-import "./Navbar.css"; // Your custom CSS for Navbar
+import "./Navbar.css"; 
 
-// Styled components for Search Bar (kept as is from your code)
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -77,28 +76,28 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function SearchAppBar() {
   const navigate = useNavigate();
-  const [mobileOpen, setMobileOpen] = React.useState(false); // State for mobile drawer
-  const [isLoggedIn, setIsLoggedIn] = React.useState(Auth.loggedIn()); // State for login status
+  const [mobileOpen, setMobileOpen] = React.useState(false); 
+  const [isLoggedIn, setIsLoggedIn] = React.useState(Auth.loggedIn()); 
 
-  // Effect to update login status
+  
   React.useEffect(() => {
     const checkLoginStatus = () => {
       setIsLoggedIn(Auth.loggedIn());
     };
-    // This initial check ensures the state is correct on mount
+    
     checkLoginStatus();
   }, []);
 
-  // Handle logout
+  
   const handleLogout = () => {
-    Auth.logout(); // Call the logout utility
-    setIsLoggedIn(false); // Update local state
-    navigate("/"); // Redirect to home page after logout
+    Auth.logout(); 
+    setIsLoggedIn(false); 
+    navigate("/"); 
   };
 
-  // Toggle mobile drawer - this function returns an event handler
+  
   const toggleDrawer = (anchor, open) => (event) => {
-    // Safely check if event exists before accessing its properties
+    
     if (
       event &&
       event.type === "keydown" &&
@@ -106,24 +105,23 @@ export default function SearchAppBar() {
     ) {
       return;
     }
-    setMobileOpen(open); // Directly set mobileOpen state
+    setMobileOpen(open); 
   };
 
-  // Define navigation items for the drawer
+  
   const navItems = [
     { text: "Home", path: "/", icon: <HomeIcon /> },
     { text: 'Admin', path: '/admin', icon: <WorkOutlineIcon /> },
     { text: "Order Online", path: "/orderOnline", icon: <FastfoodIcon /> },
-    { text: "Contact", path: "/contact", icon: <ContactsIcon /> },
   ];
 
-  // Function to handle navigation and close the drawer
+  
   const handleDrawerNavLinkClick = (path) => {
-    setMobileOpen(false); // FIX: Directly close the drawer, no event object needed here
-    navigate(path); // Navigate to the specified path
+    setMobileOpen(false); 
+    navigate(path); 
   };
 
-  // TemporaryDrawer content JSX
+  
   const drawerContent = (
     <Box
       sx={{
@@ -134,9 +132,9 @@ export default function SearchAppBar() {
         height: "100%",
       }}
       role="presentation"
-      // No need for onClick/onKeyDown here if ListItemButton handles clicks and closes drawer
-      // If you want to close the drawer when clicking anywhere on the backdrop/drawer content,
-      // you'd typically use the onClose prop of the TemporaryDrawer component itself.
+      
+      
+      
     >
       {/* Logo and Title in TemporaryDrawer Header */}
       <Typography
@@ -218,7 +216,7 @@ export default function SearchAppBar() {
             color="inherit"
             aria-label="open drawer"
             sx={{ mr: 2, display: { sm: "none" } }}
-            onClick={toggleDrawer("left", true)} // Correct: React passes event to the returned function
+            onClick={toggleDrawer("left", true)} 
           >
             <MenuIcon />
           </IconButton>
@@ -304,17 +302,12 @@ export default function SearchAppBar() {
                   Order Online
                 </NavLink>
               </li>
-              <li style={{ marginLeft: "20px" }}>
-                <NavLink
-                  to={"/contact"}
-                  className={({ isActive }) => (isActive ? "active-link" : "")}
-                >
-                  Contact
-                </NavLink>
-              </li>
+              
               <li style={{ marginLeft: "20px" }}>
                 {isLoggedIn ? (
-                  <Button
+                  <div> 
+                    <NavLink>Cart ()</NavLink>
+                    <Button
                     onClick={handleLogout}
                     sx={{
                       color: "goldenrod",
@@ -324,7 +317,8 @@ export default function SearchAppBar() {
                     }}
                   >
                     Logout
-                  </Button>
+                  </Button></div>
+                 
                 ) : (
                   <NavLink
                     to={"/login"}
@@ -347,16 +341,16 @@ export default function SearchAppBar() {
         toggleDrawer={toggleDrawer}
         anchor="left"
         open={mobileOpen}
-        onClose={toggleDrawer("left", false)} // Correct: React passes event to the returned function
+        onClose={toggleDrawer("left", false)} 
         ModalProps={{
-          keepMounted: true, // Better open performance on mobile.
+          keepMounted: true, 
         }}
         PaperProps={{
           sx: {
             boxSizing: "border-box",
             width: 250,
-            bgcolor: "black", // Set drawer background
-            color: "goldenrod", // Set drawer text color
+            bgcolor: "black", 
+            color: "goldenrod", 
           },
         }}
       >

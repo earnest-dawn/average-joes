@@ -46,8 +46,8 @@ export const DELETE_COMBOS = graphql`
 `;
 
 export const ADD_TO_Combo = graphql`
-  mutation mutationsAddToComboMutation($input: AddToCombosInput!) {
-    addToCombos(input: $input) {
+  mutation mutationsEditComboMutation($input: EditCombosInput!) {
+    editCombos(input: $input) {
       code
       success
       message
@@ -55,15 +55,7 @@ export const ADD_TO_Combo = graphql`
   }
 `;
 
-export const REMOVE_FROM_COMBO = graphql`
-  mutation mutationsRemoveFromComboMutation($input: RemoveFromCombosInput!) {
-    removeFromCombos(input: $input) {
-      code
-      success
-      message
-    }
-  }
-`;
+
 
 export const CREATE_MENU_ITEMS = graphql`
   mutation mutationsCreateMenuItemMutation($input: CreateMenuItemInput!) {
@@ -86,8 +78,8 @@ export const DELETE_MENU_ITEMS = graphql`
 `;
 
 export const ADD_MENU_ITEM = graphql`
-  mutation mutationsAddMenuItemMutation($input: AddMenuItemInput!) {
-    addMenuItems(input: $input) {
+  mutation mutationsEditMenuItemMutation($input: EditMenuItemInput!) {
+    editMenuItems(input: $input) {
       code
       success
       message
@@ -164,6 +156,24 @@ export const DELETE_RESTAURANT = graphql`
 export const ADD_RESTAURANT = graphql`
   mutation mutationsAddRestaurantMutation($input: AddRestaurantInput!) {
     addRestaurant(input: $input) {
+      code
+      success
+      message
+    }
+}`;
+
+export const ADD_TO_CART = graphql`
+  mutation mutationsAddToCartMutation($input: AddToCartInput!) {
+    addToCart(input: $input) {
+      code
+      success
+      message
+    }
+}`;
+
+export const REMOVE_FROM_CART = graphql`
+  mutation mutationsRemoveFromCartMutation($input: RemoveFromCartInput!) {
+    removeFromCart(input: $input) {
       code
       success
       message

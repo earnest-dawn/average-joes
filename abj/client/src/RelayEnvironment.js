@@ -14,7 +14,7 @@ async function fetchQuery(operation, variables) {
   });
 
   const json = await response.json();
-
+  console.log("Server Response:", json);
  
   return json; 
 }

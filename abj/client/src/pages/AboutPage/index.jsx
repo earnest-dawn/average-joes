@@ -8,7 +8,7 @@ import './AboutPage.css';
 import { useNavigate } from 'react-router-dom';
 import ContactPage from '../ContactPage';
 import StretchingHeader from '../../components/StretchingHeader';
-
+import StretchingFooter from '../../components/StretchingFooter';
 /**
  * Custom hook to add 'animate-in' class to an element after it mounts.
  * This is a general-purpose hook for animating elements on component load.
@@ -17,12 +17,10 @@ import StretchingHeader from '../../components/StretchingHeader';
 const useElementAnimateIn = (ref) => {
     useEffect(() => {
         if (ref.current) {
-            const timer = setTimeout(() => {
-                ref.current.classList.add('animate-in');
-            }, 50);
+            
 
             return () => {
-                clearTimeout(timer);
+                clearTimeout();
                 if (ref.current) {
                     ref.current.classList.remove('animate-in');
                 }
@@ -41,12 +39,15 @@ export default function About() {
     const [animateButton, setAnimateButton] = useState(false);
     const title1Ref = useRef(null);
     const image1Ref = useRef(null);
+        const image2Ref = useRef(null);
+
     const caption1Ref = useRef(null);
     const title2Ref = useRef(null);
-    const image2Ref = useRef(null);
     const caption2Ref = useRef(null);
     const wholeAboutRef = useRef(null);
     const [isFadingOut, setIsFadingOut] = useState(false);
+    const hasNavigatedToHome = useRef(false); // Ref to prevent multiple navigations
+    const [isExiting, setIsExiting] = useState(false);
     const triggerFadeOut = () => {
         if (isFadingOut) return;
         setIsFadingOut(true);
@@ -61,6 +62,7 @@ export default function About() {
         if (isFadingOut && wholeAboutRef.current) {
             const handleAnimationEnd = (event) => {
                 if (event.animationName === 'fadeOut') {
+                    window.scrollTo(0, 0);
                     navigate('/');
                 }
             };
@@ -75,18 +77,32 @@ export default function About() {
 
     useEffect(() => {
         const handleScroll = () => {
-            if (window.scrollY === 0) {
-                triggerFadeOut();
-            }
-        };
+          const scrollThreshold = 100;
+          const isAtBottom =
+            window.innerHeight + window.scrollY >=
+            document.body.offsetHeight - scrollThreshold;
+    
+          if (isAtBottom && !hasNavigatedToHome.current) {
+        hasNavigatedToHome.current = true;
+                   setIsFadingOut(true);
+// Trigger a local fade-out first
+        // Small delay to allow the fade-out animation to start
+                  
+
+      }
+    };
+    
         window.addEventListener("scroll", handleScroll);
+    
         return () => {
-            window.removeEventListener("scroll", handleScroll);
+          window.removeEventListener("scroll", handleScroll);
         };
-    }, []);
+      }, [navigate]);
 
     useElementAnimateIn(title1Ref);
     useElementAnimateIn(image1Ref);
+        useElementAnimateIn(image2Ref);
+
     useElementAnimateIn(caption1Ref);
     useElementAnimateIn(title2Ref);
     useElementAnimateIn(image2Ref);
@@ -102,7 +118,6 @@ export default function About() {
                 <Box className="about-content-container" >
                     <Paper className="about-paper-block">
                         
-                        <StretchingHeader onClick={triggerFadeOut}/>
                         
 
                         <Typography
@@ -114,12 +129,14 @@ export default function About() {
                             Welcome To My Office <FoodBankIcon fontSize="large" sx={{ verticalAlign: 'middle', ml: 1 }} />
                         </Typography>
                         <Box className="about-section-spacing">
+                           <Paper>
                             <img
                                 src={denzelSuit}
                                 alt="Denzel Washington in a suit"
                                 className="about-image"
                                 ref={image1Ref}
                             />
+                            </Paper> 
                             {/* RE-INTRODUCED NESTED PAPER HERE */}
                             <Paper className="about-paper-caption">
                                 <Typography
@@ -144,9 +161,42 @@ export default function About() {
                                     consectetur adipisci ipsa.
                                 </Typography>
                             </Paper>
+<Box>
+                            <Paper>
+                                <img src={denzelAward} 
+                                alt="my Accolade"
+                                ref={image2Ref} 
+                                className='about-image'/>
+                            </Paper>
                         </Box>
-
+<Paper className="about-paper-caption">
+                                <Typography
+                                    variant="body1"
+                                    className="aboutCaptions"
+                                    ref={caption1Ref}
+                                >
+                                    
+                                    Lorem ipsum dolor, sit amet consectetur adipisicing
+                                    elit. Fugiat quod, suscipit, aperiam totam autem culpa
+                                    cum eveniet dolorum quasi est perspiciatis laborum. Nam
+                                    recusandae nihil quia odio voluptatibus facere omnis
+                                    facilis rerum? Ab eum beatae nobis reiciendis, qui
+                                    temporibus aliquid, nesciunt velit sed quam recusandae
+                                    necessitatibus, tempora maxime. Repellendus incidunt,
+                                    maxime labore dolorum eos aperiam unde? At veritatis
+                                    nesciunt eos quas cupiditate blanditiis est quam
+                                    maiores, amet, soluta exercitationem voluptatum, veniam
+                                    assumenda? Ratione perferendis officiis deserunt nostrum
+                                    aspernatur sed asperiores! Earum sunt placeat ducimus
+                                    sint, deleniti amet esse saepe voluptatem commodi
+                                    laudantium quibusdam repellat nobis libero at
+                                    consectetur adipisci ipsa.
+                                </Typography>
+                            </Paper>
+                        </Box>
+                        
                     </Paper>
+                    <StretchingFooter pageName="Home"/>
                 </Box>
 
         </div>
