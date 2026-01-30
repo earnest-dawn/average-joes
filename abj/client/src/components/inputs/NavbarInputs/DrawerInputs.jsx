@@ -10,7 +10,6 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import HomeIcon from '@mui/icons-material/Home';
 import FastfoodIcon from '@mui/icons-material/Fastfood';
-import ContactsIcon from '@mui/icons-material/Contacts';
 import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
 import averageLogo from '../../../assets/images/averageLogo.png';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';

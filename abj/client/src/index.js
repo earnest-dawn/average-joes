@@ -1,10 +1,8 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import HomePage from './pages/HomePage';
-import ContactPage from './pages/ContactPage';
 import OrderOnline from './pages/OrderOnlinePage';
 import About from './pages/AboutPage';
 import ErrorPage from './pages/errorPage';
@@ -14,6 +12,7 @@ import AdminPage from './pages/AdminPages/AdminHomePage';
 import ManageMenuPage  from './pages/AdminPages/ManageMenuPage';
 import ManageCombosPage from './pages/AdminPages/ManageCombosPage ';
 import ManageRestaurantsPage from './pages/AdminPages/ManageRestaurantsPage';
+import RegistrationPage from './pages/RegistrationPage';
 import environment from "./network";
 const router = createBrowserRouter([
     {
@@ -22,7 +21,6 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         children: [
             { index: true, element: <HomePage /> },
-            { path: '/contact', element: <ContactPage /> },
             { path: '/orderOnline', element: <OrderOnline /> },
             { path: '/about', element: <About /> },
             { path: '/location', element: <LocationPage /> },
@@ -31,7 +29,8 @@ const router = createBrowserRouter([
             { path: '/manageCombos', element: <ManageCombosPage /> },
             { path: '/manageRestaurants', element: <ManageRestaurantsPage /> },
             { path: '/login?', element: <LogInPage /> },
-            { path: '/admin?', element: <AdminPage />}
+            { path: '/admin?', element: <AdminPage />},
+            { path: '/register', element: <RegistrationPage /> }
         ],
     },
 ]);

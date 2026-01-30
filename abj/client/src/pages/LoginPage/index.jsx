@@ -1,31 +1,28 @@
 import './LogIn.css';
-
-import React, { useState, useEffect } from 'react';
-import { TextField, Button, Alert, Link, Box } from '@mui/material';
+import React, { useState } from 'react';
+import { TextField, Button, Alert, Box, Typography } from '@mui/material'; // Added Typography
 import { useMutation } from 'react-relay/hooks';
 import { graphql } from 'babel-plugin-relay/macro';
-
-import RegistrationForm from '../../components/RegistrationForm';
+import { useNavigate } from 'react-router-dom';
 import Auth from '../../utils/auth';
 
-// Helper function to safely get error message from Relay errors array
+
 const getRelayErrorMessage = (errors) => {
     if (!errors || errors.length === 0) {
         return "An unknown error occurred (no error details provided).";
     }
 
-    // Prioritize the message from the first error object
+    
     if (errors[0] && typeof errors[0].message === 'string' && errors[0].message.trim() !== '') {
         return errors[0].message;
     }
 
-    // Fallback if the first error doesn't have a clear message
+    
     return "An unexpected error occurred (could not extract specific message).";
 };
 
 export default function LoginPage() {
-    const [registrationForm, setRegistrationForm] = useState(false);
-
+    const navigate = useNavigate();
     const [userFormData, setUserFormData] = useState({
         username: '',
         password: '',
@@ -53,156 +50,103 @@ export default function LoginPage() {
 
     const handleFormSubmit = async (event) => {
         event.preventDefault();
+        setShowAlert(false);
 
-        setShowAlert(false); // Hide any previous alerts
-        setAlertMessage('');
-        setAlertSeverity('error');
-
-        const form = event.currentTarget;
-        if (form.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
-            setAlertMessage("Please fill in all required fields.");
-            setShowAlert(true);
-            return;
-        }
-
-        try {
-            commitMutation({
-                variables: {
-                    input: {
-                        username: userFormData.username,
-                        password: userFormData.password,
-                    },
+        commitMutation({
+            variables: {
+                input: {
+                    username: userFormData.username,
+                    password: userFormData.password,
                 },
-                onCompleted: (response, errors) => {
-                    if (errors && errors.length > 0) {
-                        console.error('Login GraphQL errors (full object):', errors);
-                        const extractedMessage = getRelayErrorMessage(errors);
-                        console.log('Extracted Alert Message:', extractedMessage);
-                        setAlertMessage(extractedMessage);
-                        setAlertSeverity('error');
-                        setShowAlert(true); // Show alert on error
-                    } else if (response && response.login && response.login.token) {
-                        Auth.login(response.login.token);
-                        console.log('Login successful for user:', response.login.user.username);
-                        setAlertMessage("Login successful!");
-                        setAlertSeverity('success');
-                        setShowAlert(true); // Show alert on success (optional, or redirect)
-                        // Redirect or update UI as needed
-                    } else {
-                        console.error('Login response is not defined or missing token:', response);
-                        setAlertMessage('Login failed: Invalid response from server or missing token.');
-                        setAlertSeverity('error');
-                        setShowAlert(true);
-                    }
-                },
-                onError: (err) => {
-                    console.error('Login network or unexpected error:', err);
-                    setAlertMessage(`Login failed: ${err.message || 'Network error'}`);
-                    setAlertSeverity('error');
+            },
+            onCompleted: (response, errors) => {
+                if (errors && errors.length > 0) {
+                    setAlertMessage(getRelayErrorMessage(errors));
                     setShowAlert(true);
-                },
-            });
-
-        } catch (e) {
-            console.error('Unexpected error during login process setup:', e);
-            setAlertMessage(`An unexpected error occurred: ${e.message}`);
-            setAlertSeverity('error');
-            setShowAlert(true);
-        }
-
-        setUserFormData({
-            username: '',
-            password: '',
+                } else if (response?.login?.token) {
+                    Auth.login(response.login.token);
+                    navigate('/orderOnline'); // Take them to the food!
+                }
+            },
+            onError: (err) => {
+                setAlertMessage(`Login failed: ${err.message}`);
+                setShowAlert(true);
+            },
         });
     };
 
     return (
-        <Box className="login-page-container">
-            {registrationForm ? (
-                <RegistrationForm onSwitchToLogin={() => setRegistrationForm(false)} />
-            ) : (
-                <form
-                    onSubmit={handleFormSubmit}
-                    id="login-form"
-                    className="login-form"
-                >
-                    {/* Conditional rendering of the Alert */}
-                    {showAlert && (
-                        <Alert
-                            onClose={() => setShowAlert(false)}
-                            severity={alertSeverity}
-                            // NEW: Aggressive styling to force visibility
-                            sx={{
-                                mb: 2,
-                                width: '100%', // Ensure it takes full width
-                                position: 'relative', // Ensure z-index works
-                                zIndex: 1000, // High z-index to be on top
-                                backgroundColor: alertSeverity === 'error' ? '#ffebee' : '#e8f5e9', // Light red/green background
-                                border: `2px solid ${alertSeverity === 'error' ? '#ef9a9a' : '#a5d6a7'}`, // Clear border
-                                color: alertSeverity === 'error' ? '#d32f2f' : '#2e7d32', // Darker text color
-                                fontWeight: 'bold',
-                                opacity: 1, // Ensure full opacity
-                                display: 'flex', // Ensure it's a flex container
-                                alignItems: 'center', // Vertically center content
-                                justifyContent: 'space-between', // Space out content and close button
-                                padding: '12px 16px', // Standard padding
-                                borderRadius: '4px', // Standard border radius
-                                animation: 'fadeIn 0.5s ease-out forwards', // Add a fade-in animation
-                                '@keyframes fadeIn': {
-                                    '0%': { opacity: 0, transform: 'translateY(-10px)' },
-                                    '100%': { opacity: 1, transform: 'translateY(0)' },
-                                },
-                            }}
-                        >
-                            {alertMessage}
-                        </Alert>
-                    )}
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '100vh',
+                backgroundColor: '#f0f2f5',
+            }}
+        >
+            <Box
+                component="form"
+                onSubmit={handleFormSubmit} // Fixed: matches function name above
+                sx={{
+                    backgroundColor: 'white',
+                    padding: '30px',
+                    borderRadius: '12px',
+                    boxShadow: '0 8px 20px rgba(0, 0, 0, 0.15)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '20px',
+                    maxWidth: '400px',
+                    width: '100%',
+                }}
+            >
+                <Typography variant="h5" sx={{ color: '#3f51b5', textAlign: 'center' }}>
+                    Login to Your Account
+                </Typography>
 
-                    <TextField
-                        label="Username"
-                        type="text"
-                        placeholder="Your username"
-                        name="username"
-                        onChange={handleInputChange}
-                        value={userFormData.username}
-                        required
-                        fullWidth
-                        margin="normal"
-                    />
-                    <TextField
-                        label="Password"
-                        type="password"
-                        placeholder="Your password"
-                        name="password"
-                        onChange={handleInputChange}
-                        value={userFormData.password}
-                        required
-                        fullWidth
-                        margin="normal"
-                    />
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                        disabled={isLoading}
-                        fullWidth
-                        sx={{ mt: 2, mb: 1 }}
-                    >
-                        {isLoading ? 'Logging In...' : 'Login'}
-                    </Button>
-                    <Button
-                        type='button'
-                        onClick={() => setRegistrationForm(true)}
-                        variant="text"
-                        color="secondary"
-                        fullWidth
-                    >
-                        Don't have an account? Sign Up!
-                    </Button>
-                </form>
-            )}
+                {showAlert && (
+                    <Alert severity={alertSeverity} onClose={() => setShowAlert(false)}>
+                        {alertMessage}
+                    </Alert>
+                )}
+
+                <TextField
+                    label="Username"
+                    name="username" // Important: must match key in userFormData
+                    value={userFormData.username} // Fixed: points to state
+                    onChange={handleInputChange} // Fixed: uses the handler
+                    fullWidth
+                    required
+                />
+
+                <TextField
+                    label="Password"
+                    name="password"
+                    type="password"
+                    value={userFormData.password}
+                    onChange={handleInputChange}
+                    fullWidth
+                    required
+                />
+
+                <Button
+                    type="submit"
+                    variant="contained"
+                    disabled={isLoading}
+                    sx={{ py: 1.5 }}
+                >
+                    {isLoading ? 'Logging In...' : 'Login'}
+                </Button>
+
+                <Button
+                    variant="text"
+                    color="secondary"
+                    onClick={() => navigate('/register')} 
+                >
+                    Don't have an account? Sign Up!
+                </Button>
+            </Box>
         </Box>
     );
 }

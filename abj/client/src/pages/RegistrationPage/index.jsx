@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { commitMutation } from 'react-relay';
-import environment from '../../network'; // Assuming this is your Relay environment setup
-import graphql from 'babel-plugin-relay/macro'; // Keep if you use it for other mutations/queries
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook for programmatic navigation
-
-// Import Material-UI components for styling
+import environment from '../../network'; 
+import graphql from 'babel-plugin-relay/macro'; 
+import { useNavigate } from 'react-router-dom'; 
 import { TextField, Button, Box, Typography, Alert } from '@mui/material';
 
-// GraphQL mutation for registering a user
+
 const mutation = graphql`
-  mutation RegistrationFormMutation($input: RegisterInput!) {
+  mutation RegistrationPageMutation($input: RegisterInput!) {
     register(input: $input) {
       token
       user {
@@ -20,7 +18,7 @@ const mutation = graphql`
   }
 `;
 
-// Helper function to create the input object for the mutation
+
 function createRegisterInput(username, email, password) {
   return {
     username: username,
@@ -29,26 +27,26 @@ function createRegisterInput(username, email, password) {
   };
 }
 
-// RegistrationForm component
-function RegistrationForm({ onSwitchToLogin }) { // Accept onSwitchToLogin prop
+
+function RegistrationPage({ onSwitchToLogin }) { 
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertSeverity, setAlertSeverity] = useState('error');
-  const [isLoading, setIsLoading] = useState(false); // State for loading indicator
+  const [isLoading, setIsLoading] = useState(false); 
 
-  const navigate = useNavigate(); // Initialize useNavigate hook
+  const navigate = useNavigate(); 
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setIsLoading(true); // Set loading state
-    setShowAlert(false); // Hide previous alerts
+    setIsLoading(true); 
+    setShowAlert(false); 
     setAlertMessage('');
     setAlertSeverity('error');
 
-    // Basic form validation
+    
     if (!username || !email || !password) {
       setAlertMessage("Please fill in all fields.");
       setAlertSeverity('error');
@@ -57,20 +55,20 @@ function RegistrationForm({ onSwitchToLogin }) { // Accept onSwitchToLogin prop
       return;
     }
 
-    // Call the function to create the input object
+    
     const registerInput = createRegisterInput(username, email, password);
 
-    // Send the `registerInput` object to your server using the register mutation
+    
     commitMutation(environment, {
       mutation,
       variables: {
         input: registerInput,
       },
       onCompleted: (response, errors) => {
-        setIsLoading(false); // Clear loading state
+        setIsLoading(false); 
         if (errors && errors.length > 0) {
           console.error('Registration failed with errors:', errors);
-          // Extract message from GraphQL errors
+          
           const errorMessage = errors[0]?.message || 'Registration failed with an unknown error.';
           setAlertMessage(`Registration failed: ${errorMessage}`);
           setAlertSeverity('error');
@@ -80,12 +78,12 @@ function RegistrationForm({ onSwitchToLogin }) { // Accept onSwitchToLogin prop
           setAlertMessage("Registration successful! Redirecting to login...");
           setAlertSeverity('success');
           setShowAlert(true);
-          // Redirect to login page after successful registration
+          
           setTimeout(() => {
-            navigate('/login'); // Use navigate function
-            // Or, if this component is toggled within LoginPage, just switch back:
-            // onSwitchToLogin();
-          }, 2000); // Wait 2 seconds before redirecting
+            navigate('/login'); 
+            
+            
+          }, 2000); 
         } else {
             console.error('Registration response is not defined or missing token:', response);
             setAlertMessage('Registration failed: Invalid response from server.');
@@ -94,7 +92,7 @@ function RegistrationForm({ onSwitchToLogin }) { // Accept onSwitchToLogin prop
         }
       },
       onError: (error) => {
-        setIsLoading(false); // Clear loading state
+        setIsLoading(false); 
         console.error('Registration failed:', error);
         setAlertMessage(`Registration failed: ${error.message || 'Network error'}`);
         setAlertSeverity('error');
@@ -110,9 +108,9 @@ function RegistrationForm({ onSwitchToLogin }) { // Accept onSwitchToLogin prop
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: '100vh', // Take full viewport height
+        minHeight: '100vh', 
         padding: '20px',
-        backgroundColor: '#f0f2f5', // Light background
+        backgroundColor: '#f0f2f5', 
         fontFamily: 'Inter, sans-serif',
       }}
     >
@@ -126,8 +124,8 @@ function RegistrationForm({ onSwitchToLogin }) { // Accept onSwitchToLogin prop
           boxShadow: '0 8px 20px rgba(0, 0, 0, 0.15)',
           display: 'flex',
           flexDirection: 'column',
-          gap: '20px', // Space between form elements
-          maxWidth: '400px', // Max width for the form
+          gap: '20px', 
+          maxWidth: '400px', 
           width: '100%',
         }}
       >
@@ -152,7 +150,7 @@ function RegistrationForm({ onSwitchToLogin }) { // Accept onSwitchToLogin prop
           onChange={(e) => setUsername(e.target.value)}
           fullWidth
           required
-          variant="outlined" // Modern Material-UI look
+          variant="outlined" 
         />
         <TextField
           label="Email"
@@ -178,8 +176,8 @@ function RegistrationForm({ onSwitchToLogin }) { // Accept onSwitchToLogin prop
           variant="contained"
           color="primary"
           fullWidth
-          disabled={isLoading} // Disable button while loading
-          sx={{ mt: 2, py: 1.5, borderRadius: '8px' }} // Add some padding and rounded corners
+          disabled={isLoading} 
+          sx={{ mt: 2, py: 1.5, borderRadius: '8px' }} 
         >
           {isLoading ? 'Registering...' : 'Register'}
         </Button>
@@ -187,7 +185,7 @@ function RegistrationForm({ onSwitchToLogin }) { // Accept onSwitchToLogin prop
         <Button
           variant="text"
           color="secondary"
-          onClick={onSwitchToLogin} // Button to switch back to login
+          onClick={() => navigate('/login')} // Fixed: Navigates to login page
           fullWidth
           sx={{ mt: 1 }}
         >
@@ -198,4 +196,4 @@ function RegistrationForm({ onSwitchToLogin }) { // Accept onSwitchToLogin prop
   );
 }
 
-export default RegistrationForm;
+export default RegistrationPage;

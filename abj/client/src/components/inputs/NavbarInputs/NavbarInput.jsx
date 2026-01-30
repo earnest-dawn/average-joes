@@ -6,46 +6,35 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
-import Button from "@mui/material/Button"; // For logout button
+import Button from "@mui/material/Button";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
-
-// Material-UI components specific to the TemporaryDrawer
-import TemporaryDrawer from "./DrawerInputs.jsx"; // TemporaryDrawer component
+import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import Divider from "@mui/material/Divider"; // For drawer divider
-
-// Material-UI Icons for TemporaryDrawer navigation
+import Divider from "@mui/material/Divider";
 import HomeIcon from "@mui/icons-material/Home";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
-import ContactsIcon from "@mui/icons-material/Contacts";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { NavLink, useNavigate, useLocation } from "react-router-dom"; 
 
-import { NavLink, useNavigate } from "react-router-dom"; 
-import Auth from "../../../utils/auth"; 
-import averageLogo from "../../../assets/images/averageLogo.png"; 
 
-import "./Navbar.css"; 
+
+
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
+  "&:hover": { backgroundColor: alpha(theme.palette.common.white, 0.25) },
   marginLeft: 0,
   width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(1),
-    width: "auto",
-  },
+  [theme.breakpoints.up("sm")]: { marginLeft: theme.spacing(1), width: "auto" },
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
@@ -67,141 +56,87 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     width: "100%",
     [theme.breakpoints.up("sm")]: {
       width: "12ch",
-      "&:focus": {
-        width: "20ch",
-      },
+      "&:focus": { width: "20ch" },
     },
   },
 }));
 
 export default function SearchAppBar() {
   const navigate = useNavigate();
-  const [mobileOpen, setMobileOpen] = React.useState(false); 
-  const [isLoggedIn, setIsLoggedIn] = React.useState(Auth.loggedIn()); 
+  const location = useLocation(); 
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
   
   React.useEffect(() => {
-    const checkLoginStatus = () => {
-      setIsLoggedIn(Auth.loggedIn());
+    
+    
+    const checkLogin = () => {
+        const token = localStorage.getItem('id_token'); 
+        setIsLoggedIn(!!token);
     };
-    
-    checkLoginStatus();
-  }, []);
+    checkLogin();
+  }, [location]); 
 
-  
   const handleLogout = () => {
-    Auth.logout(); 
-    setIsLoggedIn(false); 
-    navigate("/"); 
-  };
-
-  
-  const toggleDrawer = (anchor, open) => (event) => {
     
-    if (
-      event &&
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
-    }
-    setMobileOpen(open); 
+    localStorage.removeItem('id_token');
+    setIsLoggedIn(false);
+    navigate("/");
   };
 
-  
+  const toggleDrawer = (open) => (event) => {
+    if (event && event.type === "keydown" && (event.key === "Tab" || event.key === "Shift")) return;
+    setMobileOpen(open);
+  };
+
   const navItems = [
     { text: "Home", path: "/", icon: <HomeIcon /> },
     { text: 'Admin', path: '/admin', icon: <WorkOutlineIcon /> },
-    { text: "Order Online", path: "/orderOnline", icon: <FastfoodIcon /> },
+    { 
+      text: isLoggedIn ? "Order Online" : "Menu", 
+      path: "/orderOnline", 
+      icon: <FastfoodIcon /> 
+    },
   ];
 
-  
   const handleDrawerNavLinkClick = (path) => {
-    setMobileOpen(false); 
-    navigate(path); 
+    setMobileOpen(false);
+    navigate(path);
   };
 
-  
   const drawerContent = (
     <Box
-      sx={{
-        textAlign: "center",
-        width: 250,
-        bgcolor: "black",
-        color: "goldenrod",
-        height: "100%",
-      }}
+      sx={{ textAlign: "center", width: 250, bgcolor: "black", color: "goldenrod", height: "100%" }}
       role="presentation"
-      
-      
-      
     >
-      {/* Logo and Title in TemporaryDrawer Header */}
-      <Typography
-        color={"goldenrod"}
-        variant="h6"
-        component="div"
-        sx={{ my: 2 }}
-      >
-        <img
-          src={averageLogo}
-          alt="Logo"
-          height={"70"}
-          width="200"
-          style={{ display: "block", margin: "0 auto" }}
-        />
+      <Typography variant="h6" component="div" sx={{ my: 2 }}>
+        LOGO
       </Typography>
-      <Divider sx={{ bgcolor: "goldenrod" }} /> {/* Styled divider */}
-      {/* Main Navigation List */}
+      <Divider sx={{ bgcolor: "goldenrod" }} />
       <List>
         {navItems.map((item) => (
           <ListItem key={item.text} disablePadding>
-            <ListItemButton
-              onClick={() => handleDrawerNavLinkClick(item.path)}
-              sx={{ "&:hover": { bgcolor: "#333" } }}
-            >
-              <ListItemIcon sx={{ color: "goldenrod" }}>
-                {item.icon}
-              </ListItemIcon>
+            <ListItemButton onClick={() => handleDrawerNavLinkClick(item.path)}>
+              <ListItemIcon sx={{ color: "goldenrod" }}>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} sx={{ color: "white" }} />
             </ListItemButton>
           </ListItem>
         ))}
-
-        {/* Login/Logout Conditional Item in TemporaryDrawer */}
         <ListItem disablePadding>
           {isLoggedIn ? (
-            <ListItemButton
-              onClick={handleLogout}
-              sx={{ "&:hover": { bgcolor: "#333" } }}
-            >
-              <ListItemIcon sx={{ color: "goldenrod" }}>
-                <LogoutIcon />
-              </ListItemIcon>
+            <ListItemButton onClick={handleLogout}>
+              <ListItemIcon sx={{ color: "goldenrod" }}><LogoutIcon /></ListItemIcon>
               <ListItemText primary="Logout" sx={{ color: "white" }} />
             </ListItemButton>
           ) : (
-            <ListItemButton
-              onClick={() => handleDrawerNavLinkClick("/login")}
-              sx={{ "&:hover": { bgcolor: "#333" } }}
-            >
-              <ListItemIcon sx={{ color: "goldenrod" }}>
-                <LoginIcon />
-              </ListItemIcon>
+            <ListItemButton onClick={() => handleDrawerNavLinkClick("/login")}>
+              <ListItemIcon sx={{ color: "goldenrod" }}><LoginIcon /></ListItemIcon>
               <ListItemText primary="Login" sx={{ color: "white" }} />
             </ListItemButton>
           )}
         </ListItem>
       </List>
-      <Divider
-        sx={{
-          bgcolor: "goldenrod",
-          height: "2px",
-          opacity: 1,
-          my: 2,
-          flexShrink: 0,
-        }}
-      />{" "}
     </Box>
   );
 
@@ -209,153 +144,54 @@ export default function SearchAppBar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ bgcolor: "black" }}>
         <Toolbar>
-          {/* Mobile Menu Icon */}
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2, display: { sm: "none" } }}
-            onClick={toggleDrawer("left", true)} 
-          >
+          <IconButton size="large" edge="start" color="inherit" aria-label="open drawer" sx={{ mr: 2, display: { sm: "none" } }} onClick={toggleDrawer(true)}>
             <MenuIcon />
           </IconButton>
 
-          {/* Logo */}
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{
-              flexGrow: 1,
-              display: "flex",
-              alignItems: "center",
-              color: "goldenrod",
-            }}
-          >
-            <NavLink
-              to="/"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                textDecoration: "none",
-                color: "inherit",
-              }}
-            >
-              <img
-                src={averageLogo}
-                alt="Average Joe's Burger Joint Logo"
-                height={"70"}
-                width="auto"
-                style={{ display: "block", marginRight: "8px" }}
-                id="averageLogo"
-              />
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, display: "flex", alignItems: "center", color: "goldenrod" }}>
+            <NavLink to="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", color: "inherit" }}>
+                JOE'S BURGER
             </NavLink>
           </Typography>
 
-          {/* Desktop Navigation, Search, and Logout Button */}
-          <Box
-            sx={{ display: { xs: "none", sm: "flex" }, alignItems: "center" }}
-          >
-            {/* Search Bar */}
+          <Box sx={{ display: { xs: "none", sm: "flex" }, alignItems: "center" }}>
             <Search>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Search…"
-                inputProps={{ "aria-label": "search" }}
-              />
+              <SearchIconWrapper><SearchIcon /></SearchIconWrapper>
+              <StyledInputBase placeholder="Search..." inputProps={{ "aria-label": "search" }} />
             </Search>
 
-            {/* Desktop Navigation Links */}
-            <ul
-              className="navigation-menu"
-              style={{
-                display: "flex",
-                listStyle: "none",
-                margin: 0,
-                padding: 0,
-              }}
-            >
-              <li style={{ marginLeft: "20px" }}>
-                <NavLink
-                  to={"/"}
-                  className={({ isActive }) => (isActive ? "active-link" : "")}
-                >
-                  Home
+            <Box component="ul" sx={{ display: "flex", listStyle: "none", m: 0, p: 0, alignItems: "center" }}>
+              <Box component="li" sx={{ ml: 3 }}>
+                <NavLink to="/" style={({ isActive }) => ({ color: isActive ? "goldenrod" : "white", textDecoration: 'none' })}>Home</NavLink>
+              </Box>
+              <Box component="li" sx={{ ml: 3 }}>
+                <NavLink to="/admin" style={({ isActive }) => ({ color: isActive ? "goldenrod" : "white", textDecoration: 'none' })}>Admin</NavLink>
+              </Box>
+              <Box component="li" sx={{ ml: 3 }}>
+                <NavLink to="/orderOnline" style={({ isActive }) => ({ color: isActive ? "goldenrod" : "white", textDecoration: 'none' })}>
+                  {isLoggedIn ? "Order Online" : "Menu"}
                 </NavLink>
-              </li>
-              <li style={{ marginLeft: "20px" }}>
-                <NavLink
-                  to={"/admin"}
-                  className={({ isActive }) => (isActive ? "active-link" : "")}
-                >
-                  Admin
-                </NavLink>
-              </li>
-              <li style={{ marginLeft: "20px" }}>
-                <NavLink
-                  to={"/orderOnline"}
-                  className={({ isActive }) => (isActive ? "active-link" : "")}
-                >
-                  Order Online
-                </NavLink>
-              </li>
-              
-              <li style={{ marginLeft: "20px" }}>
+              </Box>
+              <Box component="li" sx={{ ml: 3 }}>
                 {isLoggedIn ? (
-                  <div> 
-                    <NavLink>Cart ()</NavLink>
-                    <Button
-                    onClick={handleLogout}
-                    sx={{
-                      color: "goldenrod",
-                      textTransform: "none",
-                      minWidth: "auto",
-                      padding: "6px 8px",
-                    }}
-                  >
-                    Logout
-                  </Button></div>
-                 
+                  <Button onClick={handleLogout} sx={{ color: "goldenrod", textTransform: "none" }}>Logout</Button>
                 ) : (
-                  <NavLink
-                    to={"/login"}
-                    className={({ isActive }) =>
-                      isActive ? "active-link" : ""
-                    }
-                  >
-                    Login
-                  </NavLink>
+                  <NavLink to="/login" style={({ isActive }) => ({ color: isActive ? "goldenrod" : "white", textDecoration: 'none' })}>Login</NavLink>
                 )}
-              </li>
-            </ul>
+              </Box>
+            </Box>
           </Box>
         </Toolbar>
       </AppBar>
 
-      {/* Temporary TemporaryDrawer for Mobile (rendered directly here) */}
-      <TemporaryDrawer
-        state={{ left: mobileOpen }}
-        toggleDrawer={toggleDrawer}
+      <Drawer
         anchor="left"
         open={mobileOpen}
-        onClose={toggleDrawer("left", false)} 
-        ModalProps={{
-          keepMounted: true, 
-        }}
-        PaperProps={{
-          sx: {
-            boxSizing: "border-box",
-            width: 250,
-            bgcolor: "black", 
-            color: "goldenrod", 
-          },
-        }}
+        onClose={toggleDrawer(false)}
+        PaperProps={{ sx: { width: 250, bgcolor: "black" } }}
       >
         {drawerContent}
-      </TemporaryDrawer>
+      </Drawer>
     </Box>
   );
 }

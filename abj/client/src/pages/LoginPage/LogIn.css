@@ -40,3 +40,9 @@
   font-size: medium;
   color: #ffffff;
 }
+
+.login-page-container {
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+}

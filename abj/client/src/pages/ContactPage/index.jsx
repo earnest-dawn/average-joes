@@ -14,6 +14,8 @@ import {
     TableRow,
     Typography,
 } from '@mui/material';
+import './ContactPage.css';
+import {Button} from '@mui/material';
 
 export default function ContactPage() {
     return (
@@ -27,10 +29,12 @@ export default function ContactPage() {
                         '@media (max-width:600px)': {
                             width: '300px',
                         },
+                        mb: 35,
+                        mt: 5,
+
                     }}
                 >
-                    <Typography variant="h4">Contact My Resturant</Typography>
-<TableContainer component={Paper}>
+<TableContainer component={Paper} >
                         <Table aria-label="contact table">
                             <TableHead>
                                 <TableRow>
@@ -40,6 +44,7 @@ export default function ContactPage() {
                                             color: 'white',
                                         }}
                                         align="center"
+className="contact-title"
                                     >
                                         Contact Details
                                     </TableCell>
@@ -52,7 +57,8 @@ export default function ContactPage() {
                                             sx={{ color: 'red', pt: 1 }}
                                         />{' '}
                                         1800-00-0000 (tollfree)
-                                    </TableCell>
+                                                                        <Button>Edit</Button>
+</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell>
@@ -60,7 +66,9 @@ export default function ContactPage() {
                                             sx={{ color: 'skyblue', pt: 1 }}
                                         />{' '}
                                         help@myrest.com
-                                    </TableCell>
+                                                                                                            <Button>Edit</Button>
+</TableCell>
+
                                 </TableRow>
                                 <TableRow>
                                     <TableCell>
@@ -68,7 +76,9 @@ export default function ContactPage() {
                                             sx={{ color: 'green', pt: 1 }}
                                         />{' '}
                                         619-456-7890
-                                    </TableCell>
+                                        <Button>Edit</Button>
+                                                                    </TableCell>
+
                                 </TableRow>
                             </TableBody>
                         </Table>

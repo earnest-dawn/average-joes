@@ -50,12 +50,10 @@ export default function Navbar() {
                     </NavLink>
                 </li>
                 <li>
-                    <NavLink to={'/orderOnline'}>Order Online</NavLink>
+                    <NavLink to={'/orderOnline'}>Menu</NavLink>
                 </li>
                 
-                <li>
-                    <NavLink to={'/contact'}>Contact</NavLink>
-                </li>
+               
                 <li>
                     <NavLink to={'/login'}>Login</NavLink>
                 </li>
@@ -101,9 +99,7 @@ export default function Navbar() {
                                     </NavLink>
                                 </li>
                                 
-                                <li>
-                                    <NavLink to={'/contact'}>Contact</NavLink>
-                                </li>
+                                
                                 <li>
                                     <NavLink to={'/login'}>Login</NavLink>
                                 </li>

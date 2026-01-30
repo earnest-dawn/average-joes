@@ -1,65 +1,61 @@
-/* HomePage.css */
-
 /* Import global CSS variables and base styles */
 @import "../../App.css";
 
 /* --- Global / Base Styles for HomePage --- */
 
 #wholeHome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
   margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
 /* Styles for the content divider that prompts scrolling */
 #contentDiv {
   width: 100%;
-  height: 100vh; /* Make it take full viewport height for scrollability */
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--col1); /* Using CSS variable for dark teal */
-  color: var(--col6); /* Using CSS variable for text color */
-  font-size: 2rem; /* Larger font for visibility */
+  background-color: var(--col1);
+  color: var(--col6);
+  font-size: 2rem;
   text-align: center;
-  padding: 20px; /* Add some padding */
-  box-sizing: border-box; /* Include padding in height */
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 /* Styles for the text inside the button */
 .buttonText {
   font-size: 35px;
   font-weight: bold;
-  color: var(--col5); /* Using CSS variable for text color */
-  display: inline-block; /* Essential for transform to work on span */
-  text-decoration: underline var(--col4) double 1px; /* Underline with accent color */
+  color: var(--col5);
+  display: inline-block;
+  text-decoration: underline var(--col4) double 1px;
 }
 
 .buttonText:hover {
-  color: var(--col7)
+  color: var(--col7);
 }
+
+/* Updated for perfect centering */
 .orderLink {
-  position: absolute;
-
-  /* Distance from the top of the screen */
-  top: 65%;
-
-  /* Centering logic */
-  left: 50%;
-  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  z-index: 2;
 }
 
 /* --- Order Now Button Animation --- */
 
-/* Keyframes for the grow/shrink (jiggle) animation */
 @keyframes growShrink {
-  0% {
-    transform: scale(0.5);
-  }
-  50% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(0.5);
-  }
+  0% { transform: scale(0.9); }
+  50% { transform: scale(1); }
+  100% { transform: scale(0.9); }
 }
 
 #imgBox {
@@ -76,150 +72,75 @@
   justify-content: center;
   align-items: center;
   max-width: 80%;
-  height: auto; /* Ensure height adjusts proportionally */
-  border-radius: 8px; /* Slightly rounded corners for images */
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for images */
-  margin-top: 15px; /* Space above image */
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 15px;
 }
 
-/* Base styles for the .orderNowButton (the Link component) */
-/* This is the element that will receive the 'animate-in' class */
 .orderNowButton {
   text-decoration: none;
-  /* Important: Ensure no transitions here that would conflict with the 'animate-in' */
   transition: none;
-  /* If this button needs to fade in or slide in, its initial opacity/transform
-       should be set here, and the 'animate-in' class would trigger that.
-       Currently, growShrink just scales, so it assumes it's already visible.
-    */
-}
-
-/* Styles applied when 'animate-in' class is added to .orderNowButton */
-.orderNowButton.animate-in {
-  animation: growShrink 2s infinite forwards; /* Apply the continuous jiggle animation */
-  /* If you want an initial fade-in/slide-in, you'd chain it here:
-       animation: fadeIn 0.5s ease-out forwards, growShrink 2s 0.5s infinite forwards;
-       and ensure .orderNowButton has opacity: 0; transform: ...; initially.
-    */
-}
-
-/* --- Home Section Layout and Styling --- */
-
-.home {
-  height: 90vh; /* Takes 90% of the viewport height */
-  display: flex;
-  position: relative;
-  justify-content: center; /* Center horizontally */
-  align-items: flex-start; /* Align to the left (start of cross axis) */
-  flex-direction: column; /* Stack children vertically */
-  background-image: url("../../assets/images/denzelLogoBackground.png");
-  min-height: 100vh;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover; /* Cover the entire area */
-}
-
-.headerContainer {
-  display: flex;
-  flex-direction: column;
-  /* This centers everything horizontally */
-  align-items: center;
-  /* This pushes content to the bottom of the container */
-  justify-content: flex-end;
-  height: 80%;
-}
-
-.home .headerContainer h1 {
-  /* Styles for the main heading */
-  justify-content: center; /* No effect with flex-direction: column on parent */
-  align-items: center; /* No effect with flex-direction: column on parent */
-  font-weight: bold;
-  font-size: 70px;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
-  color: white;
-}
-
-.home .headerContainer p {
-  /* Styles for the subheading/tagline */
-  margin-top: 15px;
-  padding: 0;
-  font-size: 40px;
-  font-weight: lighter;
-  color: white;
-}
-
-/* Base styles for the actual <button> element inside the Link */
-.orderLink button {
-  background-color: var(--col6); /* Dark background */
-  margin-top: 20px;
+  background-color: var(--col6);
   border: none;
   border-radius: 5px;
   cursor: pointer;
   height: 100px;
   width: 360px;
-  text-decoration: none; /* No underline from the button itself */
-  color: var(--col4); /* Text color */
-  display: block; /* Make it a block element to respect width/height */
-  box-sizing: border-box; /* Include padding/border in width/height */
+  display: flex; /* Use flex to center text inside button */
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
 }
 
-/* Hover effect for the button */
-.orderLink button:hover {
+.orderNowButton.animate-in {
+  animation: growShrink 2s infinite forwards;
+}
+
+/* --- Home Section Layout and Styling --- */
+
+.home {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  position: relative;
+  justify-content: center; /* Centers headerContainer horizontally */
+  align-items: center;     /* Centers headerContainer vertically */
+  background-image: url("../../assets/images/denzelLogoBackground.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.headerContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Centers children (button) inside */
+  width: 100%;
+  height: auto;
+}
+
+.orderNowButton:hover {
   background: var(--col8);
-  cursor: pointer;
-  transition: 0.3s ease-in; /* Smooth transition for hover effects */
-  border: 1px groove var(--col4); /* Border on hover using CSS variable */
+  transition: 0.3s ease-in;
+  border: 1px groove var(--col4);
 }
 
-button:hover {
-    color: var(--col6);
-
-}
-/* --- Mobile View Adjustments (max-width: 600px) --- */
+/* --- Mobile View Adjustments --- */
 
 @media only screen and (max-width: 600px) {
-  .home {
-    justify-content: center; /* Center content vertically in mobile */
-    align-items: center; /* Center content horizontally in mobile */
+  .orderNowButton {
+    width: 280px;
+    height: 80px;
   }
-
-  .orderLink {
-    margin-left: 0; /* Remove left margin for mobile */
-    border-radius: 10px;
-    width: 90%; /* Take up 90% width */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    color: white;
-    padding: 20px; /* Add padding to the header container itself */
-    box-sizing: border-box;
-  }
-
-  .home .orderLink h1 {
-    font-size: 40px; /* Smaller font size for heading on mobile */
-    height: auto; /* Allow height to adjust based on content */
-    margin: 20px 0px; /* Adjusted margins */
-  }
-  .home .orderLink p {
-    font-size: 30px; /* Smaller font size for subheading on mobile */
-    margin-top: 10px;
-  }
-  .orderLink button {
-    background-color: white; /* Button background changes to white on mobile */
-    color: #121619; /* Button text changes to dark on mobile */
-    margin-bottom: 20px; /* Adjusted margin */
-
-  }
+  
   .buttonText {
-    font-size: 20px; /* Smaller text inside button on mobile */
+    font-size: 24px;
   }
-  .headerContainer button {
-    width: 220px; 
-    height: 60px;
-    font-size: 18px;
+
+  .home .headerContainer h1 {
+    font-size: 40px;
+    text-align: center;
   }
 }
-
-/* You might want to add more media queries for tablets (e.g., max-width: 900px)
-   or specific device sizes for finer control. */
