@@ -9,7 +9,7 @@ import InputBase from "@mui/material/InputBase";
 import Button from "@mui/material/Button";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
-import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
+import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -21,11 +21,9 @@ import HomeIcon from "@mui/icons-material/Home";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { NavLink, useNavigate, useLocation } from "react-router-dom"; 
-
-
-
-
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import TemporaryDrawer from "./DrawerInputs";
+import averageLogo from "../../../assets/images/averageLogo.png";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -63,40 +61,41 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function SearchAppBar() {
   const navigate = useNavigate();
-  const location = useLocation(); 
+  const location = useLocation();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
-  
   React.useEffect(() => {
-    
-    
     const checkLogin = () => {
-        const token = localStorage.getItem('id_token'); 
-        setIsLoggedIn(!!token);
+      const token = localStorage.getItem("id_token");
+      setIsLoggedIn(!!token);
     };
     checkLogin();
-  }, [location]); 
+  }, [location]);
 
   const handleLogout = () => {
-    
-    localStorage.removeItem('id_token');
+    localStorage.removeItem("id_token");
     setIsLoggedIn(false);
     navigate("/");
   };
 
   const toggleDrawer = (open) => (event) => {
-    if (event && event.type === "keydown" && (event.key === "Tab" || event.key === "Shift")) return;
+    if (
+      event &&
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    )
+      return;
     setMobileOpen(open);
   };
 
   const navItems = [
     { text: "Home", path: "/", icon: <HomeIcon /> },
-    { text: 'Admin', path: '/admin', icon: <WorkOutlineIcon /> },
-    { 
-      text: isLoggedIn ? "Order Online" : "Menu", 
-      path: "/orderOnline", 
-      icon: <FastfoodIcon /> 
+    { text: "Admin", path: "/admin", icon: <WorkOutlineIcon /> },
+    {
+      text: isLoggedIn ? "Order Online" : "Menu",
+      path: "/orderOnline",
+      icon: <FastfoodIcon />,
     },
   ];
 
@@ -107,18 +106,41 @@ export default function SearchAppBar() {
 
   const drawerContent = (
     <Box
-      sx={{ textAlign: "center", width: 250, bgcolor: "black", color: "goldenrod", height: "100%" }}
+      sx={{
+        textAlign: "center",
+        width: 250,
+        bgcolor: "black",
+        color: "goldenrod",
+        height: "100%",
+      }}
       role="presentation"
     >
-      <Typography variant="h6" component="div" sx={{ my: 2 }}>
-        LOGO
-      </Typography>
+      <NavLink
+        to="/"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          textDecoration: "none",
+          color: "inherit",
+        }}
+      >
+        <img
+          src={averageLogo}
+          alt="logo"
+          height={"70"}
+          width="auto"
+          display="flex"
+          id="averageLogo"
+        />{" "}
+      </NavLink>
       <Divider sx={{ bgcolor: "goldenrod" }} />
       <List>
         {navItems.map((item) => (
           <ListItem key={item.text} disablePadding>
             <ListItemButton onClick={() => handleDrawerNavLinkClick(item.path)}>
-              <ListItemIcon sx={{ color: "goldenrod" }}>{item.icon}</ListItemIcon>
+              <ListItemIcon sx={{ color: "goldenrod" }}>
+                {item.icon}
+              </ListItemIcon>
               <ListItemText primary={item.text} sx={{ color: "white" }} />
             </ListItemButton>
           </ListItem>
@@ -126,12 +148,16 @@ export default function SearchAppBar() {
         <ListItem disablePadding>
           {isLoggedIn ? (
             <ListItemButton onClick={handleLogout}>
-              <ListItemIcon sx={{ color: "goldenrod" }}><LogoutIcon /></ListItemIcon>
+              <ListItemIcon sx={{ color: "goldenrod" }}>
+                <LogoutIcon />
+              </ListItemIcon>
               <ListItemText primary="Logout" sx={{ color: "white" }} />
             </ListItemButton>
           ) : (
             <ListItemButton onClick={() => handleDrawerNavLinkClick("/login")}>
-              <ListItemIcon sx={{ color: "goldenrod" }}><LoginIcon /></ListItemIcon>
+              <ListItemIcon sx={{ color: "goldenrod" }}>
+                <LoginIcon />
+              </ListItemIcon>
               <ListItemText primary="Login" sx={{ color: "white" }} />
             </ListItemButton>
           )}
@@ -144,54 +170,152 @@ export default function SearchAppBar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ bgcolor: "black" }}>
         <Toolbar>
-          <IconButton size="large" edge="start" color="inherit" aria-label="open drawer" sx={{ mr: 2, display: { sm: "none" } }} onClick={toggleDrawer(true)}>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="open drawer"
+            sx={{ mr: 2, display: { sm: "none" } }}
+            onClick={toggleDrawer(true)}
+          >
             <MenuIcon />
           </IconButton>
 
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, display: "flex", alignItems: "center", color: "goldenrod" }}>
-            <NavLink to="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", color: "inherit" }}>
-                JOE'S BURGER
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{
+              flexGrow: 1,
+              display: "flex",
+              alignItems: "center",
+              color: "goldenrod",
+            }}
+          >
+            <NavLink
+              to="/"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                textDecoration: "none",
+                color: "inherit",
+              }}
+            >
+              <img
+                src={averageLogo}
+                alt="logo"
+                height={"70"}
+                width="auto"
+                display="flex"
+                id="averageLogo"
+              />{" "}
             </NavLink>
           </Typography>
 
-          <Box sx={{ display: { xs: "none", sm: "flex" }, alignItems: "center" }}>
+          <Box
+            sx={{ display: { xs: "none", sm: "flex" }, alignItems: "center" }}
+          >
             <Search>
-              <SearchIconWrapper><SearchIcon /></SearchIconWrapper>
-              <StyledInputBase placeholder="Search..." inputProps={{ "aria-label": "search" }} />
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search..."
+                inputProps={{ "aria-label": "search" }}
+              />
             </Search>
 
-            <Box component="ul" sx={{ display: "flex", listStyle: "none", m: 0, p: 0, alignItems: "center" }}>
+            <Box
+              component="ul"
+              sx={{
+                display: "flex",
+                listStyle: "none",
+                m: 0,
+                p: 0,
+                alignItems: "center",
+              }}
+            >
               <Box component="li" sx={{ ml: 3 }}>
-                <NavLink to="/" style={({ isActive }) => ({ color: isActive ? "goldenrod" : "white", textDecoration: 'none' })}>Home</NavLink>
+                <NavLink
+                  to="/"
+                  style={({ isActive }) => ({
+                    color: isActive ? "goldenrod" : "white",
+                    textDecoration: "none",
+                  })}
+                >
+                  Home
+                </NavLink>
               </Box>
+              {isLoggedIn ? (
+                <Box component="li" sx={{ ml: 3 }}>
+                  <NavLink
+                    to="/admin"
+                    style={({ isActive }) => ({
+                      color: isActive ? "goldenrod" : "white",
+                      textDecoration: "none",
+                    })}
+                  >
+                    Admin
+                  </NavLink>
+                </Box>
+              ) : (
+                <></>
+              )}
               <Box component="li" sx={{ ml: 3 }}>
-                <NavLink to="/admin" style={({ isActive }) => ({ color: isActive ? "goldenrod" : "white", textDecoration: 'none' })}>Admin</NavLink>
-              </Box>
-              <Box component="li" sx={{ ml: 3 }}>
-                <NavLink to="/orderOnline" style={({ isActive }) => ({ color: isActive ? "goldenrod" : "white", textDecoration: 'none' })}>
+                <NavLink
+                  to="/orderOnline"
+                  style={({ isActive }) => ({
+                    color: isActive ? "goldenrod" : "white",
+                    textDecoration: "none",
+                  })}
+                >
                   {isLoggedIn ? "Order Online" : "Menu"}
                 </NavLink>
               </Box>
               <Box component="li" sx={{ ml: 3 }}>
                 {isLoggedIn ? (
-                  <Button onClick={handleLogout} sx={{ color: "goldenrod", textTransform: "none" }}>Logout</Button>
+                  <Button
+                    onClick={handleLogout}
+                    sx={{ color: "goldenrod", textTransform: "none" }}
+                  >
+                    Logout
+                  </Button>
                 ) : (
-                  <NavLink to="/login" style={({ isActive }) => ({ color: isActive ? "goldenrod" : "white", textDecoration: 'none' })}>Login</NavLink>
+                  <NavLink
+                    to="/login"
+                    style={({ isActive }) => ({
+                      color: isActive ? "goldenrod" : "white",
+                      textDecoration: "none",
+                    })}
+                  >
+                    Login
+                  </NavLink>
                 )}
               </Box>
             </Box>
           </Box>
         </Toolbar>
       </AppBar>
-
-      <Drawer
+      <TemporaryDrawer
+        state={{ left: mobileOpen }}
+        toggleDrawer={toggleDrawer}
         anchor="left"
         open={mobileOpen}
-        onClose={toggleDrawer(false)}
-        PaperProps={{ sx: { width: 250, bgcolor: "black" } }}
+        onClose={toggleDrawer("left", false)}
+        ModalProps={{
+          keepMounted: true,
+        }}
+        PaperProps={{
+          sx: {
+            boxSizing: "border-box",
+            width: 250,
+            bgcolor: "black",
+            color: "goldenrod",
+          },
+        }}
       >
         {drawerContent}
-      </Drawer>
+      </TemporaryDrawer>{" "}
     </Box>
   );
 }

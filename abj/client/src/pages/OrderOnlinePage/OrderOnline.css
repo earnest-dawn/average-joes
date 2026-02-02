@@ -9,19 +9,19 @@
 }
 
 .inStock {
-    width: "320px";
-    display: "flex";
-    flex-direction: "column";
-    border-radius: 3;
-    transition: "transform 0.2s";
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 3px;
+    transition: transform 0.2s;
     border: 10px solid var(--col5);
 }
 
 .orderOnlinePageMenu {
-    width: "320px";
-    display: "flex";
-    flex-direction: "column";
-    border-radius: 3;
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 3px;
     transition: "transform 0.2s";
 }
 .outOfStock {
@@ -29,3 +29,13 @@
     border: 10px solid var(--col2);
 }
 
+.plsRegister:hover {
+    background: var(--col8);
+}
+.plsRegister {
+    margin-bottom: 2px;
+    background: var(--col9);
+    color: var(--col7);
+    font-weight: bold;
+    font-size: 1rem;
+}

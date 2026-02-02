@@ -36,7 +36,7 @@ export default function ManageCombosPage() {
   return (
     <div id="wholeAbout">
       <Box sx={{ m: 0 }}>
-        <Paper className="comboAdmin-paper-block">
+        <Paper  className="menuAdmin-paper-block">
           <AdminPageOptions
             title="Combo Management"
             data={mongoMenu}

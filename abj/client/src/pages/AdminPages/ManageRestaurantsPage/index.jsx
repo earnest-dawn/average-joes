@@ -56,7 +56,8 @@ export default function ManageRestaurantsPage() {
   return (
     <div id="wholeAbout">
       <Box sx={{ m: 0 }}>
-        <Paper className="restaurantAdmin-paper-block">
+        <Paper  className="menuAdmin-paper-block"
+        >
           <AdminPageOptions
             title="Restaurant Management"
             data={mongoMenu}
