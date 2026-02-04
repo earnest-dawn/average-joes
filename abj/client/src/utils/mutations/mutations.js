@@ -179,3 +179,33 @@ export const REMOVE_FROM_CART = graphql`
       message
     }
 }`;
+
+export const CLAIM_OWNERSHIP = graphql`
+  mutation mutationsClaimOwnershipMutation($input: ClaimRestaurantOwnershipInput!) {
+    claimRestaurantOwnership(input: $input) {
+      code
+      success
+      message
+    }
+  }
+`;
+
+export const CREATE_ORDER = graphql`
+  mutation mutationsCreateOrderMutation($items: [OrderItemInput]!, $Restaurant: ID!) {
+    createOrder(Restaurant: $Restaurant, items: $items) {
+        id
+      totalPrice
+      status
+    }
+  }
+`;
+
+export const UPDATE_ORDER_STATUS = graphql`
+  mutation mutationsUpdateOrderStatusMutation ($input: UpdateOrderStatusInput!) {
+    updateOrderStatus(input: $input) {
+      code
+      success
+      message
+    }
+  }
+`;

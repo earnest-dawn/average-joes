@@ -22,6 +22,12 @@ const AdminOptions = [
     description: "Add, edit, or remove restaurants.",
     icon: <FoodBankIcon sx={{ fontSize: 40, color: 'goldenrod' }} />,
     path: "/manageRestaurants",
+  },
+  {
+    title: "Manage Orders",
+    description: "View and manage customer orders.",
+    icon: <FoodBankIcon sx={{ fontSize: 40, color: 'goldenrod' }} />,
+    path: "/manageOrders",
   }
 ];
 
@@ -49,7 +55,9 @@ export default function About() {
                     </Button> )}
                 </Typography>
               </ListItem>
+              
             </Paper>
+            
           </Box>
           ))}
           

@@ -187,3 +187,24 @@ export const QUERY_ORDER_INFO = gql`
     }
   }
 `;
+
+export const GET_MY_ORDERS = gql`
+  query GetMyOrders {
+    myOrders {
+      _id
+      totalPrice
+      status
+      createdAt
+      restaurant {
+        name
+      }
+      items {
+        quantity
+        priceAtPurchase
+        menuItem {
+          name
+        }
+      }
+    }
+  }
+`;

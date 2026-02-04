@@ -43,7 +43,12 @@ const restaurantsSchema = new Schema({
             required: false,
         },
     ],
-});
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: false, 
+    },
+}, { timestamps: true });
 
 restaurantsSchema.virtual('ratings', {
   ref: 'Rating',

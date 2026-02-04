@@ -1,0 +1,7 @@
+@import '../../../App.css';
+
+.menuAdmin-paper-block {
+    background: var(--col8)!important;
+    
+    color: var(--col7) !important;
+}

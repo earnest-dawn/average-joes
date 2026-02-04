@@ -194,7 +194,6 @@ input CreateMenuItemInput {
 }
 
 type CreateMenuItemPayload implements MutationResponse {
-  input: CreateMenuItemInput
   code: String!
   success: Boolean!
   message: String!
@@ -244,6 +243,8 @@ type Restaurant implements Node {
   contactInfo: String!
   images: [String]
   hours: String
+  owner: User! 
+  activeOrders: [Order]
 }
 
 input CreateRestaurantInput {
@@ -348,7 +349,6 @@ input AddToCartInput {
   clientMutationId: String
 }
 type AddToCartPayload implements MutationResponse {
-  input: AddToCartInput
   code: String!
   success: Boolean!
   message: String!
@@ -360,10 +360,81 @@ input RemoveFromCartInput {
   clientMutationId: String
 }
 type RemoveFromCartPayload implements MutationResponse {
-  input: RemoveFromCartInput
   code: String!
   success: Boolean!
   message: String!
+  clientMutationId: String
+}
+
+enum OrderStatus {
+  PENDING
+  PREPARING
+  READY
+  COMPLETED
+  CANCELLED
+}
+
+type Order implements Node {
+  id: ID
+  customer: User!
+  restaurant: Restaurant!
+  items: [OrderItem]!
+  totalPrice: Float!
+  status: OrderStatus!
+  createdAt: String!
+}
+
+type OrderItem {
+  name: String!    
+  price: Float!    
+  quantity: Int!
+  itemReference: MenuItems 
+}
+input CheckoutInput {
+  restaurantId: ID!
+  clientMutationId: String
+}
+
+type CheckoutPayload implements MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+  order: Order
+}
+
+input UpdateOrderStatusInput {
+  orderId: ID!
+  status: OrderStatus!
+  clientMutationId: String
+}
+input OrderItemInput {
+  menuItemId: ID!
+  quantity: Int!
+}
+type OrderItemPayload implements MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+  orderItem: Order
+}
+type UpdateOrderStatusPayload implements MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+  order: Order
+}
+
+type ClaimRestaurantOwnershipPayload implements MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+  restaurant: Restaurant
+  clientMutationId: String
+}
+
+input ClaimRestaurantOwnershipInput {
+  id: ID
+  name: String!
   clientMutationId: String
 }
 
@@ -377,7 +448,11 @@ type Query {
   restaurants: [Restaurant]
   friends: [Friend]
   cart: Cart
+  orders: [Order]
+  myOrders:[Order]
 }
+
+
 
 type Mutation {
   register(input: RegisterInput!): RegisterPayload
@@ -397,4 +472,8 @@ type Mutation {
   addRestaurant(input: AddRestaurantInput!): AddRestaurantPayload
   addToCart(input: AddToCartInput!): AddToCartPayload
   removeFromCart(input: RemoveFromCartInput!): RemoveFromCartPayload
+  checkout(input: CheckoutInput!): CheckoutPayload
+  updateOrderStatus(input: UpdateOrderStatusInput!): UpdateOrderStatusPayload
+  createOrder(Restaurant: ID!, items: [OrderItemInput]!): Order
+  claimRestaurantOwnership(input: ClaimRestaurantOwnershipInput!): ClaimRestaurantOwnershipPayload
 }

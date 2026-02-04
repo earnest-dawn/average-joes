@@ -13,6 +13,7 @@ import ManageMenuPage  from './pages/AdminPages/ManageMenuPage';
 import ManageCombosPage from './pages/AdminPages/ManageCombosPage ';
 import ManageRestaurantsPage from './pages/AdminPages/ManageRestaurantsPage';
 import RegistrationPage from './pages/RegistrationPage';
+import ManageOrdersPage from './pages/AdminPages/ManageOrdersPage';
 import environment from "./network";
 const router = createBrowserRouter([
     {
@@ -28,6 +29,7 @@ const router = createBrowserRouter([
             { path: '/manageMenu', element: <ManageMenuPage /> },
             { path: '/manageCombos', element: <ManageCombosPage /> },
             { path: '/manageRestaurants', element: <ManageRestaurantsPage /> },
+            { path: '/manageOrders', element: <ManageOrdersPage /> },
             { path: '/login?', element: <LogInPage /> },
             { path: '/admin?', element: <AdminPage />},
             { path: '/register', element: <RegistrationPage /> }
