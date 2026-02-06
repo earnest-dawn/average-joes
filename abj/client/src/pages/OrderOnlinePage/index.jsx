@@ -44,7 +44,7 @@ const OrderOnlinePageQuery = graphql`
 export default function OrderOnline() {
   const loggedIn = Auth.loggedIn();
   const data = useLazyLoadQuery(OrderOnlinePageQuery, {});
-  const [setToggleStock, isToggleStockInFlight] = useMutation(TOGGLE_STOCK_STATUS);
+  const [setToggleStock] = useMutation(TOGGLE_STOCK_STATUS);
   const mongoMenu = (data?.menuItems || []).filter((item) => item !== null);
   const [loading, setLoading] = React.useState(false);
 
@@ -56,40 +56,38 @@ export default function OrderOnline() {
         itemId: item.id,
         itemType: "MenuItem",
       },
-      onCompleted: (response) => {
-        console.log("Added to cart:", response);
-      },
-      onError: (err) => console.error(err),
+      onCompleted: (response) => console.log("Added to cart:", response),
+      onError: (err) => console.error("Cart Error:", err),
     });
   };
-
-  useEffect(() => {
-    console.log("Raw data from MongoDB:", data);
-    console.log("Menu Items Array:", mongoMenu);
-  }, [data, mongoMenu]);
-  const toggleStockStatus = (id, currentStockStatus) => {
+const toggleStockStatus = (id, currentInStock) => {
+    
     setToggleStock({
       variables: {
+        
         input: {
           id: id,
-          inStock: !currentStockStatus,
+          inStock: !currentInStock,
+          clientMutationId: "toggle-" + id 
         },
       },
       optimisticResponse: {
-        toggleStockStatus: {
-          menuItem: {
-            id: id,
-            inStock: !currentStockStatus,
-          },
-          code: 200,
-          success: true,
-          message: "Optimistic Update",
+      toggleStockStatus: {
+        code: "200",
+        success: true,
+        message: "Optimistic update",
+        menuItem: {
+          id: id,
+          inStock: !currentInStock,
         },
       },
+    },
       onCompleted: (response) => {
-        console.log("Stock toggled!");
+        console.log("Status successfully toggled:", response);
       },
-      onError: (err) => console.error(err),
+      onError: (err) => {
+        console.error("Mutation failed:", err);
+      },
     });
   };
   const renderMenuCard = (item) => (
@@ -101,101 +99,69 @@ export default function OrderOnline() {
         flexDirection: "column",
         height: "100%",
         border: item.inStock ? "4px solid #d0f0c0" : "4px solid #f0c0c0",
-        "&:hover": { transform: "scale(1.02)" },
         transition: "transform 0.2s",
+        "&:hover": { transform: "scale(1.02)" },
       }}
     >
-      <CardActionArea
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          height: "100%",
-          alignItems: "stretch",
-        }}
-      >
+      {/* CardActionArea now ONLY wraps the content, not the footer button */}
+      <CardActionArea sx={{ flexGrow: 1 }}>
         <CardMedia
           component="img"
           height="200"
           image={`https://picsum.photos/seed/${item.name}/400/300`}
           alt={item.name}
         />
-        <CardContent
-          sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}
-        >
+        <CardContent>
           <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
-            <Typography variant="h5" sx={{ fontWeight: 700 }}>
-              {item.name}
-            </Typography>
-            <Typography variant="h6" color="primary" sx={{ fontWeight: 800 }}>
-              ${item.price}
-            </Typography>
+            <Typography variant="h5" sx={{ fontWeight: 700 }}>{item.name}</Typography>
+            <Typography variant="h6" color="primary" sx={{ fontWeight: 800 }}>${item.price}</Typography>
           </Box>
-
+        
           <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
             <Chip
               label={item.inStock ? "Available" : "Out of Stock"}
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                toggleStockStatus(item.id);
+                toggleStockStatus(item.id, item.inStock);
               }}
               size="small"
-              variant="outlined"
               color={item.inStock ? "success" : "error"}
               sx={{ cursor: "pointer" }}
             />
-            <Chip
-              label={`${item.calories} Cal`}
-              size="small"
-              variant="outlined"
-            />
+            <Chip label={`${item.calories} Cal`} size="small" variant="outlined" />
           </Box>
 
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ fontStyle: "italic", mb: 1 }}
-          >
+          <Typography variant="body2" color="text.secondary" sx={{ fontStyle: "italic", mb: 1 }}>
             {item.caption}
           </Typography>
-          <Typography
-            variant="caption"
-            color="text.secondary"
-            sx={{ mt: "auto" }}
-          >
+          <Typography variant="caption" color="text.secondary">
             Contains: {item.ingredients}
           </Typography>
         </CardContent>
-
-        <Button
-        className="plsRegister"
-          variant="contained"
-          fullWidth
-          disabled={!item.inStock && loggedIn}
-          onClick={
-            loggedIn
-              ? (e) => handleAdd(e, item)
-              : () => window.location.assign("/register")
-          }
-          sx={{
-            borderRadius: 0,
-            py: 1.5,
-            mt: "auto",
-            background: "var(--col9)",
-            color: "goldenrod",
-            fontWeight: "bold",
-            "&:hover": { bgcolor: "var(--col8)" },
-          }}
-        >
-          {loggedIn
-            ? item.inStock
-              ? "ADD TO CART"
-              : "OUT OF STOCK"
-            : "REGISTER TO ORDER"}
-        </Button>
       </CardActionArea>
+
+      {/* Button is now outside CardActionArea - FIXES NESTING ERROR */}
+      <Button
+        className="plsRegister"
+        variant="contained"
+        fullWidth
+        disabled={!item.inStock && loggedIn}
+        onClick={loggedIn ? () => handleAdd(item) : () => window.location.assign("/register")}
+        sx={{
+          borderRadius: 0,
+          py: 1.5,
+          background: "var(--col9)",
+          color: "goldenrod",
+          fontWeight: "bold",
+          "&:hover": { bgcolor: "var(--col8)" },
+        }}
+      >
+        {loggedIn ? (item.inStock ? "ADD TO CART" : "OUT OF STOCK") : "REGISTER TO ORDER"}
+      </Button>
     </Card>
   );
+
 
   return (
     <Box sx={{ backgroundColor: "#004c4c", minHeight: "100vh", py: 4, px: 2 }}>

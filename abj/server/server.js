@@ -21,7 +21,12 @@ const server = new ApolloServer({
     csrfPrevention: false, 
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
-
+process.on('SIGINT', () => {
+  httpServer.close(() => { 
+    console.log('Server process terminated');
+    process.exit(0);
+  });
+})
 const startApolloServer = async () => {
   await server.start();
 
@@ -62,6 +67,7 @@ const startApolloServer = async () => {
       console.log(`🚀 GraphQL Sandbox: http://localhost:${PORT}/graphql`);
     });
   });
+  
 };
 
 startApolloServer();

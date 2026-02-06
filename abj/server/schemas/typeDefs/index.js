@@ -230,6 +230,7 @@ type EditMenuItemPayload implements MutationResponse {
   clientMutationId: String
 }
 input ToggleStockStatusInput {
+  id: ID!
   inStock: Boolean!
   clientMutationId: String
 }
@@ -481,6 +482,7 @@ type Query {
 
 
 type Mutation {
+  toggleStockStatus(input: ToggleStockStatusInput!): ToggleStockStatusPayload
   register(input: RegisterInput!): RegisterPayload
   login(input: LoginInput!): LoginPayload
   createCombos(input: CreateCombosInput!): CreateCombosPayload
@@ -491,7 +493,6 @@ type Mutation {
   editMenuItems(input: EditMenuItemInput!): EditMenuItemPayload
   createRating(input: CreateRatingInput!): CreateRatingPayload
   deleteRating(input: DeleteRatingInput!): DeleteRatingPayload
-  toggleStockStatus(input: ToggleStockStatusInput!): ToggleStockStatusPayload
   createRestaurant(input: CreateRestaurantInput!): CreateRestaurantPayload
   editRestaurant(input: EditRestaurantInput!): EditRestaurantPayload
   deleteRestaurant(input: DeleteRestaurantInput!): DeleteRestaurantPayload
@@ -504,6 +505,7 @@ type Mutation {
   deleteOrder(input: DeleteOrderInput!): DeleteOrderPayload
   claimRestaurantOwnership(input: ClaimRestaurantOwnershipInput!): ClaimRestaurantOwnershipPayload
 }
+
 
 
 

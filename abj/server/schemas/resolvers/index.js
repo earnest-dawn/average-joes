@@ -74,24 +74,36 @@ const resolvers = {
   },
   Mutation: {
     toggleStockStatus: async (parent, { input }, context) => {
-      if (context.user) {
-        const menuItem = await MenuItems.findById(input.id);
-        if (!menuItem) {
-          throw new Error("Menu item not found");
-        }
-        menuItem.inStock = !menuItem.inStock;
-        await menuItem.save();
-        return {
-          code: 200,
-          success: true,
-          message: "Stock status updated!",
-          menuItem: menuItem,
-        };
-      }
-      throw new AuthenticationError(
-        "You need to be logged in to toggle stock status!",
-      );
-    },
+  // 1. Check Auth
+  if (!context.user) {
+    throw new Error("You need to be logged in!");
+  }
+
+  try {
+    // EXTRACT FROM INPUT: Relay sends everything inside the 'input' object
+    const { id, inStock } = input; 
+
+    const menuItem = await MenuItems.findByIdAndUpdate(
+      id,
+      { inStock: inStock },
+      { new: true }
+    );
+
+    if (!menuItem) {
+      return { code: "404", success: false, message: "Menu item not found" };
+    }
+
+    return {
+      code: "200",
+      success: true,
+      message: "Stock status updated!",
+      menuItem: menuItem,
+    };
+  } catch (err) {
+    console.error(err);
+    return { code: "500", success: false, message: "Internal Server Error" };
+  }
+},
     register: async (parent, args) => {
       console.log("Received input:", args.input);
       const { username, password, email } = args.input;
