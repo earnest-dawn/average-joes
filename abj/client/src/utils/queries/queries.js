@@ -58,44 +58,23 @@ export const ME = gql`
 `;
 
 export const QUERY_RATINGS = gql`
-  query queriesRatingQuery {
+  query GetRatings {
     ratings {
-      _id
       emoji
       ratingText
-      createdAt
-      images
-      user {
-        id
-        username
-      }
       ratedId {
+        __typename 
         ... on MenuItems {
-          id
           name
-          ingredients
-          calories
           price
-          caption
-          images
-          category
-          inStock
         }
         ... on Combos {
-          id
           title
           price
-          menuItems {
-            id
-            name
-            ingredients
-            calories
-            price
-            caption
-            images
-            category
-            inStock
-          }
+        }
+        ... on Restaurant {
+          name
+          location
         }
       }
     }
@@ -154,36 +133,24 @@ export const QUERY_RESTAURANTS = gql`
   }
 `;
 
-export const QUERY_ORDER_INFO = gql`
-  query queriesOrderInfoQuery {
-    orderInfo {
-    combos {
-        id
-        title
-        menuItems {
+export const QUERY_CART_INFO = gql`
+  query GetCartInfo {
+    me {
+      cart {
+        items {
           id
-          name
-          ingredients
-          calories
-          price
-          caption
-          images
-          category
-          inStock
+          quantity
+          menuItem {
+            name
+            price
+          }
+          combo {
+            title
+            price
+          }
         }
-}
-        menuItems {
-        id
-        name
-        ingredients
-        calories
-        price
-        caption
-        images
-        category
-        inStock
+        totalPrice
       }
-      totalPrice
     }
   }
 `;
@@ -191,7 +158,7 @@ export const QUERY_ORDER_INFO = gql`
 export const GET_MY_ORDERS = gql`
   query GetMyOrders {
     myOrders {
-      _id
+      id
       totalPrice
       status
       createdAt
@@ -200,8 +167,8 @@ export const GET_MY_ORDERS = gql`
       }
       items {
         quantity
-        priceAtPurchase
-        menuItem {
+        priceAtPurchase 
+        itemReference { 
           name
         }
       }

@@ -6,9 +6,12 @@ export const REGISTER = graphql`
       token
       user {
         username
-        password
+        
         email
       }
+        code
+      success
+      message
     }
   }
 `;
@@ -19,8 +22,11 @@ export const LOGIN = graphql`
       token
       user {
         username
-        password
+        
       }
+        code
+      success
+      message
     }
   }
 `;
@@ -191,11 +197,15 @@ export const CLAIM_OWNERSHIP = graphql`
 `;
 
 export const CREATE_ORDER = graphql`
-  mutation mutationsCreateOrderMutation($items: [OrderItemInput]!, $Restaurant: ID!) {
-    createOrder(Restaurant: $Restaurant, items: $items) {
-        id
+  mutation mutationsCreateOrderMutation($input:CreateOrderInput!) {
+    createOrder(input: $input) {
+       order{
+       id
       totalPrice
-      status
+      status} 
+      code
+      success
+      message
     }
   }
 `;
@@ -209,3 +219,15 @@ export const UPDATE_ORDER_STATUS = graphql`
     }
   }
 `;
+
+export const DELETE_ORDER = graphql`
+mutation mutationsDeleteBadOrderMutation ($input: DeleteOrderInput!) {
+  deleteOrder(input: $input) {
+    code
+    success
+    message
+    order {
+      id
+    }
+  }
+}`;

@@ -4,7 +4,7 @@ const orderSchema = new Schema({
     customer: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     restaurant: { type: Schema.Types.ObjectId, ref: 'Restaurant', required: true },
     items: [{
-        menuItem: { type: Schema.Types.ObjectId, ref: 'MenuItems' },
+        itemReference: { type: Schema.Types.ObjectId, ref: 'MenuItems' },
         quantity: { type: Number, default: 1 },
         priceAtPurchase: { type: Number, required: true } 
     }],

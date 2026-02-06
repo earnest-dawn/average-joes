@@ -4,17 +4,8 @@ import { graphql } from "babel-plugin-relay/macro";
 
 import {
   Box,
-  Drawer,
-  AppBar,
-  Toolbar,
   Typography,
   Divider,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Badge,
   Grid,
   Card,
   CardHeader,
@@ -23,26 +14,21 @@ import {
   Button,
   Chip,
   IconButton,
-  Tooltip,
   Container,
   Paper,
-  CssBaseline,
-  ThemeProvider,
-  createTheme,
+  CardMedia,
+  Stack
 } from "@mui/material";
 import {
-  Dashboard as DashboardIcon,
-  ReceiptLong as OrdersIcon,
-  RestaurantMenu as MenuIcon,
-  LocationOn as MapIcon,
-  Notifications as NotificationsIcon,
-  AccountCircle,
   MoreVert as MoreIcon,
   CheckCircleOutline,
   Timer as TimerIcon,
-  LocalShipping,
+  Refresh as RefreshIcon,
+  Inventory as InventoryIcon
 } from "@mui/icons-material";
 import "./manageOrders.css";
+import Auth from "../../../utils/auth"
+
 
 const ManageOrdersPageQuery = graphql`
   query ManageOrdersPageQuery {
@@ -67,9 +53,25 @@ const ManageOrdersPageQuery = graphql`
 
 export default function ManageOrdersPage() {
   const data = useLazyLoadQuery(ManageOrdersPageQuery, {});
+  const loggedIn = Auth.loggedIn();
+  const [loading, setLoading] = useState(false);
 
   const mongoMenu = (data?.menuItems || []).filter((item) => item !== null);
   const [orders, setOrders] = useState(mongoMenu);
+const handleAdd = (menuItem) => {
+    console.log("Adding to cart:", menuItem.name);
+    // Add logic here for actual cart management
+  };
+  const toggleStockStatus = (id) => {
+    setOrders(prevOrders => 
+      prevOrders.map(order => 
+        order.id === id ? { ...order, inStock: !order.inStock } : order
+      )
+    );
+  };
+  const handleMarkReady = (id) => {
+    setOrders(prevOrders => prevOrders.filter(order => order.id !== id));
+  };
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -85,176 +87,142 @@ export default function ManageOrdersPage() {
   };
 
   return (
-    <div id="wholeAbout">
-      <Box sx={{ m: 0 }}>
-        <Paper className="menuAdmin-paper-block ">
-          <Paper>
-            <Box
-              component="main"
-              sx={{ flexGrow: 1, p: 3, bgcolor: "background.default" }}
-            >
-              <Toolbar />
-              <Container maxWidth="lg">
-                {/* Header Section */}
-                <Box
-                  sx={{
-                    mb: 4,
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <Box>
-                    <Typography
-                      variant="h4"
-                      gutterBottom
-                      sx={{ fontWeight: 800 }}
-                    >
-                      Active Orders
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Manage incoming kitchen requests and pickup status.
-                    </Typography>
-                  </Box>
-                  <Button
-                    variant="contained"
-                    startIcon={<LocalShipping />}
-                    size="large"
-                  >
-                    Go Live at New Spot
-                  </Button>
-                </Box>
+    <Box sx={{ backgroundColor: "#f4f7f6", minHeight: "100vh", pb: 10 }}>
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <Box sx={{ mb: 4 }}>
+          <Typography
+            variant="h3"
+            align="center"
+            sx={{
+              backgroundColor: "#1a2027",
+              color: "#ffffff",
+              fontWeight: 700,
+              py: 3,
+              borderRadius: 1,
+              position: 'relative'
+            }}
+          >
+            Order Management
+          </Typography>
+        </Box>
+a
+        <Container maxWidth="lg">
+          <Stack direction="row" justifyContent="flex-end" sx={{ mb: 2 }}>
+            
+          </Stack>
 
-                {/* Orders Grid */}
-                <Grid container spacing={3}>
-                  {orders.map((order) => (
-                    <Grid item xs={12} md={6} lg={4} key={order.id}>
-                      <Card
-                        elevation={0}
-                        sx={{
-                          border: "1px solid #e0e0e0",
-                          position: "relative",
-                        }}
-                      >
-                        {order.priority === "high" && (
-                          <Box
-                            sx={{
-                              height: 4,
-                              bgcolor: "error.main",
-                              width: "100%",
-                            }}
-                          />
-                        )}
-                        <CardHeader
-                          action={
-                            <IconButton aria-label="settings">
-                              <MoreIcon />
-                            </IconButton>
-                          }
-                          title={
-                            <Typography
-                              variant="subtitle1"
-                              sx={{ fontWeight: 700 }}
-                            >
-                              {order.id}
-                            </Typography>
-                          }
-                          subheader={
-                            <Box
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 0.5,
-                                mt: 0.5,
-                              }}
-                            >
-                              <TimerIcon sx={{ fontSize: 14 }} />
-                              <Typography variant="caption">
-                                {order.time}
-                              </Typography>
-                            </Box>
-                          }
-                        />
-                        <CardContent sx={{ pt: 0 }}>
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            gutterBottom
-                          >
-                            Customer: <strong>{order.customer}</strong>
-                          </Typography>
-                          <Paper
-                            variant="outlined"
-                            sx={{ p: 1.5, bgcolor: "#fafafa", mt: 1 }}
-                          >
-                            <List dense disablePadding>
-                              {order.items.map((item, idx) => (
-                                <ListItem key={idx} disablePadding>
-                                  <ListItemText
-                                    primary={item}
-                                    primaryTypographyProps={{
-                                      variant: "body2",
-                                      fontWeight: 500,
-                                    }}
-                                  />
-                                </ListItem>
-                              ))}
-                            </List>
-                          </Paper>
-                          <Box
-                            sx={{
-                              mt: 2,
-                              display: "flex",
-                              justifyContent: "space-between",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Typography
-                              variant="h6"
-                              color="primary"
-                              sx={{ fontWeight: 700 }}
-                            >
-                              {order.total}
-                            </Typography>
-                            <Chip
-                              label={order.status}
-                              color={getStatusColor(order.status)}
-                              size="small"
-                              sx={{ fontWeight: 700 }}
-                            />
-                          </Box>
-                        </CardContent>
-                        <Divider />
-                        <CardActions sx={{ justifyContent: "flex-end", p: 2 }}>
-                          <Button
-                            size="small"
-                            variant="outlined"
-                            color="inherit"
-                          >
-                            Details
-                          </Button>
-                          <Button
-                            size="small"
-                            variant="contained"
-                            color={
-                              order.status === "Ready" ? "success" : "primary"
-                            }
-                            startIcon={<CheckCircleOutline />}
-                          >
-                            {order.status === "Ready"
-                              ? "Complete"
-                              : "Mark Ready"}
-                          </Button>
-                        </CardActions>
-                      </Card>
-                    </Grid>
-                  ))}
+          <Paper sx={{ p: 4, borderRadius: 3, boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+            <Grid container spacing={3}>
+              {orders.length === 0 ? (
+                <Grid item xs={12}>
+                  <Box sx={{ p: 8, textAlign: 'center' }}>
+                    <Typography variant="h6" color="text.secondary" gutterBottom>
+                      All caught up!
+                    </Typography>
+                    <Typography color="text.disabled">No active orders to manage.</Typography>
+                  </Box>
                 </Grid>
-              </Container>
-            </Box>
+              ) : (
+                orders.map((order) => (
+                  <Grid item xs={12} md={6} lg={4} key={order.id}>
+                    <Card 
+                      elevation={0} 
+                      sx={{ 
+                        border: "1px solid #e0e0e0", 
+                        borderRadius: 3,
+                        transition: '0.3s',
+                        '&:hover': { boxShadow: '0 8px 24px rgba(0,0,0,0.08)' }
+                      }}
+                    >
+                      <CardHeader
+                        action={<IconButton><MoreIcon /></IconButton>}
+                        title={
+                          <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
+                            Order ID: {order.id.slice(-6).toUpperCase()}
+                          </Typography>
+                        }
+                        subheader={
+                          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mt: 0.5 }}>
+                            <TimerIcon sx={{ fontSize: 14 }} />
+                            <Typography variant="caption">{order.category}</Typography>
+                          </Box>
+                        }
+                      />
+                      
+                      <CardMedia
+                        component="img"
+                        height="160"
+                        image={`https://picsum.photos/seed/${order.id}/400/300`}
+                        alt={order.name}
+                      />
+
+                      <CardContent sx={{ pt: 2 }}>
+                        <Typography variant="body1" sx={{ fontWeight: 600, mb: 1 }}>
+                          {order.name}
+                        </Typography>
+                        
+                        <Paper 
+                          variant="outlined" 
+                          sx={{ 
+                            p: 1.5, 
+                            bgcolor: "#fafafa", 
+                            mt: 1, 
+                            borderRadius: 2,
+                            borderStyle: 'dashed' 
+                          }}
+                        >
+                          <Typography variant="caption" display="block" sx={{ mb: 0.5, fontWeight: 700, color: 'text.secondary' }}>
+                            Ingredients:
+                          </Typography>
+                          <Typography variant="body2" sx={{ color: '#555', fontSize: '0.85rem', minHeight: '3em' }}>
+                            {order.ingredients}
+                          </Typography>
+                        </Paper>
+
+                        <Box sx={{ mt: 3, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                          <Typography variant="h6" color="primary" sx={{ fontWeight: 800 }}>
+                            ${order.price.toFixed(2)}
+                          </Typography>
+                          <Chip
+                            label={order.inStock ? "In Stock" : "Out of Stock"}
+                            color={order.inStock ? "success" : "error"}
+                            onClick={() => toggleStockStatus(order.id)}
+                            size="small"
+                            sx={{ fontWeight: 700, borderRadius: 1, cursor: 'pointer' }}
+                          />
+                        </Box>
+                      </CardContent>
+                      
+                      <Divider />
+                      
+                      <CardActions sx={{ justifyContent: "space-between", p: 2, bgcolor: '#fcfcfc' }}>
+                        <Button
+                          size="small"
+                          startIcon={<InventoryIcon />}
+                          onClick={() => toggleStockStatus(order.id)}
+                          sx={{ textTransform: 'none' }}
+                        >
+                          Toggle Stock
+                        </Button>
+                        <Button 
+                          size="small" 
+                          variant="contained" 
+                          color="success"
+                          onClick={() => handleMarkReady(order.id)}
+                          startIcon={<CheckCircleOutline />}
+                          sx={{ borderRadius: 1.5, textTransform: 'none', fontWeight: 600 }}
+                        >
+                          Mark Ready
+                        </Button>
+                      </CardActions>
+                    </Card>
+                  </Grid>
+                ))
+              )}
+            </Grid>
           </Paper>
-        </Paper>
+        </Container>
       </Box>
-    </div>
+    </Box>
   );
 }

@@ -27,7 +27,7 @@ export default function ManageCombosPage() {
   const data = useLazyLoadQuery(ManageCombosPageQuery, {});
   const mongoMenu = (data?.combos || []).filter(item => item !== null);  
   const comboColumns = [
-    { label: "Combo Name", key: "name" },
+    { label: "Combo Name", key: "title" },
     { label: "Category", key: "category" },
     { label: "Price", key: "price" },
     { label: "Calories", key: "calories" },

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<25dd907bc1e92d17a215b2b580714e9e>>
+ * @generated SignedSource<<ca1494702d9edb8e654f89b1642df138>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -41,7 +41,21 @@ v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "password",
+  "name": "code",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "success",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "message",
   "storageKey": null
 };
 return {
@@ -68,11 +82,13 @@ return {
             "name": "user",
             "plural": false,
             "selections": [
-              (v3/*: any*/),
-              (v4/*: any*/)
+              (v3/*: any*/)
             ],
             "storageKey": null
-          }
+          },
+          (v4/*: any*/),
+          (v5/*: any*/),
+          (v6/*: any*/)
         ],
         "storageKey": null
       }
@@ -104,7 +120,6 @@ return {
             "plural": false,
             "selections": [
               (v3/*: any*/),
-              (v4/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -114,23 +129,26 @@ return {
               }
             ],
             "storageKey": null
-          }
+          },
+          (v4/*: any*/),
+          (v5/*: any*/),
+          (v6/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "992efd6c6a5f2af5d485f133997be501",
+    "cacheID": "7232c7057ac76f00129b89527d9df322",
     "id": null,
     "metadata": {},
     "name": "mutationsLoginMutation",
     "operationKind": "mutation",
-    "text": "mutation mutationsLoginMutation(\n  $input: LoginInput!\n) {\n  login(input: $input) {\n    token\n    user {\n      username\n      password\n      id\n    }\n  }\n}\n"
+    "text": "mutation mutationsLoginMutation(\n  $input: LoginInput!\n) {\n  login(input: $input) {\n    token\n    user {\n      username\n      id\n    }\n    code\n    success\n    message\n  }\n}\n"
   }
 };
 })();
 
-node.hash = "a61fed6af8919abe5451c4b49b3f2a80";
+node.hash = "3f47d86ba1965271f2bf19b5e664124c";
 
 module.exports = node;

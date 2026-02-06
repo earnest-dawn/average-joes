@@ -60,7 +60,7 @@ type Rating implements Node {
   ratedId: RatedObject
 }
 
-union RatedObject = MenuItems | Combos
+union RatedObject = MenuItems | Combos | Restaurant
 
 type Auth {
   token: ID
@@ -70,6 +70,7 @@ type Auth {
 input CreateRatingInput {
   ratedId: ID
   emoji: String!
+  onModel: String!
   ratingText: String
   images: [String]
   clientMutationId: String
@@ -259,7 +260,7 @@ input CreateRestaurantInput {
   hours: String
   clientMutationId: String
 }
-type CreateRestaurantPayload {
+type CreateRestaurantPayload implements MutationResponse {
   code: String!
   success: Boolean!
   message: String!
@@ -271,7 +272,7 @@ input DeleteRestaurantInput {
   clientMutationId: String
 }
 
-type DeleteRestaurantPayload {
+type DeleteRestaurantPayload implements MutationResponse {
   code: String!
   success: Boolean!
   message: String!
@@ -289,11 +290,11 @@ input AddRestaurantInput {
   contactInfo: String!
   images: [String]
   hours: String
-
+  restaurantId: String
   clientMutationId: String
 }
 
-type AddRestaurantPayload {
+type AddRestaurantPayload implements MutationResponse {
   code: String!
   success: Boolean!
   message: String!
@@ -316,7 +317,7 @@ input EditRestaurantInput {
   clientMutationId: String
 }
 
-type EditRestaurantPayload {
+type EditRestaurantPayload implements MutationResponse {
   code: String!
   success: Boolean!
   message: String!
@@ -377,7 +378,7 @@ enum OrderStatus {
 
 type Order implements Node {
   id: ID
-  customer: User!
+  customer: User
   restaurant: Restaurant!
   items: [OrderItem]!
   totalPrice: Float!
@@ -387,9 +388,19 @@ type Order implements Node {
 
 type OrderItem {
   name: String!    
-  price: Float!    
+  priceAtPurchase: Float!    
   quantity: Int!
   itemReference: MenuItems 
+}
+input DeleteOrderInput {
+  orderId: ID!
+}
+
+type DeleteOrderPayload implements MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+  order: Order
 }
 input CheckoutInput {
   restaurantId: ID!
@@ -430,6 +441,20 @@ type ClaimRestaurantOwnershipPayload implements MutationResponse {
   success: Boolean!
   message: String!
   restaurant: Restaurant
+  clientMutationId: String
+}
+
+input CreateOrderInput {
+  restaurantId: ID!
+  items: [OrderItemInput]!
+  clientMutationId: String
+}
+
+type CreateOrderPayload implements MutationResponse {
+  code: String!
+  success: Boolean!
+  message: String!
+  order: Order
   clientMutationId: String
 }
 
@@ -475,9 +500,12 @@ type Mutation {
   removeFromCart(input: RemoveFromCartInput!): RemoveFromCartPayload
   checkout(input: CheckoutInput!): CheckoutPayload
   updateOrderStatus(input: UpdateOrderStatusInput!): UpdateOrderStatusPayload
-  createOrder(Restaurant: ID!, items: [OrderItemInput]!): Order
+  createOrder(input: CreateOrderInput!): CreateOrderPayload
+  deleteOrder(input: DeleteOrderInput!): DeleteOrderPayload
   claimRestaurantOwnership(input: ClaimRestaurantOwnershipInput!): ClaimRestaurantOwnershipPayload
 }
+
+
 
 
 

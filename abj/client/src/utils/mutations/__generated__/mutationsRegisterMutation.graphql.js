@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b26c4159244b350cd6b885bbda167b86>>
+ * @generated SignedSource<<f19dac3ce9681f809cfabb69bcc4aaa0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -41,14 +41,28 @@ v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "password",
+  "name": "email",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "email",
+  "name": "code",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "success",
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "message",
   "storageKey": null
 };
 return {
@@ -76,11 +90,13 @@ return {
             "plural": false,
             "selections": [
               (v3/*: any*/),
-              (v4/*: any*/),
-              (v5/*: any*/)
+              (v4/*: any*/)
             ],
             "storageKey": null
-          }
+          },
+          (v5/*: any*/),
+          (v6/*: any*/),
+          (v7/*: any*/)
         ],
         "storageKey": null
       }
@@ -113,7 +129,6 @@ return {
             "selections": [
               (v3/*: any*/),
               (v4/*: any*/),
-              (v5/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -123,23 +138,26 @@ return {
               }
             ],
             "storageKey": null
-          }
+          },
+          (v5/*: any*/),
+          (v6/*: any*/),
+          (v7/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "f61cf3081ff592d16559abe1d29c72a1",
+    "cacheID": "d22680377cc92d9ee787b24393ba2f07",
     "id": null,
     "metadata": {},
     "name": "mutationsRegisterMutation",
     "operationKind": "mutation",
-    "text": "mutation mutationsRegisterMutation(\n  $input: RegisterInput!\n) {\n  register(input: $input) {\n    token\n    user {\n      username\n      password\n      email\n      id\n    }\n  }\n}\n"
+    "text": "mutation mutationsRegisterMutation(\n  $input: RegisterInput!\n) {\n  register(input: $input) {\n    token\n    user {\n      username\n      email\n      id\n    }\n    code\n    success\n    message\n  }\n}\n"
   }
 };
 })();
 
-node.hash = "a811ab8f748e04b68bbdca58472c49a7";
+node.hash = "e09b9c894fdf676d1e16bafcfafc6a74";
 
 module.exports = node;
