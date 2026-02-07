@@ -53,7 +53,6 @@ const resolvers = {
     restaurants: async () => {
       return Restaurant.find({}).populate("menuItems").populate("combos").populate("owner");
     },
-    
      myOrders: async (_, __, context) => {
   if (!context.user) throw new AuthenticationError();
   return await Order.find({ customer: context.user._id })
@@ -74,13 +73,11 @@ const resolvers = {
   },
   Mutation: {
     toggleStockStatus: async (parent, { input }, context) => {
-  // 1. Check Auth
   if (!context.user) {
     throw new Error("You need to be logged in!");
   }
 
   try {
-    // EXTRACT FROM INPUT: Relay sends everything inside the 'input' object
     const { id, inStock } = input; 
 
     const menuItem = await MenuItems.findByIdAndUpdate(
@@ -153,7 +150,6 @@ const resolvers = {
   if (!context.user) throw new AuthenticationError();
 
   const user = await User.findById(context.user._id);
-  // input.id is [ID] per your schema
   user.cart.items = user.cart.items.filter(
     item => !input.id.includes(item.menuItem?.toString()) && !input.id.includes(item.combo?.toString())
   );
@@ -165,8 +161,7 @@ const resolvers = {
     code: "200",
     success: true,
     message: "Items removed from cart",
-    // Note: Your schema says this returns RemoveFromCartPayload which lacks a 'user' field.
-    // Ensure your schema matches what you return!
+    
   };
 },
     
@@ -260,6 +255,7 @@ const resolvers = {
     message: "Login successful", token, user: { username: user.username, id: user.id } };
     },
     createMenuItems: async (parent, { input }, context) => {
+      const { restaurantId, ...itemData } = input;
       if (!context.user) {
         throw new AuthenticationError(
           "You need to be logged in to create menu items!",
@@ -268,9 +264,13 @@ const resolvers = {
 
       try {
         let newMenuItem = await MenuItems.create({
-          ...input,
+          ...itemData,
         });
-
+await Restaurant.findByIdAndUpdate(
+    restaurantId,
+    { $push: { menuItems: newMenuItem._id } },
+    { new: true }
+  );
         return {
           menuItem: {
             ...newMenuItem._doc,
@@ -470,65 +470,79 @@ return {
     
   
 createOrder: async (_, { input }, context) => {
-  const { restaurantId, items } = input;
   if (!context.user) throw new AuthenticationError();
 
-  let total = 0;
-const itemsToSave = await Promise.all(items.map(async (item) => {
-    const dbItem = await MenuItems.findById(item.menuItemId);
-    if (!dbItem) throw new Error(`Menu item ${item.menuItemId} not found`); 
-    total += dbItem.price * item.quantity;
-    return {
-      itemReference: item.menuItemId, 
-  quantity: item.quantity,
-priceAtPurchase: dbItem.price 
-  };
-  }));
-const order = await Order.create({
-    customer: context.user._id,
-    restaurant: restaurantId,
-    items: itemsToSave,
-    totalPrice: total,
-    status: 'PENDING'
-  });
-  const populatedOrder = await order.populate([
-  { path: 'customer' },
-  { path: 'restaurant' },
-  { path: 'items.itemReference' }
-]);
+  const { restaurantId, items } = input;
 
-  return {
-    code: "201",
-    success: true,
-    message: "Order placed!",
-    order: populatedOrder
-  };
+  try {
+    let total = 0;
+    
+    // 1. Validate items and calculate total price server-side
+    const itemsToSave = await Promise.all(items.map(async (item) => {
+      const dbItem = await MenuItems.findById(item.menuItemId);
+      if (!dbItem) throw new Error(`Item ${item.menuItemId} not found`);
+      if (!dbItem.inStock) throw new Error(`${dbItem.name} is out of stock`);
+
+      total += dbItem.price * item.quantity;
+
+      return {
+        itemReference: dbItem._id,
+        quantity: item.quantity,
+        priceAtPurchase: dbItem.price 
+      };
+    }));
+
+    const order = await Order.create({
+      customer: context.user._id,
+      restaurant: restaurantId,
+      items: itemsToSave,
+      totalPrice: total,
+      status: 'PENDING'
+    });
+
+    await User.findByIdAndUpdate(context.user._id, {
+      $set: { "cart.items": [], "cart.totalPrice": 0 }
+    });
+
+    const populatedOrder = await order.populate(['customer', 'restaurant', 'items.itemReference']);
+
+    return {
+      code: "201",
+      success: true,
+      message: "Order placed successfully!",
+      order: populatedOrder
+    };
+  } catch (err) {
+    return {
+      code: "400",
+      success: false,
+      message: err.message,
+      order: null
+    };
+  }
 },
 deleteOrder: async (parent, { input }, context) => {
   if (!context.user) throw new AuthenticationError();
 
   const { orderId } = input;
   
-  // 1. Find the order and populate the customer data FIRST
   const order = await Order.findById(orderId).populate('customer');
 
   if (!order) {
     return { code: "404", success: false, message: "Order not found" };
   }
 
-  // 2. Security check
   if (order.customer._id.toString() !== context.user._id.toString()) {
     return { code: "403", success: false, message: "Not authorized" };
   }
 
-  // 3. Delete it now that we have the 'order' object in memory with its customer
   await Order.findByIdAndDelete(orderId);
 
   return {
     code: "200",
     success: true,
     message: "Order deleted successfully",
-    order: order // This now contains the populated customer username
+    order: order 
   };
 },
         addToCart: async (_, { input }, context) => {
@@ -583,14 +597,7 @@ deleteOrder: async (parent, { input }, context) => {
       return await SelectedModel.findById(parent.ratedId);
     },
   },
- Restaurant: {
-    activeOrders: async (parent) => {
-      return await Order.find({ 
-        restaurant: parent._id, 
-        status: { $in: ['PENDING', 'PREPARING', 'READY'] } 
-      }).populate('customer items.itemReference');
-    }
-  },
+
   RatedObject: {
     __resolveType(obj) {
       if (obj.name) return "MenuItems";
@@ -602,11 +609,9 @@ deleteOrder: async (parent, { input }, context) => {
   OrderItem: {
   priceAtPurchase: (parent) => parent.priceAtPurchase ?? 0,
   name: (parent) => {
-    // If it's populated, it's an object with a name
     if (parent.itemReference && typeof parent.itemReference === 'object') {
       return parent.itemReference.name || "Unknown Item";
     }
-    // If it's NOT populated, it's just an ID string or undefined
     return "Unknown Item";
   }
 },

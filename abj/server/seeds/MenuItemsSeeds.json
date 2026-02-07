@@ -6,7 +6,8 @@
         "ingredients": "chicken, lettuce, tomato, flour tortilla",
         "calories": 89,
         "caption": 64,
-        "category": "entree"        
+        "category": "entree",
+        "restaurant": "69704ba034657aa424464b6e"        
     },
     {
         "_id": "507f1f77bcf86cd799439012",
@@ -15,7 +16,8 @@
         "ingredients": "strawberry syrup, Sprite",
         "calories": 97,
         "caption": 57,
-        "category": "drink"
+        "category": "drink",
+        "restaurant": "69704ba034657aa424464b6e"
     },
     {
         "_id": "507f1f77bcf86cd799439013",
@@ -24,6 +26,7 @@
         "ingredients": "apricot, lemon",
         "calories": 92,
         "caption": 50,
-        "category": "appetizer"
+        "category": "appetizer",
+        "restaurant": "6972f078a012f428866fc018"
     }
 ]

@@ -108,6 +108,7 @@ export const TOGGLE_STOCK_STATUS = graphql`
 `;
 
 
+
 export const CREATE_RATING = graphql`
   mutation mutationsCreateRatingMutation($input: CreateRatingInput!) {
     createRating(input: $input) {

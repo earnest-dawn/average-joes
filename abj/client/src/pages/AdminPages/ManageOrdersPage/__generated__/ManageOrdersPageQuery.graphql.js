@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d91ee37404c49b8432952d81c9cfae5c>>
+ * @generated SignedSource<<62eaf2210edb97ab4263507d9687fd95>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,76 +20,28 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "totalPrice",
   "storageKey": null
 },
 v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "ingredients",
+  "name": "status",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "calories",
+  "name": "name",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "price",
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "caption",
-  "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "images",
-  "storageKey": null
-},
-v7 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "category",
-  "storageKey": null
-},
-v8 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "inStock",
-  "storageKey": null
-},
-v9 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "username",
-  "storageKey": null
-},
-v10 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "User",
-  "kind": "LinkedField",
-  "name": "users",
-  "plural": true,
-  "selections": [
-    (v0/*: any*/),
-    (v9/*: any*/)
-  ],
+  "name": "ingredients",
   "storageKey": null
 };
 return {
@@ -102,29 +54,41 @@ return {
       {
         "alias": null,
         "args": null,
-        "concreteType": "MenuItems",
+        "concreteType": "Order",
         "kind": "LinkedField",
-        "name": "menuItems",
+        "name": "myOrders",
         "plural": true,
         "selections": [
           (v0/*: any*/),
           (v1/*: any*/),
           (v2/*: any*/),
-          (v3/*: any*/),
-          (v4/*: any*/),
-          (v5/*: any*/),
-          (v6/*: any*/),
-          (v7/*: any*/),
-          (v8/*: any*/),
           {
+            "alias": null,
             "args": null,
-            "kind": "FragmentSpread",
-            "name": "MenuItemsFragment"
+            "concreteType": "OrderItem",
+            "kind": "LinkedField",
+            "name": "items",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "MenuItems",
+                "kind": "LinkedField",
+                "name": "itemReference",
+                "plural": false,
+                "selections": [
+                  (v3/*: any*/),
+                  (v4/*: any*/)
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
           }
         ],
         "storageKey": null
-      },
-      (v10/*: any*/)
+      }
     ],
     "type": "Query",
     "abstractKey": null
@@ -138,109 +102,33 @@ return {
       {
         "alias": null,
         "args": null,
-        "concreteType": "MenuItems",
+        "concreteType": "Order",
         "kind": "LinkedField",
-        "name": "menuItems",
+        "name": "myOrders",
         "plural": true,
         "selections": [
           (v0/*: any*/),
           (v1/*: any*/),
           (v2/*: any*/),
-          (v3/*: any*/),
-          (v4/*: any*/),
-          (v5/*: any*/),
-          (v6/*: any*/),
-          (v7/*: any*/),
-          (v8/*: any*/),
           {
             "alias": null,
             "args": null,
-            "concreteType": "Rating",
+            "concreteType": "OrderItem",
             "kind": "LinkedField",
-            "name": "ratings",
+            "name": "items",
             "plural": true,
             "selections": [
-              (v0/*: any*/),
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "emoji",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "ratingText",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "createdAt",
-                "storageKey": null
-              },
-              (v6/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "User",
+                "concreteType": "MenuItems",
                 "kind": "LinkedField",
-                "name": "user",
+                "name": "itemReference",
                 "plural": false,
                 "selections": [
-                  (v9/*: any*/),
+                  (v3/*: any*/),
+                  (v4/*: any*/),
                   (v0/*: any*/)
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": null,
-                "kind": "LinkedField",
-                "name": "ratedId",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "__typename",
-                    "storageKey": null
-                  },
-                  {
-                    "kind": "InlineFragment",
-                    "selections": [
-                      (v1/*: any*/)
-                    ],
-                    "type": "MenuItems",
-                    "abstractKey": null
-                  },
-                  {
-                    "kind": "InlineFragment",
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "title",
-                        "storageKey": null
-                      }
-                    ],
-                    "type": "Combos",
-                    "abstractKey": null
-                  },
-                  {
-                    "kind": "InlineFragment",
-                    "selections": [
-                      (v0/*: any*/)
-                    ],
-                    "type": "Node",
-                    "abstractKey": "__isNode"
-                  }
                 ],
                 "storageKey": null
               }
@@ -249,21 +137,20 @@ return {
           }
         ],
         "storageKey": null
-      },
-      (v10/*: any*/)
+      }
     ]
   },
   "params": {
-    "cacheID": "0abdd1b0d094449a55af56ee99ca2bff",
+    "cacheID": "6fe12ac60429977e262dfc85e166f665",
     "id": null,
     "metadata": {},
     "name": "ManageOrdersPageQuery",
     "operationKind": "query",
-    "text": "query ManageOrdersPageQuery {\n  menuItems {\n    id\n    name\n    ingredients\n    calories\n    price\n    caption\n    images\n    category\n    inStock\n    ...MenuItemsFragment\n  }\n  users {\n    id\n    username\n  }\n}\n\nfragment MenuItemsFragment on MenuItems {\n  id\n  name\n  ingredients\n  calories\n  price\n  caption\n  images\n  ratings {\n    ...RatingFragment\n    id\n  }\n  category\n  inStock\n}\n\nfragment RatingFragment on Rating {\n  id\n  emoji\n  ratingText\n  createdAt\n  images\n  user {\n    username\n    id\n  }\n  ratedId {\n    __typename\n    ... on MenuItems {\n      name\n    }\n    ... on Combos {\n      title\n    }\n    ... on Node {\n      __isNode: __typename\n      id\n    }\n  }\n}\n"
+    "text": "query ManageOrdersPageQuery {\n  myOrders {\n    id\n    totalPrice\n    status\n    items {\n      itemReference {\n        name\n        ingredients\n        id\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-node.hash = "7052a8337e03d349179ea74a7cf8445c";
+node.hash = "6150b302580570fb235d503bee86b58c";
 
 module.exports = node;

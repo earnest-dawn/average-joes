@@ -25,6 +25,7 @@ type MenuItems implements Node {
   category: String!
   images: [String]
   inStock: Boolean
+  restaurant: Restaurant
 }
 
 type Friend implements Node {
@@ -192,9 +193,11 @@ input CreateMenuItemInput {
   calories: Int
   price: Float!
   category: String!
+  images: [String]
+  restaurantId: ID!
   clientMutationId: String
 }
-
+  
 type CreateMenuItemPayload implements MutationResponse {
   code: String!
   success: Boolean!
@@ -247,7 +250,7 @@ type Restaurant implements Node {
   images: [String]
   hours: String
   owner: User! 
-  activeOrders: [Order]
+  myOrders: [Order]
 }
 
 input CreateRestaurantInput {
@@ -505,9 +508,6 @@ type Mutation {
   deleteOrder(input: DeleteOrderInput!): DeleteOrderPayload
   claimRestaurantOwnership(input: ClaimRestaurantOwnershipInput!): ClaimRestaurantOwnershipPayload
 }
-
-
-
 
 
 

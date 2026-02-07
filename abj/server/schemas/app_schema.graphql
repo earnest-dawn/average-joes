@@ -24,6 +24,7 @@ type MenuItems implements Node {
   category: String!
   images: [String]
   inStock: Boolean
+  restaurant: Restaurant
 }
 
 type Friend implements Node {
@@ -191,6 +192,8 @@ input CreateMenuItemInput {
   calories: Int
   price: Float!
   category: String!
+  images: [String]
+  restaurantId: ID!
   clientMutationId: String
 }
 
@@ -246,7 +249,7 @@ type Restaurant implements Node {
   images: [String]
   hours: String
   owner: User! 
-  activeOrders: [Order]
+  myOrders: [Order]
 }
 
 input CreateRestaurantInput {

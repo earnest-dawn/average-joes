@@ -103,7 +103,6 @@ const toggleStockStatus = (id, currentInStock) => {
         "&:hover": { transform: "scale(1.02)" },
       }}
     >
-      {/* CardActionArea now ONLY wraps the content, not the footer button */}
       <CardActionArea sx={{ flexGrow: 1 }}>
         <CardMedia
           component="img"
@@ -112,25 +111,62 @@ const toggleStockStatus = (id, currentInStock) => {
           alt={item.name}
         />
         <CardContent>
-          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
-            <Typography variant="h5" sx={{ fontWeight: 700 }}>{item.name}</Typography>
-            <Typography variant="h6" color="primary" sx={{ fontWeight: 800 }}>${item.price}</Typography>
-          </Box>
-        
-          <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
-            <Chip
-              label={item.inStock ? "Available" : "Out of Stock"}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                toggleStockStatus(item.id, item.inStock);
+          {/* MAIN HEADER BOX */}
+          <Box 
+            sx={{ 
+              display: "flex", 
+              justifyContent: "space-between", 
+              alignItems: "flex-start", // Aligns the top of the name with the top of the price group
+              mb: 1 
+            }}
+          >
+            <Typography 
+              variant="h6" 
+              sx={{ 
+                fontWeight: 700, 
+                lineHeight: 1.2, 
+                maxWidth: '60%' // Prevents long names from squashing the price
               }}
-              size="small"
-              color={item.inStock ? "success" : "error"}
-              sx={{ cursor: "pointer" }}
-            />
-            <Chip label={`${item.calories} Cal`} size="small" variant="outlined" />
+            >
+              {item.name}
+            </Typography>
+            
+            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 0.5 }}>
+              <Typography 
+                variant="subtitle1" 
+                color="primary" 
+                sx={{ fontWeight: 800, lineHeight: 1 }}
+              >
+                ${item.price}
+              </Typography>
+              <Chip 
+                label={`${item.calories} Cal`} 
+                size="small" 
+                variant="outlined" 
+                sx={{ fontSize: '0.65rem', height: '20px' }} 
+              />
+            </Box>
           </Box>
+
+          {loggedIn ? (
+            <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
+              <Chip
+                label={item.inStock ? "Available" : "Out of Stock"}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  toggleStockStatus(item.id, item.inStock);
+                }}
+                size="small"
+                color={item.inStock ? "success" : "error"}
+                sx={{ cursor: "pointer" }}
+              />
+            </Box>
+          ) : (
+            <Box sx={{ mb: 2, fontSize: '0.75rem', color: 'text.secondary' }}>
+              Login to see stock status and order!
+            </Box>
+          )}
 
           <Typography variant="body2" color="text.secondary" sx={{ fontStyle: "italic", mb: 1 }}>
             {item.caption}
@@ -141,7 +177,6 @@ const toggleStockStatus = (id, currentInStock) => {
         </CardContent>
       </CardActionArea>
 
-      {/* Button is now outside CardActionArea - FIXES NESTING ERROR */}
       <Button
         className="plsRegister"
         variant="contained"
@@ -162,18 +197,15 @@ const toggleStockStatus = (id, currentInStock) => {
     </Card>
   );
 
-
   return (
     <Box sx={{ backgroundColor: "#004c4c", minHeight: "100vh", py: 4, px: 2 }}>
-      
-        <Typography
-          variant="h3"
-          align="center"
-          sx={{background: "var(--col8)", color: "var(--col7)", fontWeight: 700, mb: 4, py:2}}
-        >
-          Menu
-        </Typography>
-      
+      <Typography
+        variant="h3"
+        align="center"
+        sx={{background: "var(--col8)", color: "var(--col7)", fontWeight: 700, mb: 4, py:2}}
+      >
+        Menu
+      </Typography>
 
       {loading ? (
         <Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
