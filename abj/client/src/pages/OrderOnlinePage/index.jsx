@@ -62,7 +62,6 @@ export default function OrderOnline() {
 commitAddToCart({
     variables: inputVariables,
     onCompleted: (response, errors) => {
-      // Logic for handling null responses
       if (errors) {
         console.error("GraphQL Errors:", errors);
         return;

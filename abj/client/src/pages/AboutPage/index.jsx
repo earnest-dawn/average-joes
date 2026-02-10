@@ -46,7 +46,7 @@ export default function About() {
     const caption2Ref = useRef(null);
     const wholeAboutRef = useRef(null);
     const [isFadingOut, setIsFadingOut] = useState(false);
-    const hasNavigatedToHome = useRef(false); // Ref to prevent multiple navigations
+    const hasNavigatedToHome = useRef(false);
     const [isExiting, setIsExiting] = useState(false);
     const triggerFadeOut = () => {
         if (isFadingOut) return;
@@ -85,8 +85,6 @@ export default function About() {
           if (isAtBottom && !hasNavigatedToHome.current) {
         hasNavigatedToHome.current = true;
                    setIsFadingOut(true);
-// Trigger a local fade-out first
-        // Small delay to allow the fade-out animation to start
                   
 
       }

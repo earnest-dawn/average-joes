@@ -1,6 +1,5 @@
 const { Schema, model } = require("mongoose");
 
-// Define your allowed emojis as a constant for easy updates
 const ALLOWED_EMOJIS = ["🤯", "❤", "🤔", "🤮", "😡"];
 
 const ratingSchema = new Schema({
@@ -12,7 +11,6 @@ const ratingSchema = new Schema({
   emoji: {
     type: String,
     required: true,
-    // This ensures ONLY these 4  can be saved
     enum: {
       values: ALLOWED_EMOJIS,
       message: "{VALUE} is not a supported emoji",

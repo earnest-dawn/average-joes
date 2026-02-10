@@ -26,22 +26,6 @@ import TemporaryDrawer from "./DrawerInputs";
 import averageLogo from "../../../assets/images/averageLogo.png";
 import {  graphql } from "babel-plugin-relay/macro";
 
-// const NavbarInputQuery = graphql`
-//   query NavbarInputQuery($term: String!) {
-//     globalSearch(searchTerm: $term) {
-//       __typename
-//       ... on Restaurant {
-//         id
-//         name
-//       }
-//       ... on MenuItems {
-//         id
-//         name
-//         price
-//       }
-//     }
-//   }
-// `;
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -85,9 +69,8 @@ const [searchValue, setSearchValue] = React.useState("");
 
 const handleSearchSubmit = (event) => {
   if (event.key === 'Enter' && searchValue.trim() !== "") {
-    // Navigate to a search page with the query in the URL
     navigate(`/search?q=${encodeURIComponent(searchValue)}`);
-    setSearchValue(""); // Clear search after submit
+    setSearchValue("");
   }
 };
 

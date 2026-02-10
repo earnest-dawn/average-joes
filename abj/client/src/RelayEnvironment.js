@@ -1,4 +1,3 @@
-// RelayEnvironment.js
 import { Environment, Network, RecordSource, Store } from "relay-runtime";
 import AuthService from "./utils/auth";
 
@@ -20,12 +19,10 @@ async function fetchQuery(operation, variables) {
 
   if (response.status === 401) {
     console.error("Session expired or unauthorized. Logging out...");
-    // Auth.logout(); // Optional: redirect user to login
     throw new Error("Unauthorized: Please log in again.");
   }
 
   if (result.errors) {
-    // Log the actual server error message (e.g., "User not found")
     console.error("GraphQL Errors:", result.errors);
     throw new Error(result.errors[0]?.message || "GraphQL Error");
   }

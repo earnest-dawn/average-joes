@@ -12,5 +12,5 @@ db.once('open', async () => {
     await Combos.deleteMany({});
     await Combos.insertMany(CombosSeeds);
     console.log('Combos have all been deleted');
-    process.exit(0); // exit the current process of deleteing all characters
+    process.exit(0);
 });

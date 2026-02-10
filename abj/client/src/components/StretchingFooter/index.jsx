@@ -38,18 +38,14 @@ const StretchingFooter = ({ onReachBottom, pageName }) => {
       const windowHeight = window.innerHeight;
       const docHeight = document.documentElement.scrollHeight;
       
-      // Calculate distance from bottom of viewport to bottom of page
       const distanceFromBottom = docHeight - (scrollY + windowHeight);
       
-      // Progress: 1 at the very bottom, 0 when above threshold
       const progress = Math.max(0, 1 - (distanceFromBottom / CONFIG.threshold));
       const clampedProgress = Math.min(Math.max(progress, 0), 1);
 
-      // Sync state for jiggle vs stretch
       setIsStretching(clampedProgress > 0.05);
       setIsAtBottom(distanceFromBottom <= 10);
 
-      // Match the Header's direct DOM manipulation for performance
       btnRef.current.style.height = `${CONFIG.initialHeight + (CONFIG.finalHeight - CONFIG.initialHeight) * clampedProgress}px`;
       txtRef.current.style.fontSize = `${CONFIG.initialFontSize + (CONFIG.finalFontSize - CONFIG.initialFontSize) * clampedProgress}rem`;
 

@@ -1,6 +1,6 @@
 import './LogIn.css';
 import React, { useState } from 'react';
-import { TextField, Button, Alert, Box, Typography } from '@mui/material'; // Added Typography
+import { TextField, Button, Alert, Box, Typography } from '@mui/material';
 import { useMutation } from 'react-relay/hooks';
 import { graphql } from 'babel-plugin-relay/macro';
 import { useNavigate } from 'react-router-dom';
@@ -65,7 +65,7 @@ export default function LoginPage() {
                     setShowAlert(true);
                 } else if (response?.login?.token) {
                     Auth.login(response.login.token);
-                    navigate('/orderOnline'); // Take them to the food!
+                    navigate('/orderOnline');
                 }
             },
             onError: (err) => {
@@ -88,7 +88,7 @@ export default function LoginPage() {
         >
             <Box
                 component="form"
-                onSubmit={handleFormSubmit} // Fixed: matches function name above
+                onSubmit={handleFormSubmit}
                 sx={{
                     backgroundColor: 'white',
                     padding: '30px',
@@ -113,9 +113,9 @@ export default function LoginPage() {
 
                 <TextField
                     label="Username"
-                    name="username" // Important: must match key in userFormData
-                    value={userFormData.username} // Fixed: points to state
-                    onChange={handleInputChange} // Fixed: uses the handler
+                    name="username"
+                    value={userFormData.username}
+                    onChange={handleInputChange}
                     fullWidth
                     required
                 />

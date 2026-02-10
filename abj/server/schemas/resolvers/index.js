@@ -31,7 +31,6 @@ const resolvers = {
 if (restaurantId) {
     const restaurant = await Restaurant.findById(restaurantId);
     if (restaurant) {
-      // Use the IDs stored in the restaurant's menuItems array
       query = { _id: { $in: restaurant.menuItems } };
     }
   }
@@ -55,9 +54,8 @@ if (restaurantId) {
 globalSearch: async (_, { searchTerm }) => {
   if (!searchTerm) return [];
 
-  const regex = new RegExp(searchTerm, "i"); // "i" means case-insensitive
+  const regex = new RegExp(searchTerm, "i");
 
-  // Search across different models simultaneously
   const [restaurants, items] = await Promise.all([
     Restaurant.find({ 
       $or: [{ name: regex }, { category: regex }, { location: regex }] 
@@ -67,8 +65,6 @@ globalSearch: async (_, { searchTerm }) => {
     })
   ]);
 
-  // Combine results. Relay will use the __resolveType we set up 
-  // earlier to tell them apart.
   return [...restaurants, ...items];
 },
     combos: async () => {
@@ -249,7 +245,7 @@ globalSearch: async (_, { searchTerm }) => {
   
   const updatedCombos = await Combos.findByIdAndUpdate(
     input.id,
-    { $set: input }, // Use $set to update name, price, or the entire menuItems array
+    { $set: input },
     { new: true }
   ).populate("menuItems");
 
@@ -345,7 +341,7 @@ console.error("MONGOOSE ERROR:", err);
 
   const updatedItem = await MenuItems.findByIdAndUpdate(
     input.id,
-    { $set: input }, // Use $set to update fields from input
+    { $set: input },
     { new: true }
   );
 
@@ -360,7 +356,6 @@ console.error("MONGOOSE ERROR:", err);
       if (context.user) {
         let finalRatedId = input.ratedId;
 
-        // try to find the ID first 
         if (input.onModel === "MenuItems" && input.ratedId.length !== 24) {
           const foundItem = await MenuItems.findOne({ name: input.ratedId });
           if (foundItem) finalRatedId = foundItem.id;
@@ -385,7 +380,6 @@ if (input.onModel === "Combos" && input.ratedId.length !== 24) {
           images: input.images || [],
         });
 
-        // 4. Return and populate user
         const savedRating = await newRating.populate("user");
         return {
           code: 200,
@@ -509,7 +503,6 @@ createOrder: async (_, { input }, context) => {
   try {
     let total = 0;
     
-    // 1. Validate items and calculate total price server-side
     const itemsToSave = await Promise.all(items.map(async (item) => {
       const dbItem = await MenuItems.findById(item.menuItemId);
       if (!dbItem) throw new Error(`Item ${item.menuItemId} not found`);
@@ -580,28 +573,22 @@ deleteOrder: async (parent, { input }, context) => {
         addToCart: async (_, { input }, context) => {
       const { id, itemType } = input;
       
-      // 1. Double check the Models are loaded
       if (!Cart) {
         throw new Error("Internal Server Error: Cart model not found. Check your exports/imports.");
       }
 
       if (!context.user) throw new Error("You must be logged in");
 
-      // 2. Fetch User and populate Cart
       const user = await User.findById(context.user._id).populate('cart');
       if (!user) throw new Error("User not found");
 
-      // 3. LAZY INITIALIZATION: Create the cart if the user doesn't have one
       let cart = user.cart;
       if (!cart) {
-        // This is where your previous error happened because 'Cart' was undefined
         cart = await Cart.create({ items: [], totalPrice: 0 });
         user.cart = cart._id;
         await user.save();
       }
 
-      // 4. MAPPING: Handle "menuitem" vs "MenuItems" vs "combo"
-      // We convert to lowercase to be safe
       const normalizedType = itemType.toLowerCase();
       let dbFieldName = '';
       
@@ -613,8 +600,6 @@ deleteOrder: async (parent, { input }, context) => {
         throw new Error(`Invalid item type: ${itemType}`);
       }
 
-      // 5. UPDATE LOGIC
-      // Use optional chaining and toString() for safe comparison
       const existingItemIndex = cart.items.findIndex(item => 
         item[dbFieldName] && item[dbFieldName].toString() === id
       );
@@ -674,8 +659,8 @@ deleteOrder: async (parent, { input }, context) => {
 },
 SearchResult: {
     __resolveType(obj) {
-      if (obj.ingredients) return 'MenuItems'; // Only MenuItems have ingredients
-      if (obj.owner) return 'Restaurant';      // Only Restaurants have owners
+      if (obj.ingredients) return 'MenuItems';
+      if (obj.owner) return 'Restaurant';
       return null;
     },
   },

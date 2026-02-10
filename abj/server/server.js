@@ -4,7 +4,7 @@ const { ApolloServerPluginDrainHttpServer } = require("@apollo/server/plugin/dra
 const http = require("http");
 const path = require("path");
 const cors = require("cors");
-const { json } = require("body-parser"); // Explicitly use body-parser
+const { json } = require("body-parser");
 const { expressMiddleware } = require('@as-integrations/express5');
 
 const { authMiddleware } = require("./utils/auth");
@@ -30,7 +30,6 @@ process.on('SIGINT', () => {
 const startApolloServer = async () => {
   await server.start();
 
-  // Basic Express setup
   app.use(express.urlencoded({ extended: true }));
   app.use(cors());
   app.use(
@@ -50,10 +49,8 @@ const startApolloServer = async () => {
     })
   );
 
-  // Fallback for rest of the app
   app.use(express.json());
 
-  // Static assets
   if (process.env.NODE_ENV === "production") {
     app.use(express.static(path.join(__dirname, "../client/dist")));
     app.get("*", (req, res) => {

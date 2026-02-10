@@ -26,8 +26,8 @@ import { useEffect, useRef, useState } from 'react';
  */
 const useScrollTransformEffect = (targetElementId, textElementId, options = {}) => {
     const {
-        direction = 'up', // 'up' for header, 'down' for footer
-        thresholdOffset = 200, // Distance from edge where effect is active
+        direction = 'up',
+        thresholdOffset = 200,
         initialHeight = 60,
         finalHeight = 100,
         initialFontSize = 1.2,
@@ -47,7 +47,7 @@ const useScrollTransformEffect = (targetElementId, textElementId, options = {}) 
     const getEasedProgress = (p, easingType) => {
         switch (easingType) {
             case 'easeInCubic':
-                return p * p * p; // Cubic ease-in
+                return p * p * p;
             case 'linear':
             default:
                 return p;
@@ -74,14 +74,11 @@ const useScrollTransformEffect = (targetElementId, textElementId, options = {}) 
             let shouldBeActive = false;
 
             if (direction === 'up') {
-                // Effect for header (active when scrolling towards top)
-                // Progress is 1 when scrollY is 0, 0 when scrollY is thresholdOffset
                 shouldBeActive = scrollY < thresholdOffset;
                 linearProgress = 1 - Math.min(1, Math.max(0, scrollY / thresholdOffset));
             } else if (direction === 'down') {
-                // Effect for footer (active when scrolling towards bottom)
                 const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
-                const startScrollY = Math.max(0, maxScrollY - thresholdOffset); // Effect starts thresholdOffset pixels before maxScrollY
+                const startScrollY = Math.max(0, maxScrollY - thresholdOffset);
 
                 shouldBeActive = scrollY > startScrollY;
                 linearProgress = Math.min(1, Math.max(0, (scrollY - startScrollY) / thresholdOffset));
@@ -91,19 +88,15 @@ const useScrollTransformEffect = (targetElementId, textElementId, options = {}) 
 
             const progress = getEasedProgress(linearProgress, easing);
 
-            // Apply transformations
             targetElement.style.height = `${initialHeight + (finalHeight - initialHeight) * progress}px`;
             targetElement.style.width = `${initialWidth + (finalWidth - initialWidth) * progress}%`;
             targetElement.style.fontSize = `${initialFontSize + (finalFontSize - initialFontSize) * progress}rem`;
             textElement.style.transform = `scale(${initialTextScale + (finalTextScale - initialTextScale) * progress})`;
         };
 
-        // Attach the scroll event listener
         window.addEventListener('scroll', updateElementsOnScroll);
-        // Call it once on mount to set initial state based on current scroll position
         updateElementsOnScroll();
 
-        // Cleanup function: remove the event listener when the component unmounts
         return () => {
             window.removeEventListener('scroll', updateElementsOnScroll);
         };
@@ -113,7 +106,7 @@ const useScrollTransformEffect = (targetElementId, textElementId, options = {}) 
         initialTextScale, finalTextScale, initialWidth, finalWidth
     ]);
 
-    return isEffectActive; // Return the active state of the effect
+    return isEffectActive;
 };
 
 export default useScrollTransformEffect;

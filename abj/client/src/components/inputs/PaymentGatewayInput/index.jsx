@@ -11,12 +11,11 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const PaymentGateway = () => {
   const [isApiBlocked, setIsApiBlocked] = useState(false);
-  const [status, setStatus] = useState('idle'); // 'idle', 'processing', 'success'
+  const [status, setStatus] = useState('idle');
   const [showSimulatedSheet, setShowSimulatedSheet] = useState(false);
   const [couponCode, setCouponCode] = useState('');
   const [zipCode, setZipCode] = useState('');
   
-  // State for messages - strictly using strings to avoid "Objects are not valid as a React child"
   const [errorMessage, setErrorMessage] = useState("");
 
   const priceData = {
@@ -39,10 +38,8 @@ const PaymentGateway = () => {
       try {
         const methodData = [{ supportedMethods: "https://apple.com/apple-pay", data: { version: 12 } }];
         const details = { total: { label: 'Test', amount: { value: '0', currency: 'USD' } } };
-        // Validating construction without showing UI
         new PaymentRequest(methodData, details);
       } catch (e) {
-        // If an error occurs (like SecurityError), we fallback to our custom UI.
         console.warn("Payment API restricted by browser context:", e.message);
         setIsApiBlocked(true);
       }
@@ -70,7 +67,6 @@ const PaymentGateway = () => {
       await response.complete("success");
       setStatus('success');
     } catch (e) {
-      // Logic: If native UI fails or is blocked, open the simulated payment sheet
       console.log("Using simulated fallback payment UI.");
       setShowSimulatedSheet(true);
       setStatus('idle');
@@ -80,7 +76,6 @@ const PaymentGateway = () => {
   const processSimulatedPayment = () => {
     setErrorMessage("");
 
-    // Simple validation logic
     if (couponCode && couponCode.toUpperCase() !== "SAVE10") {
       setErrorMessage("Invalid coupon code.");
       return;
@@ -94,7 +89,6 @@ const PaymentGateway = () => {
     setStatus('processing');
     setShowSimulatedSheet(false);
     
-    // Simulate network latency
     setTimeout(() => {
       setStatus('success');
     }, 1500);

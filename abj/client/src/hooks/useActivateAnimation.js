@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'; // Import useState here
+import { useEffect, useRef, useState } from 'react';
 
 /**
  * Custom React Hook to create a scroll-dependent stretching header effect.
@@ -37,7 +37,6 @@ const useStretchingHeader = (buttonId, textSpanId, options = {}) => {
     const buttonRef = useRef(null);
     const textSpanRef = useRef(null);
 
-    // NEW: State to track if the stretching effect is currently active
     const [isStretchingActive, setIsStretchingActive] = useState(false);
 
     const getEasedProgress = (p, easingType) => {
@@ -67,15 +66,12 @@ const useStretchingHeader = (buttonId, textSpanId, options = {}) => {
 
             const scrollY = window.scrollY;
 
-            // Determine if the effect should be active
             const shouldBeActive = scrollY < activationThreshold;
-            setIsStretchingActive(shouldBeActive); // Update the state
+            setIsStretchingActive(shouldBeActive);
 
-            // Calculate progress based on scrollY within the threshold
             const linearProgress = 1 - Math.min(1, Math.max(0, scrollY / activationThreshold));
             const progress = getEasedProgress(linearProgress, easing);
 
-            // Apply styles based on progress
             stretchingButton.style.height = `${initialButtonHeight + (finalButtonHeight - initialButtonHeight) * progress}px`;
             stretchingButton.style.width = `${initialButtonWidth + (finalButtonWidth - initialButtonWidth) * progress}%`;
             stretchingButton.style.fontSize = `${initialFontSize + (finalFontSize - initialFontSize) * progress}rem`;
@@ -83,20 +79,20 @@ const useStretchingHeader = (buttonId, textSpanId, options = {}) => {
         };
 
         window.addEventListener('scroll', updateButtonOnScroll);
-        updateButtonOnScroll(); // Call once on mount to set initial state
+        updateButtonOnScroll();
 
         return () => {
             window.removeEventListener('scroll', updateButtonOnScroll);
         };
     }, [
-        buttonId, textSpanId, activationThreshold, easing, // Added easing to dependencies
+        buttonId, textSpanId, activationThreshold, easing,
         initialButtonHeight, finalButtonHeight,
         initialFontSize, finalFontSize,
         initialTextScale, finalTextScale,
         initialButtonWidth, finalButtonWidth
     ]);
 
-    return isStretchingActive; // NEW: Return the active state
+    return isStretchingActive;
 };
 
 export default useStretchingHeader;

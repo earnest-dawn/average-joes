@@ -185,7 +185,7 @@ function RegistrationPage({ onSwitchToLogin }) {
         <Button
           variant="text"
           color="secondary"
-          onClick={() => navigate('/login')} // Fixed: Navigates to login page
+          onClick={() => navigate('/login')}
           fullWidth
           sx={{ mt: 1 }}
         >

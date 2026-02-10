@@ -26,7 +26,6 @@ const list = (anchor) => (
                 width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250,
             }}
             role="presentation"
-            // FIX: Wrap toggleDrawer calls in arrow functions
             onClick={toggleDrawer(anchor, false)}
             onKeyDown={() => toggleDrawer(anchor, false)}
         >
@@ -66,7 +65,6 @@ const list = (anchor) => (
                     <Drawer
                         anchor={anchor}
                         open={state[anchor]}
-                        // FIX: Wrap toggleDrawer call in an arrow function
                         onClose={() => toggleDrawer(anchor, false)}
                         PaperProps={{
                             sx: {

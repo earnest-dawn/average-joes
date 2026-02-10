@@ -106,7 +106,6 @@ const orderInfo = data?.myOrders || [];
               </Grid>
             ))
           ) : (
-            // 3. This renders if orderInfo.length is 0
             <Grid item xs={12}>
               <Paper sx={{ p: 5, textAlign: 'center', borderRadius: 3 }}>
                 <Typography variant="h5" color="text.secondary">

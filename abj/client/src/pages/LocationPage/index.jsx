@@ -1,14 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, collection, query, orderBy, onSnapshot, addDoc, setDoc, doc, updateDoc, deleteDoc, getDocs } from 'firebase/firestore';
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const localFirebaseConfig = {
   apiKey: "AIzaSyBdPM16TZ2qjqs87b-4DICsbpWsS_e7sR8",
   authDomain: "average-joes-ce6ff.firebaseapp.com",
@@ -18,46 +13,35 @@ const localFirebaseConfig = {
   appId: "1:670735096994:web:9d11041d80d7b276d1cbfb",
   measurementId: "G-TKD7JV4DRL"
 };
-// Tailwind CSS is assumed to be available in the environment
-// You would typically include this in your public/index.html or main CSS file:
-// <script src="https://cdn.tailwindcss.com"></script>
 
-// Global variables provided by the Canvas environment
 const app_id_global = typeof __app_id !== 'undefined' ? __app_id : 'default-foodtruck-app';
-const firebase_config_global = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : localFirebaseConfig; // This line uses your local config as fallback
+const firebase_config_global = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : localFirebaseConfig;
 const initial_auth_token_global = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
-// Initialize Firebase outside the component to prevent re-initialization
 let app, db, auth;
 try {
     app = initializeApp(firebase_config_global);
-    db = getFirestore(app); // Get Firestore instance
-    auth = getAuth(app);     // Get Auth instance
-    // If you need analytics, initialize it here too:
-    // const analytics = getAnalytics(app);
+    db = getFirestore(app);
+    auth = getAuth(app);
 } catch (error) {
     console.error("Firebase initialization error:", error);
 }
 
-// Function to generate a Google Maps embed URL
 const getGoogleMapsEmbedUrl = (address, name) => {
     if (!address) return '';
     const encodedAddress = encodeURIComponent(address);
     const encodedName = encodeURIComponent(name || '');
-    // Using a basic embed URL that often works without an explicit API key for simple displays
     return `https://maps.google.com/maps?q=${encodedAddress}&z=15&output=embed`;
 };
 
-// Main Food Truck Location Manager Component
 const LocationPage = () => {
     const [currentLocation, setCurrentLocation] = useState(null);
     const [upcomingLocations, setUpcomingLocations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [userId, setUserId] = useState(null);
-    const [isAdmin, setIsAdmin] = useState(false); // Simple admin check (e.g., if authenticated)
+    const [isAdmin, setIsAdmin] = useState(false);
 
-    // Admin form states
     const [locationName, setLocationName] = useState('');
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
@@ -70,12 +54,10 @@ const LocationPage = () => {
     const [notes, setNotes] = useState('');
     const [editingLocationId, setEditingLocationId] = useState(null);
 
-    // Ref for the custom modal (instead of alert/confirm)
     const modalRef = useRef(null);
     const [modalMessage, setModalMessage] = useState('');
     const [modalCallback, setModalCallback] = useState(null);
 
-    // --- Firebase Authentication and Data Fetching ---
     useEffect(() => {
         if (!auth || !db) {
             setError("Firebase is not initialized. Check your Firebase config.");
@@ -83,7 +65,6 @@ const LocationPage = () => {
             return;
         }
 
-        // Sign in anonymously if no initial auth token, or use the provided token
         const authenticate = async () => {
             try {
                 if (initial_auth_token_global) {
@@ -99,35 +80,28 @@ const LocationPage = () => {
             }
         };
 
-        // Listen for auth state changes
         const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
             if (user) {
                 setUserId(user.uid);
-                // For simplicity, any authenticated user is an "admin" for this demo
-                // In a real app, you'd check roles/permissions
                 setIsAdmin(true);
             } else {
                 setUserId(null);
                 setIsAdmin(false);
-                // If user logs out, clear data
                 setCurrentLocation(null);
                 setUpcomingLocations([]);
             }
-            setLoading(false); // Auth state is ready
+            setLoading(false);
         });
 
         authenticate();
 
-        // Cleanup auth listener on component unmount
         return () => unsubscribeAuth();
-    }, []); // Run once on mount
+    }, []);
 
-    // --- Real-time Firestore Data Listener ---
     useEffect(() => {
-        if (!db || !userId) return; // Wait for Firestore and user ID to be ready
+        if (!db || !userId) return;
 
         const locationsCollectionRef = collection(db, `artifacts/${app_id_global}/public/data/foodTruckLocations`);
-        // Order by lastUpdated to easily get the most recent for 'current' check
         const q = query(locationsCollectionRef, orderBy('lastUpdated', 'desc'));
 
         const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -154,7 +128,6 @@ const LocationPage = () => {
                 }
             });
 
-            // Sort upcoming locations by start date/time
             upcoming.sort((a, b) => {
                 const dateA = new Date(a.startDate + 'T' + a.startTime);
                 const dateB = new Date(b.startDate + 'T' + b.startTime);
@@ -170,11 +143,9 @@ const LocationPage = () => {
             setLoading(false);
         });
 
-        // Cleanup Firestore listener on component unmount or userId change
         return () => unsubscribe();
-    }, [db, userId]); // Re-run if db or userId changes
+    }, [db, userId]);
 
-    // --- Admin Actions ---
 
     const resetForm = () => {
         setLocationName('');
@@ -226,13 +197,13 @@ const LocationPage = () => {
                 state,
                 zip,
                 startDate,
-                endDate: endDate || startDate, // If end date not provided, assume same as start
+                endDate: endDate || startDate,
                 startTime,
                 endTime,
                 notes,
-                isCurrent: false, // Default to false, admin will set it live
+                isCurrent: false,
                 lastUpdated: Date.now(),
-                createdBy: userId // Track who created it
+                createdBy: userId
             };
 
             const locationsCollectionRef = collection(db, `artifacts/${app_id_global}/public/data/foodTruckLocations`);
@@ -265,7 +236,6 @@ const LocationPage = () => {
         try {
             const locationsCollectionRef = collection(db, `artifacts/${app_id_global}/public/data/foodTruckLocations`);
 
-            // First, set all other locations to not current
             const snapshot = await getDocs(locationsCollectionRef);
             const batchUpdates = [];
             snapshot.forEach(docSnapshot => {
@@ -275,7 +245,6 @@ const LocationPage = () => {
             });
             await Promise.all(batchUpdates);
 
-            // Then, set the selected location to current
             await updateDoc(doc(locationsCollectionRef, locationId), { isCurrent: true, lastUpdated: Date.now() });
             setModalMessage("Location set live successfully!");
             modalRef.current.showModal();

@@ -4,19 +4,16 @@ import {
     Box,
     Divider,
     Drawer,
-    // IconButton,
     Toolbar,
     Typography,
 } from '@mui/material';
 import averageLogo from '../../assets/images/averageLogo.png';
 
-// import MenuIcon from '@mui/icons-material/Menu';
 import { NavLink } from 'react-router-dom';
 import './Navbar.css';
 
 export default function Navbar() {
     const [mobileOpen, setMobileOpen] = useState(false);
-    // hndle menu click
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
