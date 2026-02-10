@@ -1,0 +1,620 @@
+# Query: // 
+# ContextLines: 1
+
+195 results - 28 files
+
+relay.config.js:
+  1:     
+  2      module.exports = {
+  3:       
+  4        src: "./client/src",
+  5:       
+  6        schema: "./server/schemas/app_schema.graphql",
+
+client/src/index.js:
+  42  
+  43: 
+  44: 
+  45: 
+  46  reportWebVitals();
+
+client/src/RelayEnvironment.js:
+   1: 
+   2  import { Environment, Network, RecordSource, Store } from "relay-runtime";
+
+  22      console.error("Session expired or unauthorized. Logging out...");
+  23:     
+  24      throw new Error("Unauthorized: Please log in again.");
+
+  27    if (result.errors) {
+  28:     
+  29      console.error("GraphQL Errors:", result.errors);
+
+client/src/setupTests.js:
+  1: 
+  2: 
+  3: 
+  4: 
+  5  import '@testing-library/jest-dom';
+
+client/src/components/inputs/NavbarInputs/DrawerInputs.jsx:
+  28              role="presentation"
+  29:             
+  30              onClick={toggleDrawer(anchor, false)}
+
+  68                          open={state[anchor]}
+  69:                         
+  70                          onClose={() => toggleDrawer(anchor, false)}
+
+client/src/components/inputs/NavbarInputs/NavbarInput.jsx:
+  28  
+  29: 
+  30: 
+  31: 
+  32: 
+  33: 
+  34: 
+  35: 
+  36: 
+  37: 
+  38: 
+  39: 
+  40: 
+  41: 
+  42: 
+  43: 
+  44: 
+  45  const Search = styled("div")(({ theme }) => ({
+
+  87    if (event.key === 'Enter' && searchValue.trim() !== "") {
+  88:     
+  89      navigate(`/search?q=${encodeURIComponent(searchValue)}`);
+  90:     setSearchValue(""); 
+  91    }
+
+client/src/components/inputs/PaymentGatewayInput/index.jsx:
+  13    const [isApiBlocked, setIsApiBlocked] = useState(false);
+  14:   const [status, setStatus] = useState('idle'); 
+  15    const [showSimulatedSheet, setShowSimulatedSheet] = useState(false);
+
+  18    
+  19:   
+  20    const [errorMessage, setErrorMessage] = useState("");
+
+  41          const details = { total: { label: 'Test', amount: { value: '0', currency: 'USD' } } };
+  42:         
+  43          new PaymentRequest(methodData, details);
+  44        } catch (e) {
+  45:         
+  46          console.warn("Payment API restricted by browser context:", e.message);
+
+  72      } catch (e) {
+  73:       
+  74        console.log("Using simulated fallback payment UI.");
+
+  82  
+  83:     
+  84      if (couponCode && couponCode.toUpperCase() !== "SAVE10") {
+
+  96      
+  97:     
+  98      setTimeout(() => {
+
+client/src/components/Navbar/index.jsx:
+   6      Drawer,
+   7:     
+   8      Toolbar,
+
+  12  
+  13: 
+  14  import { NavLink } from 'react-router-dom';
+
+  18      const [mobileOpen, setMobileOpen] = useState(false);
+  19:     
+  20      const handleDrawerToggle = () => {
+
+client/src/components/ShowSeeds/ComboSeedDisplay/index.jsx:
+   9      try {
+  10:         
+  11          const filePath = path.join(__dirname, 'CombosSeeds.json');
+  12  
+  13:         
+  14          const rawData = fs.readFileSync(filePath, 'utf8');
+  15  
+  16:         
+  17          const combos = JSON.parse(rawData);
+
+  20  
+  21:         
+  22          combos.forEach((item, index) => {
+
+  24              
+  25:             
+  26              for (const [key, value] of Object.entries(item)) {
+
+  35  
+  36: 
+  37  showCombo();
+
+client/src/components/ShowSeeds/MenuSeedDisplay/index.jsx:
+   9      try {
+  10:         
+  11          const filePath = path.join(__dirname, 'menuItemsSeeds.json');
+  12  
+  13:         
+  14          const rawData = fs.readFileSync(filePath, 'utf8');
+  15  
+  16:         
+  17          const menuItems = JSON.parse(rawData);
+
+  20  
+  21:         
+  22          menuItems.forEach((item, index) => {
+
+  24              
+  25:             
+  26              for (const [key, value] of Object.entries(item)) {
+
+  35  
+  36: 
+  37  showMenu();
+
+client/src/components/StretchingFooter/index.jsx:
+  40        
+  41:       
+  42        const distanceFromBottom = docHeight - (scrollY + windowHeight);
+  43        
+  44:       
+  45        const progress = Math.max(0, 1 - (distanceFromBottom / CONFIG.threshold));
+
+  47  
+  48:       
+  49        setIsStretching(clampedProgress > 0.05);
+
+  51  
+  52:       
+  53        btnRef.current.style.height = `${CONFIG.initialHeight + (CONFIG.finalHeight - CONFIG.initialHeight) * clampedProgress}px`;
+
+client/src/components/StretchingHeader/index.jsx:
+   7  const CONFIG = {
+   8:   initialHeight: 60,   
+   9:   finalHeight: 180,    
+  10    initialFontSize: 1.1,
+  11    finalFontSize: 2.2,
+  12:   threshold: 300,      
+  13  };
+
+  26        
+  27:       
+  28        const progress = Math.max(0, 1 - (scrollY / CONFIG.threshold));
+
+  30  
+  31:       
+  32        setIsStretching(clampedProgress > 0.05);
+
+  34  
+  35:       
+  36        btnRef.current.style.height = `${CONFIG.initialHeight + (CONFIG.finalHeight - CONFIG.initialHeight) * clampedProgress}px`;
+
+  40      window.addEventListener('scroll', handleScroll, { passive: true });
+  41:     handleScroll(); 
+  42      
+
+client/src/hooks/useActivateAnimation.js:
+   1: import { useEffect, useRef, useState } from 'react'; 
+   2  
+
+  39  
+  40:     
+  41      const [isStretchingActive, setIsStretchingActive] = useState(false);
+
+  69  
+  70:             
+  71              const shouldBeActive = scrollY < activationThreshold;
+  72:             setIsStretchingActive(shouldBeActive); 
+  73  
+  74:             
+  75              const linearProgress = 1 - Math.min(1, Math.max(0, scrollY / activationThreshold));
+
+  77  
+  78:             
+  79              stretchingButton.style.height = `${initialButtonHeight + (finalButtonHeight - initialButtonHeight) * progress}px`;
+
+  85          window.addEventListener('scroll', updateButtonOnScroll);
+  86:         updateButtonOnScroll(); 
+  87  
+
+  91      }, [
+  92:         buttonId, textSpanId, activationThreshold, easing, 
+  93          initialButtonHeight, finalButtonHeight,
+
+  98  
+  99:     return isStretchingActive; 
+  100  };
+
+client/src/hooks/useStretchBox/index.js:
+   28      const {
+   29:         direction = 'up', 
+   30:         thresholdOffset = 200, 
+   31          initialHeight = 60,
+
+   49              case 'easeInCubic':
+   50:                 return p * p * p; 
+   51              case 'linear':
+
+   76              if (direction === 'up') {
+   77:                 
+   78:                 
+   79                  shouldBeActive = scrollY < thresholdOffset;
+
+   81              } else if (direction === 'down') {
+   82:                 
+   83                  const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
+   84:                 const startScrollY = Math.max(0, maxScrollY - thresholdOffset); 
+   85  
+
+   93  
+   94:             
+   95              targetElement.style.height = `${initialHeight + (finalHeight - initialHeight) * progress}px`;
+
+  100  
+  101:         
+  102          window.addEventListener('scroll', updateElementsOnScroll);
+  103:         
+  104          updateElementsOnScroll();
+  105  
+  106:         
+  107          return () => {
+
+  115  
+  116:     return isEffectActive; 
+  117  };
+
+client/src/network/index.jsx:
+   3  
+   4: 
+   5: 
+   6  function fetchQuery(operation, variables, cacheConfig, uploadables) {
+
+  10  
+  11:   
+  12    const headers = token
+
+  44  
+  45: 
+  46  const network = Network.create(fetchQuery);
+
+  51    store,
+  52:   
+  53  });
+
+client/src/pages/AboutPage/index.jsx:
+  48      const [isFadingOut, setIsFadingOut] = useState(false);
+  49:     const hasNavigatedToHome = useRef(false); 
+  50      const [isExiting, setIsExiting] = useState(false);
+
+  87                     setIsFadingOut(true);
+  88: 
+  89:         
+  90                    
+
+client/src/pages/AdminPages/ManageOrdersPage/index.jsx:
+  108            ) : (
+  109:             
+  110              <Grid item xs={12}>
+
+client/src/pages/LocationPage/index.jsx:
+    3  import { getFirestore, collection, query, orderBy, onSnapshot, addDoc, setDoc, doc, updateDoc, deleteDoc, getDocs } from 'firebase/firestore';
+    4: 
+    5  import { initializeApp } from "firebase/app";
+    6  import { getAnalytics } from "firebase/analytics";
+    7: 
+    8: 
+    9  
+   10: 
+   11: 
+   12  const localFirebaseConfig = {
+
+   20  };
+   21: 
+   22: 
+   23: 
+   24  
+   25: 
+   26  const app_id_global = typeof __app_id !== 'undefined' ? __app_id : 'default-foodtruck-app';
+   27: const firebase_config_global = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : localFirebaseConfig; 
+   28  const initial_auth_token_global = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+   29  
+   30: 
+   31  let app, db, auth;
+
+   33      app = initializeApp(firebase_config_global);
+   34:     db = getFirestore(app); 
+   35:     auth = getAuth(app);     
+   36:     
+   37:     
+   38  } catch (error) {
+
+   41  
+   42: 
+   43  const getGoogleMapsEmbedUrl = (address, name) => {
+
+   46      const encodedName = encodeURIComponent(name || '');
+   47:     
+   48      return `https://maps.google.com/maps?q=${encodedAddress}&z=15&output=embed`;
+
+   50  
+   51: 
+   52  const LocationPage = () => {
+
+   57      const [userId, setUserId] = useState(null);
+   58:     const [isAdmin, setIsAdmin] = useState(false); 
+   59  
+   60:     
+   61      const [locationName, setLocationName] = useState('');
+
+   72  
+   73:     
+   74      const modalRef = useRef(null);
+
+   77  
+   78:     
+   79      useEffect(() => {
+
+   85  
+   86:         
+   87          const authenticate = async () => {
+
+  101  
+  102:         
+  103          const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+
+  105                  setUserId(user.uid);
+  106:                 
+  107:                 
+  108                  setIsAdmin(true);
+
+  111                  setIsAdmin(false);
+  112:                 
+  113                  setCurrentLocation(null);
+
+  115              }
+  116:             setLoading(false); 
+  117          });
+
+  120  
+  121:         
+  122          return () => unsubscribeAuth();
+  123:     }, []); 
+  124  
+  125:     
+  126      useEffect(() => {
+  127:         if (!db || !userId) return; 
+  128  
+  129          const locationsCollectionRef = collection(db, `artifacts/${app_id_global}/public/data/foodTruckLocations`);
+  130:         
+  131          const q = query(locationsCollectionRef, orderBy('lastUpdated', 'desc'));
+
+  156  
+  157:             
+  158              upcoming.sort((a, b) => {
+
+  172  
+  173:         
+  174          return () => unsubscribe();
+  175:     }, [db, userId]); 
+  176  
+  177:     
+  178  
+
+  228                  startDate,
+  229:                 endDate: endDate || startDate, 
+  230                  startTime,
+
+  232                  notes,
+  233:                 isCurrent: false, 
+  234                  lastUpdated: Date.now(),
+  235:                 createdBy: userId 
+  236              };
+
+  267  
+  268:             
+  269              const snapshot = await getDocs(locationsCollectionRef);
+
+  277  
+  278:             
+  279              await updateDoc(doc(locationsCollectionRef, locationId), { isCurrent: true, lastUpdated: Date.now() });
+
+client/src/pages/LoginPage/index.jsx:
+    2  import React, { useState } from 'react';
+    3: import { TextField, Button, Alert, Box, Typography } from '@mui/material'; 
+    4  import { useMutation } from 'react-relay/hooks';
+
+   67                      Auth.login(response.login.token);
+   68:                     navigate('/orderOnline'); 
+   69                  }
+
+   90                  component="form"
+   91:                 onSubmit={handleFormSubmit} 
+   92                  sx={{
+
+  115                      label="Username"
+  116:                     name="username" 
+  117:                     value={userFormData.username} 
+  118:                     onChange={handleInputChange} 
+  119                      fullWidth
+
+client/src/pages/OrderOnlinePage/index.jsx:
+  64      onCompleted: (response, errors) => {
+  65:       
+  66        if (errors) {
+
+client/src/pages/RegistrationPage/index.jsx:
+  187            color="secondary"
+  188:           onClick={() => navigate('/login')} 
+  189            fullWidth
+
+client/src/utils/auth.js:
+   1: 
+   2  import * as decode from 'jwt-decode';
+   3  
+   4: 
+   5  class AuthService {
+   6:     
+   7      getProfile() {
+
+  14  
+  15:     
+  16      loggedIn() {
+  17:         
+  18          const token = this.getToken();
+  19:         return !!token && !this.isTokenExpired(token); 
+  20      }
+  21  
+  22:     
+  23      isTokenExpired(token) {
+
+  34      getToken() {
+  35:         
+  36          return localStorage.getItem('id_token');
+
+  44              console.error('Error saving token:', err);
+  45:             
+  46          }
+
+  50      logout() {
+  51:         
+  52          localStorage.removeItem('id_token');
+  53:         
+  54          window.location.assign('/');
+
+client/src/utils/randNum.js:
+  1  export default function (num) {
+  2:     
+  3      return Math.floor(Math.random() * num);
+
+server/server.js:
+   6  const cors = require("cors");
+   7: const { json } = require("body-parser"); 
+   8  const { expressMiddleware } = require('@as-integrations/express5');
+
+  32  
+  33:   
+  34    app.use(express.urlencoded({ extended: true }));
+
+  52  
+  53:   
+  54    app.use(express.json());
+  55  
+  56:   
+  57    if (process.env.NODE_ENV === "production") {
+
+server/models/Rating.js:
+   2  
+   3: 
+   4  const ALLOWED_EMOJIS = ["🤯", "❤", "🤔", "🤮", "😡"];
+
+  14      required: true,
+  15:     
+  16      enum: {
+
+server/schemas/resolvers/index.js:
+   33      if (restaurant) {
+   34:       
+   35        query = { _id: { $in: restaurant.menuItems } };
+
+   57  
+   58:   const regex = new RegExp(searchTerm, "i"); 
+   59  
+   60:   
+   61    const [restaurants, items] = await Promise.all([
+
+   69  
+   70:   
+   71:   
+   72    return [...restaurants, ...items];
+
+  251      input.id,
+  252:     { $set: input }, 
+  253      { new: true }
+
+  347      input.id,
+  348:     { $set: input }, 
+  349      { new: true }
+
+  362  
+  363:         
+  364          if (input.onModel === "MenuItems" && input.ratedId.length !== 24) {
+
+  387  
+  388:         
+  389          const savedRating = await newRating.populate("user");
+
+  511      
+  512:     
+  513      const itemsToSave = await Promise.all(items.map(async (item) => {
+
+  582        
+  583:       
+  584        if (!Cart) {
+
+  589  
+  590:       
+  591        const user = await User.findById(context.user._id).populate('cart');
+
+  593  
+  594:       
+  595        let cart = user.cart;
+  596        if (!cart) {
+  597:         
+  598          cart = await Cart.create({ items: [], totalPrice: 0 });
+
+  602  
+  603:       
+  604:       
+  605        const normalizedType = itemType.toLowerCase();
+
+  615  
+  616:       
+  617:       
+  618        const existingItemIndex = cart.items.findIndex(item => 
+
+  676      __resolveType(obj) {
+  677:       if (obj.ingredients) return 'MenuItems'; 
+  678:       if (obj.owner) return 'Restaurant';      
+  679        return null;
+
+server/seeds/seed.js:
+  14      console.log('Combos have all been deleted');
+  15:     process.exit(0); 
+  16  });
+
+server/utils/auth.js:
+   1  const jwt = require("jsonwebtoken");
+   2: const { GraphQLError } = require("graphql"); 
+   3  const secret = "mysecretsshhhhh";
+
+   5  
+   6: 
+   7  class AuthenticationError extends GraphQLError {
+   8    constructor(message = "Could not authenticate user.") {
+   9:     
+  10      super(message, {
+
+  14      });
+  15:     this.name = "AuthenticationError"; 
+  16    }
+
+  19  module.exports = {
+  20:   AuthenticationError, 
+  21    authMiddleware: function ({ req }) {
+  22:     
+  23      let token = req.body.token || req.query.token || req.headers.authorization;
+  24  
+  25:     
+  26      if (req.headers.authorization) {
+
+  41        console.log("Invalid token");
+  42:       
+  43:       
+  44      }
