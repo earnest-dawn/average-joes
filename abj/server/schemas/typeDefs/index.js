@@ -61,6 +61,13 @@ type Rating implements Node {
   ratedId: RatedObject
 }
 
+enum CartItemType {
+  menuitem
+  combo
+}
+
+union SearchResult = Restaurant | MenuItems
+
 union RatedObject = MenuItems | Combos | Restaurant
 
 type Auth {
@@ -197,7 +204,7 @@ input CreateMenuItemInput {
   restaurantId: ID!
   clientMutationId: String
 }
-  
+
 type CreateMenuItemPayload implements MutationResponse {
   code: String!
   success: Boolean!
@@ -349,11 +356,13 @@ type Cart implements Node {
   items: [CartItem]
   totalPrice: Float
 }
+
 input AddToCartInput {
   id: ID!
-
+  itemType: CartItemType!
   clientMutationId: String
 }
+
 type AddToCartPayload implements MutationResponse {
   code: String!
   success: Boolean!
@@ -471,7 +480,7 @@ input ClaimRestaurantOwnershipInput {
 type Query {
   node(id: ID): Node
   me: User
-  menuItems: [MenuItems]
+  menuItems(restaurantId: ID): [MenuItems!]
   users: [User]
   combos: [Combos]
   ratings: [Rating]
@@ -480,6 +489,8 @@ type Query {
   cart: Cart
   orders: [Order]
   myOrders:[Order]
+    globalSearch(searchTerm: String!): [SearchResult!]!
+
 }
 
 
@@ -508,7 +519,6 @@ type Mutation {
   deleteOrder(input: DeleteOrderInput!): DeleteOrderPayload
   claimRestaurantOwnership(input: ClaimRestaurantOwnershipInput!): ClaimRestaurantOwnershipPayload
 }
-
 
 
 

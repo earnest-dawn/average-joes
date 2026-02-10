@@ -4,4 +4,5 @@ const Combos = require('./Combos');
 const Rating = require('./Rating');
 const Restaurant = require('./Restaurant');
 const Order = require('./Order');
-module.exports = { MenuItems, User, Combos, Rating, Restaurant, Order };
+const Cart = require('./Cart');
+module.exports = { MenuItems, User, Combos, Rating, Restaurant, Order, Cart };

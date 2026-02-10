@@ -24,7 +24,24 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import TemporaryDrawer from "./DrawerInputs";
 import averageLogo from "../../../assets/images/averageLogo.png";
+import {  graphql } from "babel-plugin-relay/macro";
 
+// const NavbarInputQuery = graphql`
+//   query NavbarInputQuery($term: String!) {
+//     globalSearch(searchTerm: $term) {
+//       __typename
+//       ... on Restaurant {
+//         id
+//         name
+//       }
+//       ... on MenuItems {
+//         id
+//         name
+//         price
+//       }
+//     }
+//   }
+// `;
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -64,6 +81,15 @@ export default function SearchAppBar() {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+const [searchValue, setSearchValue] = React.useState("");
+
+const handleSearchSubmit = (event) => {
+  if (event.key === 'Enter' && searchValue.trim() !== "") {
+    // Navigate to a search page with the query in the URL
+    navigate(`/search?q=${encodeURIComponent(searchValue)}`);
+    setSearchValue(""); // Clear search after submit
+  }
+};
 
   React.useEffect(() => {
     const checkLogin = () => {
@@ -220,9 +246,12 @@ export default function SearchAppBar() {
                 <SearchIcon />
               </SearchIconWrapper>
               <StyledInputBase
-                placeholder="Search..."
-                inputProps={{ "aria-label": "search" }}
-              />
+  placeholder="Search..."
+  inputProps={{ "aria-label": "search" }}
+  value={searchValue}
+  onChange={(e) => setSearchValue(e.target.value)}
+  onKeyDown={handleSearchSubmit}
+/> 
             </Search>
 
             <Box

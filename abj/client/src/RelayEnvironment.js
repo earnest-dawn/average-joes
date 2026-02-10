@@ -8,7 +8,7 @@ async function fetchQuery(operation, variables) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: token ? `Bearer ${token}` : "",
+      authorization: token ? `Bearer ${token}` : "",
     },
     body: JSON.stringify({
       query: operation.text,
@@ -16,10 +16,21 @@ async function fetchQuery(operation, variables) {
     }),
   });
 
-  const json = await response.json();
-  console.log("Server Response:", json);
+  const result = await response.json();
 
-  return json;
+  if (response.status === 401) {
+    console.error("Session expired or unauthorized. Logging out...");
+    // Auth.logout(); // Optional: redirect user to login
+    throw new Error("Unauthorized: Please log in again.");
+  }
+
+  if (result.errors) {
+    // Log the actual server error message (e.g., "User not found")
+    console.error("GraphQL Errors:", result.errors);
+    throw new Error(result.errors[0]?.message || "GraphQL Error");
+  }
+
+  return result;
 }
 
 const environment = new Environment({

@@ -26,9 +26,19 @@ const resolvers = {
       throw new AuthenticationError("You need to be logged in!");
     },
 
-    menuItems: async () => {
-  const items = await MenuItems.find();
-  return items.map(item => {
+    menuItems: async (parent, { restaurantId }) => {
+   let query = {};
+if (restaurantId) {
+    const restaurant = await Restaurant.findById(restaurantId);
+    if (restaurant) {
+      // Use the IDs stored in the restaurant's menuItems array
+      query = { _id: { $in: restaurant.menuItems } };
+    }
+  }
+
+  const items = await MenuItems.find(query);
+  return await Promise.all(items.map(async (item) => {
+    const parentRestaurant = await Restaurant.findOne({ menuItems: item._id });
     return {
       id: item._id.toString(), 
       name: item.name || "Unnamed Item", 
@@ -38,8 +48,28 @@ const resolvers = {
       caption: item.caption || "",
       category: item.category || "entree",
       inStock: item.inStock ?? true, 
+      restaurant: parentRestaurant
     };
-  });
+  }));
+},
+globalSearch: async (_, { searchTerm }) => {
+  if (!searchTerm) return [];
+
+  const regex = new RegExp(searchTerm, "i"); // "i" means case-insensitive
+
+  // Search across different models simultaneously
+  const [restaurants, items] = await Promise.all([
+    Restaurant.find({ 
+      $or: [{ name: regex }, { category: regex }, { location: regex }] 
+    }),
+    MenuItems.find({ 
+      $or: [{ name: regex }, { category: regex }, { ingredients: regex }] 
+    })
+  ]);
+
+  // Combine results. Relay will use the __resolveType we set up 
+  // earlier to tell them apart.
+  return [...restaurants, ...items];
 },
     combos: async () => {
       return Combos.find({}).populate("menuItems");
@@ -55,12 +85,14 @@ const resolvers = {
     },
      myOrders: async (_, __, context) => {
   if (!context.user) throw new AuthenticationError();
-  return await Order.find({ customer: context.user._id })
+  const orders = await Order.find({ customer: context.user._id })
     .populate('restaurant')
 .populate({
        path: 'items.itemReference',
        model: 'MenuItems' 
-    })    .sort({ createdAt: -1 });
+    })    
+    .sort({ createdAt: -1 });
+    return orders.filter(order => order.restaurant !== null);
 },
 
    orders: async () => {
@@ -546,36 +578,61 @@ deleteOrder: async (parent, { input }, context) => {
   };
 },
         addToCart: async (_, { input }, context) => {
-  const { itemId, itemType } = input;
-  if (!context.user) throw new AuthenticationError();
+      const { id, itemType } = input;
+      
+      // 1. Double check the Models are loaded
+      if (!Cart) {
+        throw new Error("Internal Server Error: Cart model not found. Check your exports/imports.");
+      }
 
-  const user = await User.findById(context.user._id).populate('cart.items.menuItem cart.items.combo');
-  
-  const existingItem = user.cart.items.find(item => {
-    const idToCompare = itemType === 'MenuItem' ? item.menuItem?._id : item.combo?._id;
-    return idToCompare?.toString() === itemId;
-  });
+      if (!context.user) throw new Error("You must be logged in");
 
-  if (existingItem) {
-    existingItem.quantity += 1;
-  } else {
-    user.cart.items.push({
-      quantity: 1,
-      [itemType === 'MenuItem' ? 'menuItem' : 'combo']: itemId
-    });
-    await user.populate('cart.items.menuItem cart.items.combo');
-  }
+      // 2. Fetch User and populate Cart
+      const user = await User.findById(context.user._id).populate('cart');
+      if (!user) throw new Error("User not found");
 
-  user.cart.totalPrice = user.cart.items.reduce((total, item) => {
-    const price = item.menuItem?.price || item.combo?.price || 0;
-    return total + (price * item.quantity);
-  }, 0);
+      // 3. LAZY INITIALIZATION: Create the cart if the user doesn't have one
+      let cart = user.cart;
+      if (!cart) {
+        // This is where your previous error happened because 'Cart' was undefined
+        cart = await Cart.create({ items: [], totalPrice: 0 });
+        user.cart = cart._id;
+        await user.save();
+      }
 
-  await user.save();
-  return { code: "200", success: true, message: "Cart updated" };
-},
-    
-        
+      // 4. MAPPING: Handle "menuitem" vs "MenuItems" vs "combo"
+      // We convert to lowercase to be safe
+      const normalizedType = itemType.toLowerCase();
+      let dbFieldName = '';
+      
+      if (normalizedType === 'menuitem' || normalizedType === 'menuitems') {
+        dbFieldName = 'menuItem';
+      } else if (normalizedType === 'combo') {
+        dbFieldName = 'combo';
+      } else {
+        throw new Error(`Invalid item type: ${itemType}`);
+      }
+
+      // 5. UPDATE LOGIC
+      // Use optional chaining and toString() for safe comparison
+      const existingItemIndex = cart.items.findIndex(item => 
+        item[dbFieldName] && item[dbFieldName].toString() === id
+      );
+
+      if (existingItemIndex > -1) {
+        cart.items[existingItemIndex].quantity += 1;
+      } else {
+        cart.items.push({ [dbFieldName]: id, quantity: 1 });
+      }
+
+      await cart.save();
+
+      return {
+        code: "200",
+        success: true,
+        message: "Successfully added to cart"
+      };
+    },        
 
         
 
@@ -615,6 +672,13 @@ deleteOrder: async (parent, { input }, context) => {
     return "Unknown Item";
   }
 },
+SearchResult: {
+    __resolveType(obj) {
+      if (obj.ingredients) return 'MenuItems'; // Only MenuItems have ingredients
+      if (obj.owner) return 'Restaurant';      // Only Restaurants have owners
+      return null;
+    },
+  },
 };
 
 module.exports = resolvers;

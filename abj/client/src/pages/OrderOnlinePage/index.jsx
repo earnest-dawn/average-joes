@@ -47,41 +47,63 @@ export default function OrderOnline() {
   const [setToggleStock] = useMutation(TOGGLE_STOCK_STATUS);
   const mongoMenu = (data?.menuItems || []).filter((item) => item !== null);
   const [loading, setLoading] = React.useState(false);
-
+  
   const [commitAddToCart] = useMutation(ADD_TO_CART);
 
   const handleAdd = (item) => {
-    commitAddToCart({
-      variables: {
-        itemId: item.id,
-        itemType: "MenuItem",
-      },
-      onCompleted: (response) => console.log("Added to cart:", response),
-      onError: (err) => console.error("Cart Error:", err),
-    });
+    const inputVariables = {
+    input: {
+      id: String(item.id),
+      itemType: item.title ? "combo" : "menuitem",
+      clientMutationId: `add-${item.id}-${Date.now()}`,
+    },
   };
-const toggleStockStatus = (id, currentInStock) => {
-    
+
+commitAddToCart({
+    variables: inputVariables,
+    onCompleted: (response, errors) => {
+      // Logic for handling null responses
+      if (errors) {
+        console.error("GraphQL Errors:", errors);
+        return;
+      }
+
+      if (!response.addToCart) {
+        console.error(
+          "Mutation returned null. This usually means the resolver failed on the server. " +
+          "Check if the ID exists in the database and the enum value is valid."
+        );
+        return;
+      }
+
+      console.log("Success:", response.addToCart);
+    },
+    onError: (err) => {
+      console.error("Critical Mutation Error:", err);
+    },
+  });
+};
+
+  const toggleStockStatus = (id, currentInStock) => {
     setToggleStock({
       variables: {
-        
         input: {
           id: id,
           inStock: !currentInStock,
-          clientMutationId: "toggle-" + id 
+          clientMutationId: "toggle-" + id,
         },
       },
       optimisticResponse: {
-      toggleStockStatus: {
-        code: "200",
-        success: true,
-        message: "Optimistic update",
-        menuItem: {
-          id: id,
-          inStock: !currentInStock,
+        toggleStockStatus: {
+          code: "200",
+          success: true,
+          message: "Optimistic update",
+          menuItem: {
+            id: id,
+            inStock: !currentInStock,
+          },
         },
       },
-    },
       onCompleted: (response) => {
         console.log("Status successfully toggled:", response);
       },
@@ -112,38 +134,45 @@ const toggleStockStatus = (id, currentInStock) => {
         />
         <CardContent>
           {/* MAIN HEADER BOX */}
-          <Box 
-            sx={{ 
-              display: "flex", 
-              justifyContent: "space-between", 
-              alignItems: "flex-start", // Aligns the top of the name with the top of the price group
-              mb: 1 
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+              mb: 1,
             }}
           >
-            <Typography 
-              variant="h6" 
-              sx={{ 
-                fontWeight: 700, 
-                lineHeight: 1.2, 
-                maxWidth: '60%' // Prevents long names from squashing the price
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 700,
+                lineHeight: 1.2,
+                maxWidth: "60%",
               }}
             >
               {item.name}
             </Typography>
-            
-            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 0.5 }}>
-              <Typography 
-                variant="subtitle1" 
-                color="primary" 
+
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-end",
+                gap: 0.5,
+              }}
+            >
+              <Typography
+                variant="subtitle1"
+                color="primary"
                 sx={{ fontWeight: 800, lineHeight: 1 }}
               >
                 ${item.price}
               </Typography>
-              <Chip 
-                label={`${item.calories} Cal`} 
-                size="small" 
-                variant="outlined" 
-                sx={{ fontSize: '0.65rem', height: '20px' }} 
+              <Chip
+                label={`${item.calories} Cal`}
+                size="small"
+                variant="outlined"
+                sx={{ fontSize: "0.65rem", height: "20px" }}
               />
             </Box>
           </Box>
@@ -163,12 +192,14 @@ const toggleStockStatus = (id, currentInStock) => {
               />
             </Box>
           ) : (
-            <Box sx={{ mb: 2, fontSize: '0.75rem', color: 'text.secondary' }}>
-              Login to see stock status and order!
-            </Box>
+            <div></div>
           )}
 
-          <Typography variant="body2" color="text.secondary" sx={{ fontStyle: "italic", mb: 1 }}>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ fontStyle: "italic", mb: 1 }}
+          >
             {item.caption}
           </Typography>
           <Typography variant="caption" color="text.secondary">
@@ -182,7 +213,11 @@ const toggleStockStatus = (id, currentInStock) => {
         variant="contained"
         fullWidth
         disabled={!item.inStock && loggedIn}
-        onClick={loggedIn ? () => handleAdd(item) : () => window.location.assign("/register")}
+        onClick={
+          loggedIn
+            ? () => handleAdd(item)
+            : () => window.location.assign("/register")
+        }
         sx={{
           borderRadius: 0,
           py: 1.5,
@@ -192,7 +227,11 @@ const toggleStockStatus = (id, currentInStock) => {
           "&:hover": { bgcolor: "var(--col8)" },
         }}
       >
-        {loggedIn ? (item.inStock ? "ADD TO CART" : "OUT OF STOCK") : "REGISTER TO ORDER"}
+        {loggedIn
+          ? item.inStock
+            ? "ADD TO CART"
+            : "OUT OF STOCK"
+          : "REGISTER TO ORDER"}
       </Button>
     </Card>
   );
@@ -202,7 +241,13 @@ const toggleStockStatus = (id, currentInStock) => {
       <Typography
         variant="h3"
         align="center"
-        sx={{background: "var(--col8)", color: "var(--col7)", fontWeight: 700, mb: 4, py:2}}
+        sx={{
+          background: "var(--col8)",
+          color: "var(--col7)",
+          fontWeight: 700,
+          mb: 4,
+          py: 2,
+        }}
       >
         Menu
       </Typography>
