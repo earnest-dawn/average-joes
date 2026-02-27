@@ -16,6 +16,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 import Divider from "@mui/material/Divider";
 import HomeIcon from "@mui/icons-material/Home";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
@@ -59,6 +60,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
+
+
+
+
 
 export default function SearchAppBar() {
   const navigate = useNavigate();
@@ -106,7 +111,11 @@ const handleSearchSubmit = (event) => {
       path: "/orderOnline",
       icon: <FastfoodIcon />,
     },
-  ];
+...(isLoggedIn 
+    ? [{ text: "Cart ()", path: "/cart", icon: <ShoppingCartCheckoutIcon /> }] 
+    : []
+  ),
+].filter(Boolean)  
 
   const handleDrawerNavLinkClick = (path) => {
     setMobileOpen(false);
@@ -156,12 +165,16 @@ const handleSearchSubmit = (event) => {
         ))}
         <ListItem disablePadding>
           {isLoggedIn ? (
-            <ListItemButton onClick={handleLogout}>
+            <div>
+              <div>()</div>
+              <ListItemButton onClick={handleLogout}>
               <ListItemIcon sx={{ color: "goldenrod" }}>
                 <LogoutIcon />
               </ListItemIcon>
               <ListItemText primary="Logout" sx={{ color: "white" }} />
             </ListItemButton>
+            </div>
+            
           ) : (
             <ListItemButton onClick={() => handleDrawerNavLinkClick("/login")}>
               <ListItemIcon sx={{ color: "goldenrod" }}>
@@ -238,73 +251,59 @@ const handleSearchSubmit = (event) => {
             </Search>
 
             <Box
-              component="ul"
-              sx={{
-                display: "flex",
-                listStyle: "none",
-                m: 0,
-                p: 0,
-                alignItems: "center",
-              }}
-            >
-              <Box component="li" sx={{ ml: 3 }}>
-                <NavLink
-                  to="/"
-                  style={({ isActive }) => ({
-                    color: isActive ? "goldenrod" : "white",
-                    textDecoration: "none",
-                  })}
-                >
-                  Home
-                </NavLink>
-              </Box>
-              {isLoggedIn ? (
-                <Box component="li" sx={{ ml: 3 }}>
-                  <NavLink
-                    to="/admin"
-                    style={({ isActive }) => ({
-                      color: isActive ? "goldenrod" : "white",
-                      textDecoration: "none",
-                    })}
-                  >
-                    Admin
-                  </NavLink>
-                </Box>
-              ) : (
-                <></>
-              )}
-              <Box component="li" sx={{ ml: 3 }}>
-                <NavLink
-                  to="/orderOnline"
-                  style={({ isActive }) => ({
-                    color: isActive ? "goldenrod" : "white",
-                    textDecoration: "none",
-                  })}
-                >
-                  {isLoggedIn ? "Order Online" : "Menu"}
-                </NavLink>
-              </Box>
-              <Box component="li" sx={{ ml: 3 }}>
-                {isLoggedIn ? (
-                  <Button
-                    onClick={handleLogout}
-                    sx={{ color: "goldenrod", textTransform: "none" }}
-                  >
-                    Logout
-                  </Button>
-                ) : (
-                  <NavLink
-                    to="/login"
-                    style={({ isActive }) => ({
-                      color: isActive ? "goldenrod" : "white",
-                      textDecoration: "none",
-                    })}
-                  >
-                    Login
-                  </NavLink>
-                )}
-              </Box>
-            </Box>
+  component="ul"
+  sx={{
+    display: "flex",
+    listStyle: "none",
+    m: 0,
+    p: 0,
+    alignItems: "center",
+  }}
+>
+  {/* Map through the reactive navItems array */}
+  {navItems.map((item) => (
+    <Box component="li" key={item.text} sx={{ ml: 3 }}>
+      <NavLink
+        to={item.path}
+        style={({ isActive }) => ({
+          color: isActive ? "goldenrod" : "white",
+          textDecoration: "none",
+          display: "flex",
+          alignItems: "center",
+          gap: "4px"
+        })}
+      >
+        {/* Optional: Show icon on desktop too */}
+        {item.text === "Cart ()" && item.icon} 
+        {item.text}
+      </NavLink>
+    </Box>
+  ))}
+
+  {/* Login/Logout Button */}
+  <Box component="li" sx={{ ml: 3 }}>
+    {isLoggedIn ? (
+      <Button
+        onClick={handleLogout}
+        sx={{ color: "goldenrod", textTransform: "none" }}
+      >
+        Logout
+      </Button>
+    ) : (
+      <NavLink
+        to="/login"
+        style={({ isActive }) => ({
+          color: isActive ? "goldenrod" : "white",
+          textDecoration: "none",
+        })}
+      >
+        Login
+      </NavLink>
+    )}
+  </Box>
+</Box>
+             
+ 
           </Box>
         </Toolbar>
       </AppBar>
