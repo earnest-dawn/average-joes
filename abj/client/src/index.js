@@ -23,7 +23,7 @@ const router = createBrowserRouter([
         element: <App />,
         errorElement: <ErrorPage />,
         children: [
-            { index: true, element: <HomePage /> },
+            { index: true, element: <TemplatePage /> },
             { path: '/orderOnline', element: <OrderOnline /> },
             { path: '/about', element: <About /> },
             { path: '/location', element: <LocationPage /> },
@@ -35,7 +35,7 @@ const router = createBrowserRouter([
             { path: '/login?', element: <LogInPage /> },
             { path: '/admin?', element: <AdminPage />},
             { path: '/register', element: <RegistrationPage /> },
-                        { path: '/template', element: <TemplatePage /> }
+                        { path: '/template', element: <HomePage /> }
 
         ],
     },

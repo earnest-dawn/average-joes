@@ -2,24 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <meta name="theme-color" content="#000000" />
     <meta name="description" content="Average Joe's Burgers - Fresh and Juicy" />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="apple-touch-icon" href="/logo192.png" />
     
-    <!-- CSS - Ensure these files exist in public/assets/css/ -->
-    <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/main.css" />
-    <noscript><link rel="stylesheet" href="%PUBLIC_URL%/assets/css/noscript.css" /></noscript>
+    <!-- CSS - Paths now start from root / -->
+    <link rel="stylesheet" href="/assets/css/main.css" />
+    <noscript><link rel="stylesheet" href="/assets/css/noscript.css" /></noscript>
 
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="manifest" href="/manifest.json" />
 
     <style>
-      /* If this still 404s, verify the image is located at:
-         [your-project]/public/assets/images/bg.jpg
-      */
+      /* Changed to absolute path to ensure it works on sub-routes if you add them */
       body {
-        background-image: url('./assets/images/bg.jpg') !important;
+        background-image: url('/assets/images/bg.jpg') !important;
         background-attachment: fixed;
         background-size: cover;
         background-position: center;
@@ -29,23 +27,25 @@
     <title>Average Joe's Burgers</title>
 
     <!-- 1. Load jQuery First -->
-    <script src="%PUBLIC_URL%/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/jquery.min.js"></script>
     
-    <!-- 2. Load the Missing Plugins (Order is critical) -->
-    <script src="%PUBLIC_URL%/assets/js/jquery.scrollex.min.js"></script>
-    <script src="%PUBLIC_URL%/assets/js/jquery.scrolly.min.js"></script>
+    <!-- 2. Load Plugins (Using absolute paths) -->
+    <script src="/assets/js/jquery.scrollex.min.js"></script>
+    <script src="/assets/js/jquery.scrolly.min.js"></script>
 </head>
 <body class="is-preload">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     
-    <div id="root"></div>
+    <div id="root">
+      
+    </div>
 
     <!-- 3. Load Environment and Utility Scripts -->
-    <script src="%PUBLIC_URL%/assets/js/browser.min.js"></script>
-    <script src="%PUBLIC_URL%/assets/js/breakpoints.min.js"></script>
-    <script src="%PUBLIC_URL%/assets/js/util.js"></script>
+    <script src="/assets/js/browser.min.js"></script>
+    <script src="/assets/js/breakpoints.min.js"></script>
+    <script src="/assets/js/util.js"></script>
     
     <!-- 4. Load Main Logic last -->
-    <script src="%PUBLIC_URL%/assets/js/main.js"></script>
+    <script src="/assets/js/main.js"></script>
 </body>
 </html>

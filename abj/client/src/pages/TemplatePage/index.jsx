@@ -1,18 +1,18 @@
 import React, { useEffect } from "react";
 
+
 export default function TemplatePage() {
   const publicUrl = process.env.PUBLIC_URL || "";
 
-  // Helper to load legacy scripts if you still need the HTML5UP animations
   useEffect(() => {
     const scripts = [
-      "/assets/js/jquery.min.js",
-      "/assets/js/jquery.scrollex.min.js",
-      "/assets/js/jquery.scrolly.min.js",
-      "/assets/js/browser.min.js",
-      "/assets/js/breakpoints.min.js",
-      "/assets/js/util.js",
-      "/assets/js/main.js",
+      `/assets/js/jquery.min.js`,
+      `/assets/js/jquery.scrollex.min.js`,
+      `/assets/js/jquery.scrolly.min.js`,
+      `/assets/js/browser.min.js`,
+      `/assets/js/breakpoints.min.js`,
+      `/assets/js/util.js`,
+      `/assets/js/main.js`,
     ];
 
     scripts.forEach((src) => {
@@ -21,8 +21,8 @@ export default function TemplatePage() {
       script.async = false;
       document.body.appendChild(script);
     });
-  }, []);
-
+  }, [publicUrl]);
+  
   return (
     <div id="wrapper" className="fade-in">
       {/* Intro */}
@@ -61,7 +61,8 @@ export default function TemplatePage() {
       <nav id="nav">
         <ul className="links">
           <li className="active">
-            <a href="index.html">This is Massively</a>
+            <a href="index.html">          Average Joe's Burgers
+</a>
           </li>
           <li>
             <a href="generic.html">Generic Page</a>
@@ -116,7 +117,7 @@ export default function TemplatePage() {
             </p>
           </header>
           <a href="#" className="image main">
-            <img src={`${publicUrl}/assets/images/pic01.jpg`} alt="" />
+            <img src={`/assets/images/pic01.jpg`} alt="" />
           </a>
           <ul className="actions special">
             <li>
@@ -141,7 +142,7 @@ export default function TemplatePage() {
               </h2>
             </header>
             <a href="#" className="image fit">
-              <img src={`${publicUrl}/assets/images/pic02.jpg`} alt="" />
+              <img src={`/assets/images/pic02.jpg`} alt="" />
             </a>
             <p>
               Donec eget ex magna. Interdum et malesuada fames ac ante ipsum
@@ -168,7 +169,7 @@ export default function TemplatePage() {
               </h2>
             </header>
             <a href="#" className="image fit">
-              <img src={`${publicUrl}/assets/images/pic03.jpg`} alt="" />
+              <img src={`/assets/images/pic03.jpg`} alt="" />
             </a>
             <p>
               Donec eget ex magna. Interdum et malesuada fames ac ante ipsum
@@ -195,7 +196,7 @@ export default function TemplatePage() {
               </h2>
             </header>
             <a href="#" className="image fit">
-              <img src={`${publicUrl}/assets/images/pic04.jpg`} alt="" />
+              <img src={`/assets/images/pic04.jpg`} alt="" />
             </a>
             <p>
               Donec eget ex magna. Interdum et malesuada fames ac ante ipsum
@@ -221,7 +222,7 @@ export default function TemplatePage() {
               </h2>
             </header>
             <a href="#" className="image fit">
-              <img src={`${publicUrl}/assets/images/pic05.jpg`} alt="" />
+              <img src={`/assets/images/pic05.jpg`} alt="" />
             </a>
             <p>
               Donec eget ex magna. Interdum et malesuada fames ac ante ipsum
@@ -247,7 +248,7 @@ export default function TemplatePage() {
               </h2>
             </header>
             <a href="#" className="image fit">
-              <img src={`${publicUrl}/assets/images/pic06.jpg`} alt="" />
+              <img src={`/assets/images/pic06.jpg`} alt="" />
             </a>
             <p>
               Donec eget ex magna. Interdum et malesuada fames ac ante ipsum
@@ -273,7 +274,7 @@ export default function TemplatePage() {
               </h2>
             </header>
             <a href="#" className="image fit">
-              <img src={`${publicUrl}/assets/images/pic07.jpg`} alt="" />
+              <img src={`/assets/images/pic07.jpg`} alt="" />
             </a>
             <p>
               Donec eget ex magna. Interdum et malesuada fames ac ante ipsum
