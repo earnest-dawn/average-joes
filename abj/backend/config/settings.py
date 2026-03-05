@@ -9,6 +9,8 @@ from datetime import timedelta
 from django.db.models import Field
 from decouple import config, Csv
 import environ
+import logging
+
 
 # Initialize environment
 env = environ.Env(DEBUG=(bool, False))
@@ -22,14 +24,14 @@ PARENT_DIR = BASE_DIR.parent
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-this-key')
 
 # DEBUG mode
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG', default=True, cast=bool)
 
 # Allowed hosts from environment
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
+ALLOWED_HOSTS = ['127.0.0.2', 'localhost', '127.0.0.1', ]
 
 # Application definition
 INSTALLED_APPS = [
-    'daphne',  # ASGI server for WebSockets
+    # 'daphne',  # ASGI server for WebSockets
     'channels',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -78,7 +80,6 @@ MIDDLEWARE = [
     'django_otp.middleware.OTPMiddleware',  # MFA middleware
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -254,15 +255,27 @@ OTP_LOGIN_URL = '/auth/login/'
 # ============================================================================
 
 # Force HTTPS in production
-SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=not DEBUG, cast=bool)
-SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=not DEBUG, cast=bool)
-CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', default=not DEBUG, cast=bool)
+# Force HTTPS ONLY in production
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
 
-# HSTS (HTTP Strict Transport Security) - forces HTTPS
-SECURE_HSTS_SECONDS = config('SECURE_HSTS_SECONDS', default=31536000, cast=int)
-SECURE_HSTS_INCLUDE_SUBDOMAINS = config('SECURE_HSTS_INCLUDE_SUBDOMAINS', default=True, cast=bool)
-SECURE_HSTS_PRELOAD = config('SECURE_HSTS_PRELOAD', default=True, cast=bool)
-
+if DEBUG:
+    # Disable all security headers that force HTTPS
+    SECURE_HSTS_SECONDS = 0
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+    SECURE_HSTS_PRELOAD = False
+    SECURE_CONTENT_SECURITY_POLICY = None
+    SECURE_BROWSER_XSS_FILTER = False
+    SECURE_CONTENT_TYPE_NOSNIFF = False
+    # This prevents the 'strict-origin-when-cross-origin' you saw in the logs
+    SECURE_REFERRER_POLICY = 'no-referrer-when-downgrade' 
+else:
+    # PRODUCTION SETTINGS (Keep these for your live server)
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
 # Frame options - prevent clickjacking
 X_FRAME_OPTIONS = 'DENY'
 

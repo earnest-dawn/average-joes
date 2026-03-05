@@ -2,6 +2,8 @@
 URL Configuration for AverageJoes backend
 """
 from django.contrib import admin
+from django.http import JsonResponse
+from django.shortcuts import redirect
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
@@ -12,7 +14,6 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 urlpatterns = [
     # Admin
     path('admin/', admin.site.urls),
-    
     # API Documentation
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
@@ -34,8 +35,10 @@ urlpatterns = [
     path('api/ratings/', include('apps.ratings.urls')),
     path('api/friends/', include('apps.friends.urls')),
     path('api/carts/', include('apps.carts.urls')),
-    
-    # OAuth URLs
+     path('rio/validate-token', lambda r: JsonResponse({'ok': True})),
+        path('', lambda request: redirect('api/docs/', permanent=False)),
+
+# OAuth URLs
     path('auth/', include('social_django.urls', namespace='social')),
 ]
 
