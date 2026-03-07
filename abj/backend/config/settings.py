@@ -290,10 +290,10 @@ CSP_FONT_SRC = ("'self'", 'fonts.gstatic.com')
 SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
 
 # Cookie settings
-CSRF_COOKIE_HTTPONLY = True
-CSRF_COOKIE_SAMESITE = 'Strict'
+CSRF_COOKIE_HTTPONLY = False  # Allow JavaScript to read CSRF cookie
+CSRF_COOKIE_SAMESITE = 'Lax'  # Allow cross-origin for development
 SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SAMESITE = 'Strict'
+SESSION_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_AGE = 3600  # 1 hour
 
 # Additional security headers

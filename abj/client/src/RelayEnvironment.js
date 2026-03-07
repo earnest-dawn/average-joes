@@ -3,22 +3,33 @@ import AuthService from "./utils/auth";
 
 async function fetchQuery(operation, variables) {
   const token = AuthService.getToken();
-  const response = await fetch("/graphql", {
+  
+  // Use the FULL URL to your Django backend
+  // Without this, React tries to find /graphql/ on port 3000/3002
+  const API_URL = "http://localhost:8000/graphql/"; 
+
+  const response = await fetch(API_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      authorization: token ? `Bearer ${token}` : "",
+      ...(token ? { "Authorization": `Bearer ${token}` } : {}),
     },
     body: JSON.stringify({
-      query: operation.text,
+      query: operation.text, // This is what Django expects
       variables,
     }),
+    credentials: "include",
   });
+
+  // If you get a 404 here, your Django server isn't running or the URL is wrong
+  if (!response.ok && response.status !== 400) {
+    throw new Error(`Server fetch failed with status ${response.status}`);
+  }
 
   const result = await response.json();
 
   if (response.status === 401) {
-    console.error("Session expired or unauthorized. Logging out...");
+    AuthService.logout();
     throw new Error("Unauthorized: Please log in again.");
   }
 

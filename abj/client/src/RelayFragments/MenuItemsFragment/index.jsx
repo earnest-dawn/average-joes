@@ -14,3 +14,4 @@ const MenuItemsFragment = graphql`
     inStock
   }
 `;
+export default MenuItemsFragment;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<19e7edb63d5258ffd005523bd7caece4>>
+ * @generated SignedSource<<da4fe586925a96f03545a00abe3fae20>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -52,7 +52,7 @@ var node = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "User",
+      "concreteType": "UserType",
       "kind": "LinkedField",
       "name": "user",
       "plural": false,
@@ -66,58 +66,12 @@ var node = {
         }
       ],
       "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": null,
-      "kind": "LinkedField",
-      "name": "ratedId",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "__typename",
-          "storageKey": null
-        },
-        {
-          "kind": "InlineFragment",
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "name",
-              "storageKey": null
-            }
-          ],
-          "type": "MenuItems",
-          "abstractKey": null
-        },
-        {
-          "kind": "InlineFragment",
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "title",
-              "storageKey": null
-            }
-          ],
-          "type": "Combos",
-          "abstractKey": null
-        }
-      ],
-      "storageKey": null
     }
   ],
   "type": "Rating",
   "abstractKey": null
 };
 
-node.hash = "3baadcbb22ab09cf7c2f66fa61a4356b";
+node.hash = "3d926e330eb3d3c6867103167460989d";
 
-module.exports = node;
+export default node;

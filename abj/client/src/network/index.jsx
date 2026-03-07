@@ -1,4 +1,4 @@
-import { Environment, Network, RecordSource, Store, error } from "relay-runtime";
+import { Environment, Network, RecordSource, Store } from "relay-runtime";
 import AuthService from "../utils/auth";
 
 function fetchQuery(operation, variables, cacheConfig, uploadables) {
@@ -15,27 +15,37 @@ function fetchQuery(operation, variables, cacheConfig, uploadables) {
         "content-type": "application/json",
       };
 
-  return fetch("http://localhost:3001/graphql", {
+  return fetch("/graphql", {
     method: "POST",
     headers: headers,
+    credentials: "include",  // Include cookies for CSRF
     body: JSON.stringify({
       query: operation.text,
       variables,
     }),
   })
     .then((response) => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        console.error("Fetch error:", error);
-        return { errors: [{ message: error.message }] };
-      }
+      console.log("Response status:", response.status);
+      return response.json().then((data) => {
+        console.log("GraphQL Response:", data);
+        if (!response.ok && !data.errors) {
+          // Server error but no GraphQL errors - create one
+          return {
+            errors: [{ message: `Server error: ${response.status}` }],
+          };
+        }
+        return data;
+      });
     })
     .catch((error) => {
       console.error(
         "There has been a problem with your fetch operation: ",
         error,
       );
+      // Return a proper GraphQL error response
+      return {
+        errors: [{ message: error.message || "Failed to fetch" }],
+      };
     });
 }
 

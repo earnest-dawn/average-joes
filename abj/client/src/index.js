@@ -10,7 +10,7 @@ import LogInPage from './pages/LoginPage';
 import LocationPage from './pages/LocationPage';
 import AdminPage from './pages/AdminPages/AdminHomePage';
 import ManageMenuPage  from './pages/AdminPages/ManageMenuPage';
-import ManageCombosPage from './pages/AdminPages/ManageCombosPage ';
+import ManageCombosPage from './pages/AdminPages/ManageCombosPage';
 import ManageRestaurantsPage from './pages/AdminPages/ManageRestaurantsPage';
 import RegistrationPage from './pages/RegistrationPage';
 import ManageOrdersPage from './pages/AdminPages/ManageOrdersPage';

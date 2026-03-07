@@ -1,14 +1,14 @@
 import { graphql } from "babel-plugin-relay/macro";
 
 /**
- * CART MUTATIONS - These work with Django backend
+ * Mutation to add an item to the user's shopping cart
+ * Requires authentication
  */
-
 export const ADD_TO_CART = graphql`
-  mutation addToCartMutation(
+  mutation cartMutationsAddToCartMutation(
     $menuItemId: UUID
     $comboId: UUID
-    $quantity: Int = 1
+    $quantity: Int
   ) {
     addToCart(menuItemId: $menuItemId, comboId: $comboId, quantity: $quantity) {
       cart {
@@ -38,8 +38,12 @@ export const ADD_TO_CART = graphql`
   }
 `;
 
+/**
+ * Mutation to remove an item from the user's shopping cart
+ * Requires authentication
+ */
 export const REMOVE_FROM_CART = graphql`
-  mutation removeFromCartMutation($cartItemId: UUID!) {
+  mutation cartMutationsRemoveFromCartMutation($cartItemId: UUID!) {
     removeFromCart(cartItemId: $cartItemId) {
       cart {
         id
@@ -63,8 +67,12 @@ export const REMOVE_FROM_CART = graphql`
   }
 `;
 
+/**
+ * Query to get current user's cart
+ * Requires authentication
+ */
 export const GET_MY_CART = graphql`
-  query getMyCartQuery {
+  query cartMutationsGetMyCartQuery {
     myCart {
       id
       total
@@ -87,35 +95,6 @@ export const GET_MY_CART = graphql`
           price
         }
       }
-    }
-  }
-`;
-
-/**
- * STOCK MANAGEMENT MUTATIONS
- */
-
-
-/**
- * RATING MUTATIONS
- */
-
-export const CREATE_RATING = graphql`
-  mutation createRatingMutation($input: CreateRatingInput!) {
-    createRating(input: $input) {
-      rating {
-        id
-        emoji
-        ratingText
-        images
-        createdAt
-        user {
-          id
-          username
-        }
-      }
-      success
-      message
     }
   }
 `;

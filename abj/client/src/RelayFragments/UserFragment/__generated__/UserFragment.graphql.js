@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4e926ad77672cab03bacbd8e11d4fa97>>
+ * @generated SignedSource<<9921699b3d3853df50e02aa14c727307>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -34,28 +34,12 @@ var node = {
       "kind": "ScalarField",
       "name": "email",
       "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "Friend",
-      "kind": "LinkedField",
-      "name": "friends",
-      "plural": true,
-      "selections": [
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "FriendFragment"
-        }
-      ],
-      "storageKey": null
     }
   ],
-  "type": "User",
+  "type": "UserType",
   "abstractKey": null
 };
 
-node.hash = "94d8ff813a2401eabbd0bd732f57050f";
+node.hash = "4a95bfdcb84b44f5fffca122c3c80c20";
 
-module.exports = node;
+export default node;

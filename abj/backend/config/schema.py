@@ -5,7 +5,6 @@ Includes queries, mutations, and resolvers for all models
 
 import graphene
 from graphene_django import DjangoObjectType
-from graphene_django.filter import DjangoFilterBackend
 from django.contrib.auth import get_user_model
 from apps.restaurants.models import Restaurant
 from apps.menu_items.models import MenuItem
@@ -37,15 +36,38 @@ class RestaurantType(DjangoObjectType):
 
 
 class MenuItemType(DjangoObjectType):
+    # Field aliases for client compatibility
+    caption = graphene.String()
+    in_stock = graphene.Boolean()
+    ratings = graphene.List(lambda: RatingType)
+    
     class Meta:
         model = MenuItem
-        fields = ['id', 'name', 'description', 'category', 'price', 'discount_price', 'calories', 'ingredients', 'is_vegetarian', 'is_vegan', 'in_stock', 'average_rating']
+        fields = ['id', 'name', 'description', 'category', 'price', 'discount_price', 'calories', 'ingredients', 'is_vegetarian', 'is_vegan', 'average_rating', 'images']
+        name = "MenuItems"  # GraphQL type name
+    
+    def resolve_caption(self, info):
+        """Alias for description field"""
+        return self.description
+    
+    def resolve_in_stock(self, info):
+        """Resolve in_stock field"""
+        return self.in_stock
+    
+    def resolve_ratings(self, info):
+        """Get ratings for this menu item"""
+        from django.contrib.contenttypes.models import ContentType
+        from apps.ratings.models import Rating
+        
+        menu_item_ct = ContentType.objects.get_for_model(MenuItem)
+        return Rating.objects.filter(content_type=menu_item_ct, object_id=self.id, status='APPROVED')
 
 
 class ComboType(DjangoObjectType):
     class Meta:
         model = Combo
         fields = ['id', 'title', 'description', 'price', 'original_price', 'menu_items', 'is_available', 'average_rating']
+        name = "Combos"  # GraphQL type name
 
 
 class OrderItemType(DjangoObjectType):
@@ -66,9 +88,28 @@ class OrderType(DjangoObjectType):
 
 
 class RatingType(DjangoObjectType):
+    rating_text = graphene.String()  # Alias for comment
+    created_at = graphene.String()  # Override to return as string
+    images = graphene.List(graphene.String)  # For compatibility
+    
     class Meta:
         model = Rating
-        fields = ['id', 'user', 'emoji', 'comment', 'rating_score', 'status', 'created_at', 'helpful_count']
+        fields = ['id', 'user', 'emoji', 'comment', 'rating_score', 'title', 'created_at', 'helpful_count']
+        name = "Rating"  # GraphQL type name
+    
+    def resolve_rating_text(self, info):
+        """Alias for comment field"""
+        return self.comment
+    
+    def resolve_created_at(self, info):
+        """Return created_at as ISO string"""
+        if hasattr(self, 'created_at'):
+            return self.created_at.isoformat()
+        return None
+    
+    def resolve_images(self, info):
+        """Return empty list for compatibility"""
+        return []
 
 
 class FriendType(DjangoObjectType):
@@ -107,14 +148,20 @@ class Query(graphene.ObjectType):
     # Restaurants
     restaurant = graphene.Field(RestaurantType, id=graphene.UUID(required=True))
     all_restaurants = graphene.List(RestaurantType)
+    restaurants = graphene.List(RestaurantType)  # Alias for all_restaurants
     restaurants_by_category = graphene.List(RestaurantType, category=graphene.String(required=True))
     
     # Menu Items
     menu_item = graphene.Field(MenuItemType, id=graphene.UUID(required=True))
+    all_menu_items = graphene.List(MenuItemType)
+    menu_items = graphene.List(MenuItemType)  # Alias for all_menu_items
+    menuItems = graphene.List(MenuItemType)  # CamelCase alias for all_menu_items
     menu_items_by_restaurant = graphene.List(MenuItemType, restaurant_id=graphene.UUID(required=True))
     
     # Combos
     combo = graphene.Field(ComboType, id=graphene.UUID(required=True))
+    all_combos = graphene.List(ComboType)
+    combos = graphene.List(ComboType)  # Alias for all_combos
     combos_by_restaurant = graphene.List(ComboType, restaurant_id=graphene.UUID(required=True))
     
     # Orders
@@ -155,6 +202,10 @@ class Query(graphene.ObjectType):
     def resolve_all_restaurants(self, info):
         return Restaurant.objects.filter(is_active=True).order_by('-average_rating')
     
+    def resolve_restaurants(self, info):
+        """Alias for all_restaurants"""
+        return Restaurant.objects.filter(is_active=True).order_by('-average_rating')
+    
     def resolve_restaurants_by_category(self, info, category):
         return Restaurant.objects.filter(category=category, is_active=True)
     
@@ -164,6 +215,17 @@ class Query(graphene.ObjectType):
         except MenuItem.DoesNotExist:
             return None
     
+    def resolve_all_menu_items(self, info):
+        return MenuItem.objects.filter(in_stock=True).order_by('-average_rating')
+    
+    def resolve_menu_items(self, info):
+        """Alias for all_menu_items"""
+        return MenuItem.objects.filter(in_stock=True).order_by('-average_rating')
+    
+    def resolve_menuItems(self, info):
+        """CamelCase alias for all_menu_items"""
+        return MenuItem.objects.filter(in_stock=True).order_by('-average_rating')
+    
     def resolve_menu_items_by_restaurant(self, info, restaurant_id):
         return MenuItem.objects.filter(restaurant_id=restaurant_id, in_stock=True)
     
@@ -172,6 +234,13 @@ class Query(graphene.ObjectType):
             return Combo.objects.get(id=id)
         except Combo.DoesNotExist:
             return None
+    
+    def resolve_all_combos(self, info):
+        return Combo.objects.filter(is_available=True).order_by('-average_rating')
+    
+    def resolve_combos(self, info):
+        """Alias for all_combos"""
+        return Combo.objects.filter(is_available=True).order_by('-average_rating')
     
     def resolve_combos_by_restaurant(self, info, restaurant_id):
         return Combo.objects.filter(restaurant_id=restaurant_id, is_available=True)

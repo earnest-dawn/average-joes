@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1f038132d0e22f536d59a9e1c04e9028>>
+ * @generated SignedSource<<61f7f1937e6e46cf7a199de72bef2a58>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,19 +20,12 @@ var node = {
       "kind": "ScalarField",
       "name": "id",
       "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "username",
-      "storageKey": null
     }
   ],
-  "type": "Friend",
+  "type": "FriendType",
   "abstractKey": null
 };
 
-node.hash = "87f15f4e339ac117c440a51084594932";
+node.hash = "4d5f6a1bddfc5ee3ab9fe282b957556e";
 
-module.exports = node;
+export default node;

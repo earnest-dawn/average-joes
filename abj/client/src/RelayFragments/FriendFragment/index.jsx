@@ -1,6 +1,7 @@
 const FriendFragment = graphql`
-    fragment FriendFragment on Friend {
+    fragment FriendFragment on FriendType {
         id
-        username
     }
 `;
+
+export default FriendFragment;

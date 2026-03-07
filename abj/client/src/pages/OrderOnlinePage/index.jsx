@@ -2,8 +2,7 @@ import Auth from "../../utils/auth";
 import React, { useState, useEffect } from "react";
 import Layout from "../../components/Layout";
 import { graphql } from "babel-plugin-relay/macro";
-import { useLazyLoadQuery } from "react-relay";
-import { ADD_TO_CART } from "../../utils/mutations/mutations.js";
+import { useLazyLoadQuery, useMutation } from "react-relay";
 import {
   Box,
   Card,
@@ -20,8 +19,6 @@ import {
   Paper,
 } from "@mui/material";
 import "./OrderOnline.css";
-import { TOGGLE_STOCK_STATUS } from "../../utils/mutations/mutations.js";
-import { useMutation } from "react-relay";
 import { NavLink } from "react-router-dom";
 
 const OrderOnlinePageQuery = graphql`
@@ -41,14 +38,45 @@ const OrderOnlinePageQuery = graphql`
   }
 `;
 
+const AddToCartMutation = graphql`
+  mutation OrderOnlinePageAddToCartMutation(
+    $menuItemId: UUID
+    $comboId: UUID
+    $quantity: Int = 1
+  ) {
+    addToCart(menuItemId: $menuItemId, comboId: $comboId, quantity: $quantity) {
+      cart {
+        id
+        total
+        items {
+          id
+          quantity
+          unitPrice
+          menuItem {
+            id
+            name
+            price
+          }
+          combo {
+            id
+            title
+            price
+          }
+        }
+      }
+      success
+      message
+    }
+  }
+`;
+
 export default function OrderOnline() {
   const loggedIn = Auth.loggedIn();
   const data = useLazyLoadQuery(OrderOnlinePageQuery, {});
-  const [setToggleStock] = useMutation(TOGGLE_STOCK_STATUS);
   const mongoMenu = (data?.menuItems || []).filter((item) => item !== null);
   const [loading, setLoading] = React.useState(false);
   
-  const [commitAddToCart] = useMutation(ADD_TO_CART);
+  const [commitAddToCart] = useMutation(AddToCartMutation);
 
   const handleAdd = (item) => {
     const inputVariables = {
@@ -83,34 +111,6 @@ commitAddToCart({
   });
 };
 
-  const toggleStockStatus = (id, currentInStock) => {
-    setToggleStock({
-      variables: {
-        input: {
-          id: id,
-          inStock: !currentInStock,
-          clientMutationId: "toggle-" + id,
-        },
-      },
-      optimisticResponse: {
-        toggleStockStatus: {
-          code: "200",
-          success: true,
-          message: "Optimistic update",
-          menuItem: {
-            id: id,
-            inStock: !currentInStock,
-          },
-        },
-      },
-      onCompleted: (response) => {
-        console.log("Status successfully toggled:", response);
-      },
-      onError: (err) => {
-        console.error("Mutation failed:", err);
-      },
-    });
-  };
   const renderMenuCard = (item) => (
     <Card
       key={item.id}
@@ -180,14 +180,9 @@ commitAddToCart({
             <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
               <Chip
                 label={item.inStock ? "Available" : "Out of Stock"}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  toggleStockStatus(item.id, item.inStock);
-                }}
+                // NOTE: toggleStockStatus removed - requires admin permission and mutation
                 size="small"
                 color={item.inStock ? "success" : "error"}
-                sx={{ cursor: "pointer" }}
               />
             </Box>
           ) : (

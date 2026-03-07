@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d973a413f67bcd20bd179bad3ba373fb>>
+ * @generated SignedSource<<9b1d3386ccb07de70bc3b27f78eee42e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -165,7 +165,7 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "User",
+                "concreteType": "UserType",
                 "kind": "LinkedField",
                 "name": "user",
                 "plural": false,
@@ -176,55 +176,6 @@ return {
                     "kind": "ScalarField",
                     "name": "username",
                     "storageKey": null
-                  },
-                  (v0/*: any*/)
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": null,
-                "kind": "LinkedField",
-                "name": "ratedId",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "__typename",
-                    "storageKey": null
-                  },
-                  {
-                    "kind": "InlineFragment",
-                    "selections": [
-                      (v1/*: any*/)
-                    ],
-                    "type": "MenuItems",
-                    "abstractKey": null
-                  },
-                  {
-                    "kind": "InlineFragment",
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "title",
-                        "storageKey": null
-                      }
-                    ],
-                    "type": "Combos",
-                    "abstractKey": null
-                  },
-                  {
-                    "kind": "InlineFragment",
-                    "selections": [
-                      (v0/*: any*/)
-                    ],
-                    "type": "Node",
-                    "abstractKey": "__isNode"
                   }
                 ],
                 "storageKey": null
@@ -238,16 +189,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "34b21ca7317a9731901c5bde8e099ae0",
+    "cacheID": "7e9973f87f96e437759e9a10251434d8",
     "id": null,
     "metadata": {},
     "name": "OrderOnlinePageQuery",
     "operationKind": "query",
-    "text": "query OrderOnlinePageQuery {\n  menuItems {\n    id\n    name\n    ingredients\n    calories\n    price\n    caption\n    images\n    category\n    inStock\n    ...MenuItemsFragment\n  }\n}\n\nfragment MenuItemsFragment on MenuItems {\n  id\n  name\n  ingredients\n  calories\n  price\n  caption\n  images\n  ratings {\n    ...RatingFragment\n    id\n  }\n  category\n  inStock\n}\n\nfragment RatingFragment on Rating {\n  id\n  emoji\n  ratingText\n  createdAt\n  images\n  user {\n    username\n    id\n  }\n  ratedId {\n    __typename\n    ... on MenuItems {\n      name\n    }\n    ... on Combos {\n      title\n    }\n    ... on Node {\n      __isNode: __typename\n      id\n    }\n  }\n}\n"
+    "text": "query OrderOnlinePageQuery {\n  menuItems {\n    id\n    name\n    ingredients\n    calories\n    price\n    caption\n    images\n    category\n    inStock\n    ...MenuItemsFragment\n  }\n}\n\nfragment MenuItemsFragment on MenuItems {\n  id\n  name\n  ingredients\n  calories\n  price\n  caption\n  images\n  ratings {\n    ...RatingFragment\n  }\n  category\n  inStock\n}\n\nfragment RatingFragment on Rating {\n  id\n  emoji\n  ratingText\n  createdAt\n  images\n  user {\n    username\n  }\n}\n"
   }
 };
 })();
 
 node.hash = "0ec435b21b64f058bf35650154fdc356";
 
-module.exports = node;
+export default node;

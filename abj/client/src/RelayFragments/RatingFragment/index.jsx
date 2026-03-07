@@ -8,14 +8,7 @@ const RatingFragment = graphql`
     user {
       username
       }
-    ratedId {
-      __typename
-      ... on MenuItems {
-        name
-      }
-      ... on Combos {
-        title
-      }
-    }
   }
 `;
+
+export default RatingFragment;

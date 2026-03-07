@@ -1,0 +1,320 @@
+type Query {
+  me: UserType
+  user(id: UUID!): UserType
+  allUsers: [UserType]
+  restaurant(id: UUID!): RestaurantType
+  allRestaurants: [RestaurantType]
+  restaurants: [RestaurantType]
+  restaurantsByCategory(category: String!): [RestaurantType]
+  menuItem(id: UUID!): MenuItems
+  allMenuItems: [MenuItems]
+  menuItems: [MenuItems]
+  menuItemsByRestaurant(restaurantId: UUID!): [MenuItems]
+  combo(id: UUID!): Combos
+  allCombos: [Combos]
+  combos: [Combos]
+  combosByRestaurant(restaurantId: UUID!): [Combos]
+  myOrders: [OrderType]
+  order(id: UUID!): OrderType
+  ratings: [Rating]
+  myFriends: [FriendType]
+  friendRequests: [FriendType]
+  myCart: CartType
+}
+
+type UserType {
+  """Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."""
+  username: String!
+  firstName: String!
+  lastName: String!
+  id: UUID!
+  email: String!
+  avatar: String
+  bio: String!
+  isActive: Boolean!
+  role: UsersCustomUserRoleChoices!
+  password: String
+}
+
+"""
+Leverages the internal Python implementation of UUID (uuid.UUID) to provide native UUID objects
+in fields, resolvers and input.
+"""
+scalar UUID
+
+"""An enumeration."""
+enum UsersCustomUserRoleChoices {
+  """Customer"""
+  CUSTOMER
+
+  """Restaurant Owner"""
+  RESTAURANT_OWNER
+
+  """Administrator"""
+  ADMIN
+
+  """Moderator"""
+  MODERATOR
+}
+
+type RestaurantType {
+  id: UUID!
+  name: String!
+  description: String!
+  phoneNumber: String!
+  email: String!
+  website: String!
+  category: RestaurantsRestaurantCategoryChoices!
+  isVerified: Boolean!
+  averageRating: Decimal!
+}
+
+"""An enumeration."""
+enum RestaurantsRestaurantCategoryChoices {
+  """Italian"""
+  ITALIAN
+
+  """Chinese"""
+  CHINESE
+
+  """Mexican"""
+  MEXICAN
+
+  """American"""
+  AMERICAN
+
+  """Indian"""
+  INDIAN
+
+  """Thai"""
+  THAI
+
+  """Japanese"""
+  JAPANESE
+
+  """Mediterranean"""
+  MEDITERRANEAN
+
+  """Soul"""
+  SOUL
+
+  """BBQ"""
+  BBQ
+}
+
+"""The `Decimal` scalar type represents a python Decimal."""
+scalar Decimal
+
+type MenuItems {
+  id: UUID!
+  name: String!
+  description: String!
+  category: MenuItemsMenuItemCategoryChoices!
+  price: Decimal!
+  discountPrice: Decimal
+  calories: Int
+  ingredients: String!
+  isVegetarian: Boolean!
+  isVegan: Boolean!
+  images: [String!]!
+  averageRating: Decimal!
+  caption: String
+  inStock: Boolean
+  ratings: [Rating]
+}
+
+"""An enumeration."""
+enum MenuItemsMenuItemCategoryChoices {
+  """Entree"""
+  ENTREE
+
+  """Side"""
+  SIDE
+
+  """Drink"""
+  DRINK
+
+  """Dessert"""
+  DESSERT
+
+  """Appetizer"""
+  APPETIZER
+}
+
+type Rating {
+  id: UUID!
+  user: UserType!
+  emoji: RatingsRatingEmojiChoices!
+  title: String!
+  comment: String!
+  ratingScore: Int!
+  helpfulCount: Int!
+  createdAt: String
+  ratingText: String
+  images: [String]
+}
+
+"""An enumeration."""
+enum RatingsRatingEmojiChoices {
+  """Mind Blown"""
+  A_
+
+  """Love It"""
+  A__1
+
+  """Neutral"""
+  A__2
+
+  """Dislike"""
+  A__3
+
+  """Hate It"""
+  A__4
+}
+
+type Combos {
+  id: UUID!
+  title: String!
+  description: String!
+  menuItems: [MenuItems!]!
+  price: Decimal!
+  originalPrice: Decimal!
+  isAvailable: Boolean!
+  averageRating: Decimal!
+}
+
+type OrderType {
+  id: UUID!
+  customer: UserType
+  restaurant: RestaurantType
+  orderNumber: String!
+  status: OrdersOrderStatusChoices!
+  totalPrice: Decimal!
+  paymentStatus: OrdersOrderPaymentStatusChoices!
+  createdAt: DateTime!
+  completedAt: DateTime
+  orderItems: [OrderItemType]
+}
+
+"""An enumeration."""
+enum OrdersOrderStatusChoices {
+  """Pending"""
+  PENDING
+
+  """Preparing"""
+  PREPARING
+
+  """Ready"""
+  READY
+
+  """Completed"""
+  COMPLETED
+
+  """Cancelled"""
+  CANCELLED
+
+  """Refunded"""
+  REFUNDED
+}
+
+"""An enumeration."""
+enum OrdersOrderPaymentStatusChoices {
+  """Pending"""
+  PENDING
+
+  """Processing"""
+  PROCESSING
+
+  """Completed"""
+  COMPLETED
+
+  """Failed"""
+  FAILED
+
+  """Refunded"""
+  REFUNDED
+}
+
+"""
+The `DateTime` scalar type represents a DateTime
+value as specified by
+[iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+"""
+scalar DateTime
+
+type OrderItemType {
+  id: UUID!
+  menuItem: MenuItems
+  combo: Combos
+  quantity: Int!
+  priceAtPurchase: Decimal!
+  total: Decimal!
+}
+
+type FriendType {
+  id: UUID!
+  user: UserType!
+  friend: UserType!
+  status: FriendsFriendStatusChoices!
+  createdAt: DateTime!
+}
+
+"""An enumeration."""
+enum FriendsFriendStatusChoices {
+  """Pending"""
+  PENDING
+
+  """Accepted"""
+  ACCEPTED
+
+  """Blocked"""
+  BLOCKED
+}
+
+type CartType {
+  id: UUID!
+  user: UserType!
+  items: [CartItemType!]!
+  total: Float
+}
+
+type CartItemType {
+  id: UUID!
+  menuItem: MenuItems
+  combo: Combos
+  quantity: Int!
+  specialInstructions: String!
+  unitPrice: Decimal!
+}
+
+type Mutation {
+  createRating(input: CreateRatingInput!): CreateRating
+  addToCart(comboId: UUID, menuItemId: UUID, quantity: Int = 1): AddToCart
+  removeFromCart(cartItemId: UUID!): RemoveFromCart
+}
+
+type CreateRating {
+  rating: Rating
+  success: Boolean
+  message: String
+}
+
+input CreateRatingInput {
+  emoji: String!
+  comment: String
+  ratingScore: Int
+  menuItemId: UUID
+  comboId: UUID
+  restaurantId: UUID
+}
+
+type AddToCart {
+  cart: CartType
+  success: Boolean
+  message: String
+}
+
+type RemoveFromCart {
+  cart: CartType
+  success: Boolean
+}

@@ -1,10 +1,9 @@
 const UserFragment = graphql`
-    fragment UserFragment on User {
+    fragment UserFragment on UserType {
         id
         username
         email
-        friends {
-            ...FriendFragment
-        }
     }
 `;
+
+export default UserFragment;
