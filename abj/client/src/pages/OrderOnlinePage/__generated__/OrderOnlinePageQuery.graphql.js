@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9b1d3386ccb07de70bc3b27f78eee42e>>
+ * @generated SignedSource<<8ea153b09ca0aa309c9ec14e303abc51>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -55,21 +55,14 @@ v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "images",
+  "name": "inStock",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "category",
-  "storageKey": null
-},
-v8 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "inStock",
+  "name": "images",
   "storageKey": null
 };
 return {
@@ -88,19 +81,17 @@ return {
         "plural": true,
         "selections": [
           (v0/*: any*/),
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "MenuItemsFragment"
+          },
           (v1/*: any*/),
           (v2/*: any*/),
           (v3/*: any*/),
           (v4/*: any*/),
           (v5/*: any*/),
-          (v6/*: any*/),
-          (v7/*: any*/),
-          (v8/*: any*/),
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "MenuItemsFragment"
-          }
+          (v6/*: any*/)
         ],
         "storageKey": null
       }
@@ -128,9 +119,7 @@ return {
           (v3/*: any*/),
           (v4/*: any*/),
           (v5/*: any*/),
-          (v6/*: any*/),
           (v7/*: any*/),
-          (v8/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -161,11 +150,11 @@ return {
                 "name": "createdAt",
                 "storageKey": null
               },
-              (v6/*: any*/),
+              (v7/*: any*/),
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "UserType",
+                "concreteType": "User",
                 "kind": "LinkedField",
                 "name": "user",
                 "plural": false,
@@ -182,23 +171,31 @@ return {
               }
             ],
             "storageKey": null
-          }
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "category",
+            "storageKey": null
+          },
+          (v6/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "7e9973f87f96e437759e9a10251434d8",
+    "cacheID": "2bc822f2ab59c1129f76b087793ed310",
     "id": null,
     "metadata": {},
     "name": "OrderOnlinePageQuery",
     "operationKind": "query",
-    "text": "query OrderOnlinePageQuery {\n  menuItems {\n    id\n    name\n    ingredients\n    calories\n    price\n    caption\n    images\n    category\n    inStock\n    ...MenuItemsFragment\n  }\n}\n\nfragment MenuItemsFragment on MenuItems {\n  id\n  name\n  ingredients\n  calories\n  price\n  caption\n  images\n  ratings {\n    ...RatingFragment\n  }\n  category\n  inStock\n}\n\nfragment RatingFragment on Rating {\n  id\n  emoji\n  ratingText\n  createdAt\n  images\n  user {\n    username\n  }\n}\n"
+    "text": "query OrderOnlinePageQuery {\n  menuItems {\n    id\n    ...MenuItemsFragment\n    name\n    ingredients\n    calories\n    price\n    caption\n    inStock\n  }\n}\n\nfragment MenuItemsFragment on MenuItems {\n  id\n  name\n  ingredients\n  calories\n  price\n  caption\n  images\n  ratings {\n    ...RatingFragment\n  }\n  category\n  inStock\n}\n\nfragment RatingFragment on Rating {\n  id\n  emoji\n  ratingText\n  createdAt\n  images\n  user {\n    username\n  }\n}\n"
   }
 };
 })();
 
-node.hash = "0ec435b21b64f058bf35650154fdc356";
+node.hash = "5f4918ad37fa912d21cad4dedd125b41";
 
 export default node;

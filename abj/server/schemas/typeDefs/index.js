@@ -1,534 +1,257 @@
-const typeDefs = `
-schema {
-  query: Query
-  mutation: Mutation
-}
+const typeDefs = `  
+# 1. SCALARS
+  scalar UUID
+  scalar Decimal
+  scalar DateTime
 
-interface Node {
-  id: ID
-}
+  # 2. ENUMS
+  enum UserRole { CUSTOMER RESTAURANT_OWNER ADMIN MODERATOR }
+  enum RestaurantCategory { ITALIAN CHINESE MEXICAN AMERICAN INDIAN THAI JAPANESE MEDITERRANEAN SOUL BBQ }
+  enum MenuItemCategory { ENTREE entree SIDE DRINK DESSERT APPETIZER }
+  enum RatingEmoji { A_ A__1 A__2 A__3 A__4 }
+  enum OrderStatus { PENDING PREPARING READY COMPLETED CANCELLED REFUNDED }
+  enum OrderPaymentStatus { PENDING PROCESSING COMPLETED FAILED REFUNDED }
+  enum FriendStatus { PENDING ACCEPTED BLOCKED }
+  enum CartItemType { MENUITEM COMBO }
 
-interface MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-}
+  # 3. INTERFACES
+  interface Node { id: ID! }
+  interface MutationResponse { code: String!, success: Boolean!, message: String! }
 
-type MenuItems implements Node {
-  id: ID
-  name: String!
-  ingredients: String!
-  calories: Int
-  price: Float!
-  caption: String!
-  ratings: [Rating]
-  category: String!
-  images: [String]
-  inStock: Boolean
-  restaurant: Restaurant
-}
+  # 4. UNIONS
+  union SearchResult = Restaurant | MenuItems
+  union RatedObject = MenuItems | Combos | Restaurant
 
-type Friend implements Node {
-  id: ID
-  username: String!
-}
+  # 5. OBJECT TYPES
+  type User implements Node {
+    id: ID!
+    username: String!
+    firstName: String!
+    lastName: String!
+    email: String!
+    password: String!
+    avatar: String
+    bio: String
+    isActive: Boolean!
+    role: UserRole!
+    friends: [Friend]
+    cart: Cart
+  }
 
-type Combos implements Node {
-  id: ID
-  ratings: [Rating]
-  title: String!
-  menuItems: [MenuItems]
-  price: Float!
-}
+  type Restaurant implements Node {
+    id: ID!
+    name: String!
+    description: String!
+    phoneNumber: String!
+    email: String!
+    website: String!
+    category: RestaurantCategory!
+    isVerified: Boolean!
+    averageRating: Decimal!
+    location: String!
+    contactInfo: String!
+    images: [String]
+    hours: String
+    owner: User!
+    menuItems: [MenuItems]
+    combos: [Combos]
+    ratings: [Rating]
+    myOrders: [Order]
+  }
 
-type User implements Node {
-  id: ID
-  username: String!
-  password: String!
-  email: String!
-  friends: [Friend]
-  cart: Cart
-}
+  type MenuItems implements Node {
+    id: ID!
+    name: String!
+    description: String!
+    category: MenuItemCategory!
+    price: Decimal!
+    discountPrice: Decimal
+    calories: Int
+    ingredients: String!
+    isVegetarian: Boolean!
+    isVegan: Boolean!
+    images: [String]
+    averageRating: Decimal!
+    ratings: [Rating]
+    restaurant: Restaurant
+    caption: String
+    inStock: Boolean!
+  }
 
-type Rating implements Node {
-  id: ID
-  emoji: String
-  ratingText: String
-  user: User
-  createdAt: String
-  images: [String]
-  menuItem: MenuItems
-  ratedId: RatedObject
-}
+  type Combos implements Node {
+    id: ID!
+    title: String!
+    description: String!
+    menuItems: [MenuItems!]!
+    price: Decimal!
+    originalPrice: Decimal!
+    isAvailable: Boolean!
+    averageRating: Decimal!
+    ratings: [Rating]
+  }
 
-enum CartItemType {
-  menuitem
-  combo
-}
+  type Rating implements Node {
+    id: ID!
+    user: User!
+    emoji: RatingEmoji!
+    title: String!
+    comment: String
+    ratingScore: Int
+    helpfulCount: Int
+    createdAt: DateTime!
+    ratedId: RatedObject
+    ratingText: String
+    images: [String]
+  }
 
-union SearchResult = Restaurant | MenuItems
+  type Friend implements Node {
+    id: ID!
+    username: String!
+    user: User!
+    friend: User!
+    status: FriendStatus!
+    createdAt: DateTime!
+  }
 
-union RatedObject = MenuItems | Combos | Restaurant
+  type Cart implements Node {
+    id: ID!
+    user: User!
+    items: [CartItem]
+    totalPrice: Decimal
+  }
 
-type Auth {
-  token: ID
-  user: User
-}
+  type CartItem implements Node {
+    id: ID!
+    menuItem: MenuItems
+    combo: Combos
+    quantity: Int!
+    unitPrice: Decimal!
+  }
 
-input CreateRatingInput {
-  ratedId: ID
-  emoji: String!
-  onModel: String!
-  ratingText: String
-  images: [String]
-  clientMutationId: String
-}
+  type Order implements Node {
+    id: ID!
+    orderNumber: String!
+    customer: User
+    restaurant: Restaurant!
+    items: [OrderItem]!
+    totalPrice: Decimal!
+    status: OrderStatus!
+    paymentStatus: OrderPaymentStatus!
+    createdAt: DateTime!
+  }
 
-type CreateRatingPayload implements MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-  rating: Rating
+  type OrderItem {
+    name: String!
+    priceAtPurchase: Decimal!
+    quantity: Int!
+    total: Decimal!
+  }
 
-  clientMutationId: String
-}
-input DeleteRatingInput {
-  id: ID
-  name: String!
-  clientMutationId: String
-}
+  # 6. MUTATION INPUTS & PAYLOADS
+  input CreateUserInput { username: String!, firstName: String!, lastName: String!, password: String!, email: String!, clientMutationId: String }
+  type CreateUserPlayload implements MutationResponse { code: String!, success: Boolean!, message: String!, token: String, user: User, clientMutationId: String }
 
-type DeleteRatingPayload implements MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-  rating: Rating
-  clientMutationId: String
-}
+  input LoginInput { username: String!, password: String!, clientMutationId: String }
+  type LoginPayload implements MutationResponse { code: String!, success: Boolean!, message: String!, token: String, user: User, clientMutationId: String }
 
-input RegisterInput {
-  username: String!
-  password: String!
-  email: String!
-  clientMutationId: String
-}
+  input ToggleStockStatusInput { id: ID!, inStock: Boolean!, clientMutationId: String }
+  type ToggleStockStatusPayload implements MutationResponse { code: String!, success: Boolean!, message: String!, menuItem: MenuItems, clientMutationId: String }
 
-type RegisterPayload implements MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-  token: ID
-  user: User
-  clientMutationId: String
-}
+  input CreateMenuItemInput { name: String!, description: String!, ingredients: String!, calories: Int, price: Decimal!, category: MenuItemCategory!, isVegetarian: Boolean = false, isVegan: Boolean = false, images: [String], restaurantId: ID!, clientMutationId: String }
+  type CreateMenuItemPayload implements MutationResponse { code: String!, success: Boolean!, message: String!, menuItem: MenuItems, clientMutationId: String }
 
-input LoginInput {
-  username: String!
-  password: String!
-  clientMutationId: String
-}
+  input DeleteMenuItemInput { name: String!, clientMutationId: String }
+  type DeleteMenuItemPayload implements MutationResponse { code: String!, success: Boolean!, message: String!, menuItem: MenuItems, clientMutationId: String }
 
-type LoginPayload implements MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-  token: ID
-  user: User
-  clientMutationId: String
-}
+  input UpdateMenuItemInput { id: ID!, name: String, price: Decimal, inStock: Boolean, clientMutationId: String }
+  type UpdateMenuItemPayload implements MutationResponse { code: String!, success: Boolean!, message: String!, menuItem: MenuItems, clientMutationId: String }
 
-input CreateCombosInput {
-  title: String!
-  menuItems: [ID]!
-  price: Float!
-  clientMutationId: String
-}
+  input CreateCombosInput { title: String!, description: String!, menuItems: [ID!]!, price: Decimal!, originalPrice: Decimal!, clientMutationId: String }
+  type CreateCombosPayload implements MutationResponse { code: String!, success: Boolean!, message: String!, combos: Combos, clientMutationId: String }
 
-type CreateCombosPayload implements MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-  combos: Combos
-  clientMutationId: String
-}
+  input DeleteCombosInput { title: String!, clientMutationId: String }
+  type DeleteCombosPayload implements MutationResponse { code: String!, success: Boolean!, message: String!, combos: Combos, clientMutationId: String }
 
-input DeleteCombosInput {
-  title: String!
-  clientMutationId: String
-}
+  input EditCombosInput { title: String!, description: String, menuItems: [ID!], price: Decimal, clientMutationId: String }
+  type EditCombosPayload implements MutationResponse { code: String!, success: Boolean!, message: String!, combos: Combos, clientMutationId: String }
 
-type DeleteCombosPayload implements MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-  combos: Combos
-  clientMutationId: String
-}
+  input CreateRestaurantInput { name: String!, description: String!, category: RestaurantCategory!, location: String!, contactInfo: String!, phoneNumber: String!, email: String!, website: String!, images: [String], hours: String, clientMutationId: String }
+  type CreateRestaurantPayload implements MutationResponse { code: String!, success: Boolean!, message: String!, restaurant: Restaurant, clientMutationId: String }
 
-input EditCombosInput {
-  message: String
-  title: String!
-  menuItems: ID
-  clientMutationId: String
-}
+  input UpdateRestaurantInput { id: ID!, name: String, description: String, category: RestaurantCategory, location: String, contactInfo: String, phoneNumber: String, email: String, website: String, images: [String], hours: String, clientMutationId: String }
+  type UpdateRestaurantPayload implements MutationResponse { code: String!, success: Boolean!, message: String!, restaurant: Restaurant, clientMutationId: String }
 
-type EditCombosPayload implements MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-  combos: Combos
-  clientMutationId: String
-}
+  input DeleteRestaurantInput { id: ID!, clientMutationId: String }
+  type DeleteRestaurantPayload implements MutationResponse { code: String!, success: Boolean!, message: String!, restaurant: Restaurant, clientMutationId: String }
 
-input RemoveFromCombosInput {
-  title: String!
-  menuItems: ID
-  clientMutationId: String
-}
+  input ClaimRestaurantOwnershipInput { id: ID!, clientMutationId: String }
+  type ClaimRestaurantOwnershipPayload implements MutationResponse { code: String!, success: Boolean!, message: String!, restaurant: Restaurant, clientMutationId: String }
 
-type RemoveFromCombosPayload implements MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-  combos: Combos
-  clientMutationId: String
-}
+  input CreateRatingInput { ratedId: ID, emoji: RatingEmoji!, onModel: String!, ratingText: String, ratingScore: Int, images: [String], clientMutationId: String }
+  type CreateRatingPayload implements MutationResponse { code: String!, success: Boolean!, message: String!, rating: Rating, clientMutationId: String }
 
-input CreateMenuItemInput {
-  name: String!
-  ingredients: String!
-  calories: Int
-  price: Float!
-  category: String!
-  images: [String]
-  restaurantId: ID!
-  clientMutationId: String
-}
+  input DeleteRatingInput { id: ID!, clientMutationId: String }
+  type DeleteRatingPayload implements MutationResponse { code: String!, success: Boolean!, message: String!, rating: Rating, clientMutationId: String }
 
-type CreateMenuItemPayload implements MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-  menuItem: MenuItems
-  clientMutationId: String
-}
+  input AddToCartInput { id: ID!, itemType: CartItemType!, quantity: Int = 1, specialInstructions: String, clientMutationId: String }
+  type AddToCartPayload implements MutationResponse { code: String!, success: Boolean!, message: String!, cart: Cart, clientMutationId: String }
 
-input DeleteMenuItemInput {
-  name: String!
-  clientMutationId: String
-}
+  input RemoveFromCartInput { id: [ID!]!, clientMutationId: String }
+  type RemoveFromCartPayload implements MutationResponse { code: String!, success: Boolean!, message: String!, cart: Cart, clientMutationId: String }
 
-type DeleteMenuItemPayload implements MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-  menuItem: MenuItems
-  clientMutationId: String
-}
+  input CreateOrderInput { restaurantId: ID!, items: [OrderItemInput!]!, clientMutationId: String }
+  input OrderItemInput { menuItemId: ID!, quantity: Int!, specialInstructions: String }
+  type CreateOrderPayload implements MutationResponse { code: String!, success: Boolean!, message: String!, order: Order, clientMutationId: String }
 
-input EditMenuItemInput {
-  comboId: ID
-  name: String!
-  clientMutationId: String
-}
+  input CheckoutInput { restaurantId: ID!, clientMutationId: String }
+  type CheckoutPayload implements MutationResponse { code: String!, success: Boolean!, message: String!, order: Order, clientMutationId: String }
 
-type EditMenuItemPayload implements MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-  menuItem: MenuItems
-  clientMutationId: String
-}
-input ToggleStockStatusInput {
-  id: ID!
-  inStock: Boolean!
-  clientMutationId: String
-}
+  input UpdateOrderStatusInput { orderId: ID!, status: OrderStatus!, clientMutationId: String }
+  type UpdateOrderStatusPayload implements MutationResponse { code: String!, success: Boolean!, message: String!, order: Order, clientMutationId: String }
 
-type Restaurant implements Node {
-  id: ID
-  name: String!
-  menuItems: [MenuItems]
-  combos: [Combos]
-  ratings: [Rating]
-  category: String!
-  location: String!
-  contactInfo: String!
-  images: [String]
-  hours: String
-  owner: User! 
-  myOrders: [Order]
-}
+  input DeleteOrderInput { orderId: ID!, clientMutationId: String }
+  type DeleteOrderPayload implements MutationResponse { code: String!, success: Boolean!, message: String!, order: Order, clientMutationId: String }
 
-input CreateRestaurantInput {
-  name: String!
-  menuItems: [ID]
-  combos: [ID]
-  category: String!
-  location: String!
-  contactInfo: String!
-  images: [String]
-  hours: String
-  clientMutationId: String
-}
-type CreateRestaurantPayload implements MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-  restaurant: Restaurant
-}
-input DeleteRestaurantInput {
-  id: ID
-  name: String!
-  clientMutationId: String
-}
-
-type DeleteRestaurantPayload implements MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-  restaurant: Restaurant
-  clientMutationId: String
-}
-
-input AddRestaurantInput {
-  name: String!
-  menuItems: [ID]
-  combos: [ID]
-  ratings: [ID]
-  category: String!
-  location: String!
-  contactInfo: String!
-  images: [String]
-  hours: String
-  restaurantId: String
-  clientMutationId: String
-}
-
-type AddRestaurantPayload implements MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-  restaurant: Restaurant
-  clientMutationId: String
-}
-
-input EditRestaurantInput {
-  id: ID
-  name: String
-  menuItems: [ID]
-  combos: [ID]
-  ratings: [ID]
-  category: String
-  location: String
-  contactInfo: String
-  images: [String]
-  hours: String
-
-  clientMutationId: String
-}
-
-type EditRestaurantPayload implements MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-  restaurant: Restaurant
-  clientMutationId: String
-}
-
-type ToggleStockStatusPayload implements MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-  menuItem: MenuItems
-  clientMutationId: String
-}
-
-type CartItem implements Node {
-  id: ID
-  menuItem: MenuItems
-  combo: Combos
-  quantity: Int
-}
-
-type Cart implements Node {
-  id: ID
-  items: [CartItem]
-  totalPrice: Float
-}
-
-input AddToCartInput {
-  id: ID!
-  itemType: CartItemType!
-  clientMutationId: String
-}
-
-type AddToCartPayload implements MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-  clientMutationId: String
-}
-
-input RemoveFromCartInput {
-  id: [ID]
-  clientMutationId: String
-}
-type RemoveFromCartPayload implements MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-  clientMutationId: String
-}
-
-enum OrderStatus {
-  PENDING
-  PREPARING
-  READY
-  COMPLETED
-  CANCELLED
-}
-
-type Order implements Node {
-  id: ID
-  customer: User
-  restaurant: Restaurant!
-  items: [OrderItem]!
-  totalPrice: Float!
-  status: OrderStatus!
-  createdAt: String!
-}
-
-type OrderItem {
-  name: String!    
-  priceAtPurchase: Float!    
-  quantity: Int!
-  itemReference: MenuItems 
-}
-input DeleteOrderInput {
-  orderId: ID!
-}
-
-type DeleteOrderPayload implements MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-  order: Order
-}
-input CheckoutInput {
-  restaurantId: ID!
-  clientMutationId: String
-}
-
-type CheckoutPayload implements MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-  order: Order
-}
-
-input UpdateOrderStatusInput {
-  orderId: ID!
-  status: OrderStatus!
-  clientMutationId: String
-}
-input OrderItemInput {
-  menuItemId: ID!
-  quantity: Int!
-}
-type OrderItemPayload implements MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-  orderItem: Order
-}
-type UpdateOrderStatusPayload implements MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-  order: Order
-}
-
-type ClaimRestaurantOwnershipPayload implements MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-  restaurant: Restaurant
-  clientMutationId: String
-}
-
-input CreateOrderInput {
-  restaurantId: ID!
-  items: [OrderItemInput]!
-  clientMutationId: String
-}
-
-type CreateOrderPayload implements MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-  order: Order
-  clientMutationId: String
-}
-
-input ClaimRestaurantOwnershipInput {
-  id: ID
-  name: String!
-  clientMutationId: String
-}
-
-type Query {
-  node(id: ID): Node
-  me: User
-  menuItems(restaurantId: ID): [MenuItems!]
-  users: [User]
-  combos: [Combos]
-  ratings: [Rating]
-  restaurants: [Restaurant]
-  friends: [Friend]
-  cart: Cart
-  orders: [Order]
-  myOrders:[Order]
+  # 7. ROOT TYPES
+  type Query {
+    node(id: ID!): Node
+    me: User
+    users: [User]
+    menuItems(restaurantId: UUID): [MenuItems!]
+    combos: [Combos]
+    ratings: [Rating]
+    restaurants: [Restaurant]
+    restaurantsByCategory(category: RestaurantCategory!): [Restaurant]
+    friends: [Friend]
+    cart: Cart
+    orders: [Order]
+    myOrders: [Order]
     globalSearch(searchTerm: String!): [SearchResult!]!
+  }
 
-}
-
-
-
-type Mutation {
-  toggleStockStatus(input: ToggleStockStatusInput!): ToggleStockStatusPayload
-  register(input: RegisterInput!): RegisterPayload
-  login(input: LoginInput!): LoginPayload
-  createCombos(input: CreateCombosInput!): CreateCombosPayload
-  deleteCombos(input: DeleteCombosInput!): DeleteCombosPayload
-  editCombos(input: EditCombosInput!): EditCombosPayload
-  createMenuItems(input: CreateMenuItemInput!): CreateMenuItemPayload
-  deleteMenuItems(input: DeleteMenuItemInput!): DeleteMenuItemPayload
-  editMenuItems(input: EditMenuItemInput!): EditMenuItemPayload
-  createRating(input: CreateRatingInput!): CreateRatingPayload
-  deleteRating(input: DeleteRatingInput!): DeleteRatingPayload
-  createRestaurant(input: CreateRestaurantInput!): CreateRestaurantPayload
-  editRestaurant(input: EditRestaurantInput!): EditRestaurantPayload
-  deleteRestaurant(input: DeleteRestaurantInput!): DeleteRestaurantPayload
-  addRestaurant(input: AddRestaurantInput!): AddRestaurantPayload
-  addToCart(input: AddToCartInput!): AddToCartPayload
-  removeFromCart(input: RemoveFromCartInput!): RemoveFromCartPayload
-  checkout(input: CheckoutInput!): CheckoutPayload
-  updateOrderStatus(input: UpdateOrderStatusInput!): UpdateOrderStatusPayload
-  createOrder(input: CreateOrderInput!): CreateOrderPayload
-  deleteOrder(input: DeleteOrderInput!): DeleteOrderPayload
-  claimRestaurantOwnership(input: ClaimRestaurantOwnershipInput!): ClaimRestaurantOwnershipPayload
-}
-
-
-
-
-scalar Float
-scalar Int
-scalar String
-scalar Boolean
-
-  scalar ID
+  type Mutation {
+    createUser(input: CreateUserInput!): CreateUserPlayload
+    login(input: LoginInput!): LoginPayload
+    toggleStockStatus(input: ToggleStockStatusInput!): ToggleStockStatusPayload
+    createMenuItems(input: CreateMenuItemInput!): CreateMenuItemPayload
+    deleteMenuItems(input: DeleteMenuItemInput!): DeleteMenuItemPayload
+    updateMenuItems(input: UpdateMenuItemInput!): UpdateMenuItemPayload
+    createCombos(input: CreateCombosInput!): CreateCombosPayload
+    deleteCombos(input: DeleteCombosInput!): DeleteCombosPayload
+    editCombos(input: EditCombosInput!): EditCombosPayload
+    createRestaurant(input: CreateRestaurantInput!): CreateRestaurantPayload
+    updateRestaurant(input: UpdateRestaurantInput!): UpdateRestaurantPayload
+    deleteRestaurant(input: DeleteRestaurantInput!): DeleteRestaurantPayload
+    claimRestaurantOwnership(input: ClaimRestaurantOwnershipInput!): ClaimRestaurantOwnershipPayload
+    createRating(input: CreateRatingInput!): CreateRatingPayload
+    deleteRating(input: DeleteRatingInput!): DeleteRatingPayload
+    addToCart(input: AddToCartInput!): AddToCartPayload
+    removeFromCart(input: RemoveFromCartInput!): RemoveFromCartPayload
+    createOrder(input: CreateOrderInput!): CreateOrderPayload
+    checkout(input: CheckoutInput!): CheckoutPayload
+    updateOrderStatus(input: UpdateOrderStatusInput!): UpdateOrderStatusPayload
+    deleteOrder(input: DeleteOrderInput!): DeleteOrderPayload
+  }
 `;
 
 module.exports = typeDefs;

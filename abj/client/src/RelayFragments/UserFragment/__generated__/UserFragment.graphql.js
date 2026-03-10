@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9921699b3d3853df50e02aa14c727307>>
+ * @generated SignedSource<<e2094fd0d8e2c7a63de8dc1fe106d2f0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -36,10 +36,10 @@ var node = {
       "storageKey": null
     }
   ],
-  "type": "UserType",
+  "type": "User",
   "abstractKey": null
 };
 
-node.hash = "4a95bfdcb84b44f5fffca122c3c80c20";
+node.hash = "1870382eabf653334c3589b389e275c1";
 
 export default node;

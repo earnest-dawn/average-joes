@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2519ce8b64d6b075e5c3783ab4e152ac>>
+ * @generated SignedSource<<bfab6c0a61b77767d26ebd069563c471>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,21 +24,7 @@ v2 = {
   "kind": "LocalArgument",
   "name": "quantity"
 },
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "price",
-  "storageKey": null
-},
-v5 = [
+v3 = [
   {
     "alias": null,
     "args": [
@@ -63,91 +49,6 @@ v5 = [
     "name": "addToCart",
     "plural": false,
     "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "CartType",
-        "kind": "LinkedField",
-        "name": "cart",
-        "plural": false,
-        "selections": [
-          (v3/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "total",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "CartItemType",
-            "kind": "LinkedField",
-            "name": "items",
-            "plural": true,
-            "selections": [
-              (v3/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "quantity",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "unitPrice",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "MenuItems",
-                "kind": "LinkedField",
-                "name": "menuItem",
-                "plural": false,
-                "selections": [
-                  (v3/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "name",
-                    "storageKey": null
-                  },
-                  (v4/*: any*/)
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Combos",
-                "kind": "LinkedField",
-                "name": "combo",
-                "plural": false,
-                "selections": [
-                  (v3/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "title",
-                    "storageKey": null
-                  },
-                  (v4/*: any*/)
-                ],
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      },
       {
         "alias": null,
         "args": null,
@@ -176,7 +77,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "OrderOnlinePageAddToCartMutation",
-    "selections": (v5/*: any*/),
+    "selections": (v3/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -189,19 +90,19 @@ return {
     ],
     "kind": "Operation",
     "name": "OrderOnlinePageAddToCartMutation",
-    "selections": (v5/*: any*/)
+    "selections": (v3/*: any*/)
   },
   "params": {
-    "cacheID": "a8696d9b0a7d3edd03c67d1ad63b7d7b",
+    "cacheID": "831a91eb225b77883f18dd8cb22d9ecb",
     "id": null,
     "metadata": {},
     "name": "OrderOnlinePageAddToCartMutation",
     "operationKind": "mutation",
-    "text": "mutation OrderOnlinePageAddToCartMutation(\n  $menuItemId: UUID\n  $comboId: UUID\n  $quantity: Int = 1\n) {\n  addToCart(menuItemId: $menuItemId, comboId: $comboId, quantity: $quantity) {\n    cart {\n      id\n      total\n      items {\n        id\n        quantity\n        unitPrice\n        menuItem {\n          id\n          name\n          price\n        }\n        combo {\n          id\n          title\n          price\n        }\n      }\n    }\n    success\n    message\n  }\n}\n"
+    "text": "mutation OrderOnlinePageAddToCartMutation(\n  $menuItemId: UUID\n  $comboId: UUID\n  $quantity: Int = 1\n) {\n  addToCart(menuItemId: $menuItemId, comboId: $comboId, quantity: $quantity) {\n    success\n    message\n  }\n}\n"
   }
 };
 })();
 
-node.hash = "c6f0e41118b883ec4a0ee8d9c18e94cb";
+node.hash = "48b0d4c879458c7fe407110337eb2f38";
 
 export default node;

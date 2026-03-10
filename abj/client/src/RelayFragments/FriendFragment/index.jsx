@@ -1,5 +1,6 @@
+import graphql from 'babel-plugin-relay/macro';
 const FriendFragment = graphql`
-    fragment FriendFragment on FriendType {
+    fragment FriendFragment on Friend {
         id
     }
 `;

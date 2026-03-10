@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<da4fe586925a96f03545a00abe3fae20>>
+ * @generated SignedSource<<92a7930848779bd7c94084720ee3882d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -52,7 +52,7 @@ var node = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "UserType",
+      "concreteType": "User",
       "kind": "LinkedField",
       "name": "user",
       "plural": false,

@@ -13259,3 +13259,32 @@ WARNING 2026-03-06 01:21:09,056 basehttp 249895 140673466496704 "GET /graphql/ H
 INFO 2026-03-07 00:46:48,967 autoreload 113924 140207663468672 Watching for file changes with StatReloader
 INFO 2026-03-07 00:47:11,748 autoreload 114553 140360187265152 Watching for file changes with StatReloader
 INFO 2026-03-07 00:49:42,462 autoreload 116312 139815742435456 Watching for file changes with StatReloader
+INFO 2026-03-09 15:51:35,014 autoreload 231290 140245149708416 Watching for file changes with StatReloader
+INFO 2026-03-09 15:56:37,261 autoreload 233406 140019790393472 Watching for file changes with StatReloader
+INFO 2026-03-09 17:10:30,133 autoreload 255267 140716755636352 Watching for file changes with StatReloader
+INFO 2026-03-09 17:21:23,088 autoreload 258307 139869706551424 Watching for file changes with StatReloader
+INFO 2026-03-09 17:44:35,916 autoreload 265065 140457166209152 Watching for file changes with StatReloader
+INFO 2026-03-09 18:39:30,786 autoreload 277146 139628730273920 Watching for file changes with StatReloader
+INFO 2026-03-09 19:27:36,484 autoreload 277146 139628730273920 /home/edawn/average-joes/abj/backend/config/schema.py changed, reloading.
+INFO 2026-03-09 19:27:37,828 autoreload 289316 140490657714304 Watching for file changes with StatReloader
+INFO 2026-03-09 19:30:42,851 autoreload 289316 140490657714304 /home/edawn/average-joes/abj/backend/config/schema.py changed, reloading.
+INFO 2026-03-09 19:30:43,292 autoreload 290205 140152182861952 Watching for file changes with StatReloader
+INFO 2026-03-09 19:30:47,678 autoreload 290205 140152182861952 /home/edawn/average-joes/abj/backend/config/schema.py changed, reloading.
+INFO 2026-03-09 19:30:48,089 autoreload 290313 139691576713344 Watching for file changes with StatReloader
+INFO 2026-03-09 19:32:37,277 autoreload 290313 139691576713344 /home/edawn/average-joes/abj/backend/config/schema.py changed, reloading.
+INFO 2026-03-09 19:32:37,694 autoreload 290853 139966124277888 Watching for file changes with StatReloader
+INFO 2026-03-09 19:40:28,083 autoreload 292970 140305339183232 Watching for file changes with StatReloader
+INFO 2026-03-09 20:16:56,801 autoreload 292970 140305339183232 /home/edawn/average-joes/abj/backend/config/schema.py changed, reloading.
+INFO 2026-03-09 20:16:58,135 autoreload 300882 140207005352064 Watching for file changes with StatReloader
+WARNING 2026-03-09 20:19:04,633 log 300882 140206893168320 Not Found: /
+WARNING 2026-03-09 20:19:04,636 basehttp 300882 140206893168320 "GET / HTTP/1.1" 404 179
+WARNING 2026-03-09 20:19:04,965 log 300882 140206893168320 Not Found: /favicon.ico
+WARNING 2026-03-09 20:19:04,966 basehttp 300882 140206893168320 "GET /favicon.ico HTTP/1.1" 404 179
+INFO 2026-03-09 21:02:30,006 autoreload 310982 139863220064384 Watching for file changes with StatReloader
+WARNING 2026-03-09 21:40:06,238 log 310982 139863107040960 Not Found: /favicon.ico
+WARNING 2026-03-09 21:40:06,242 basehttp 310982 139863107040960 "GET /favicon.ico HTTP/1.1" 404 179
+INFO 2026-03-09 22:22:43,192 autoreload 344154 140366294368384 Watching for file changes with StatReloader
+INFO 2026-03-09 22:46:48,726 autoreload 310982 139863220064384 /home/edawn/average-joes/abj/backend/.venv/lib/python3.11/site-packages/PIL/_binary.py changed, reloading.
+INFO 2026-03-09 22:46:49,748 autoreload 349237 139846586142848 Watching for file changes with StatReloader
+INFO 2026-03-10 00:49:53,827 autoreload 380522 140594080292992 Watching for file changes with StatReloader
+INFO 2026-03-10 00:58:04,066 autoreload 382258 139856309366912 Watching for file changes with StatReloader

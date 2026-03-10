@@ -5,9 +5,7 @@
   "description": "Monorepo for Average Joe's Burger Joint (Tech Matchup App)",
   "main": "server/server.js",
   "scripts": {
-    "dev": "npx concurrently \"npm run watch --workspace=server\" \"cd backend && python manage.py runserver 8000\" \"npm start --workspace=client\"",
-    "install-all": "npm install",
-    "seed": "npm run seed --workspace=server",
+"dev": "npx concurrently \"npm run watch --workspace=server\" \"cd backend && ../.venv/bin/python3 manage.py runserver 8000\" \"npm start --workspace=client\"",    "seed": "npm run seed --workspace=server",
     "build": "npm run build --workspace=client",
     "watch": "npm run watch --workspace=server",
     "start-client": "npm run start --workspace=client",

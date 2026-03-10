@@ -1,4 +1,12 @@
-const { MenuItems, User, Combos, Rating, Restaurant, Order, Cart } = require("../../models");
+const {
+  MenuItems,
+  User,
+  Combos,
+  Rating,
+  Restaurant,
+  Order,
+  Cart,
+} = require("../../models");
 const { signToken } = require("../../utils/auth");
 const bcrypt = require("bcrypt");
 
@@ -27,46 +35,50 @@ const resolvers = {
     },
 
     menuItems: async (parent, { restaurantId }) => {
-   let query = {};
-if (restaurantId) {
-    const restaurant = await Restaurant.findById(restaurantId);
-    if (restaurant) {
-      query = { _id: { $in: restaurant.menuItems } };
-    }
-  }
+      let query = {};
+      if (restaurantId) {
+        const restaurant = await Restaurant.findById(restaurantId);
+        if (restaurant) {
+          query = { _id: { $in: restaurant.menuItems } };
+        }
+      }
 
-  const items = await MenuItems.find(query);
-  return await Promise.all(items.map(async (item) => {
-    const parentRestaurant = await Restaurant.findOne({ menuItems: item._id });
-    return {
-      id: item._id.toString(), 
-      name: item.name || "Unnamed Item", 
-      ingredients: item.ingredients || "",
-      calories: item.calories || 0,
-      price: item.price || 0,
-      caption: item.caption || "",
-      category: item.category || "entree",
-      inStock: item.inStock ?? true, 
-      restaurant: parentRestaurant
-    };
-  }));
-},
-globalSearch: async (_, { searchTerm }) => {
-  if (!searchTerm) return [];
+      const items = await MenuItems.find(query);
+      return await Promise.all(
+        items.map(async (item) => {
+          const parentRestaurant = await Restaurant.findOne({
+            menuItems: item._id,
+          });
+          return {
+            id: item._id.toString(),
+            name: item.name || "Unnamed Item",
+            ingredients: item.ingredients || "",
+            calories: item.calories || 0,
+            price: item.price || 0,
+            caption: item.caption || "",
+            category: item.category || "entree",
+            inStock: item.inStock ?? true,
+            restaurant: parentRestaurant,
+          };
+        }),
+      );
+    },
+    globalSearch: async (_, { searchTerm }) => {
+      if (!searchTerm) return [];
 
-  const regex = new RegExp(searchTerm, "i");
+      const regex = new RegExp(searchTerm, "i");
 
-  const [restaurants, items] = await Promise.all([
-    Restaurant.find({ 
-      $or: [{ name: regex }, { category: regex }, { location: regex }] 
-    }),
-    MenuItems.find({ 
-      $or: [{ name: regex }, { category: regex }, { ingredients: regex }] 
-    })
-  ]);
+      const [restaurants, items] = await Promise.all([
+        Restaurant.find({
+          $or: [{ name: regex }, { category: regex }, { location: regex }],
+        }),
+        MenuItems.find({
+          $or: [{ name: regex }, { category: regex }, { ingredients: regex }],
+        }),
+      ]);
 
-  return [...restaurants, ...items];
-},
+      return [...restaurants, ...items];
+    },
     combos: async () => {
       return Combos.find({}).populate("menuItems");
     },
@@ -77,59 +89,68 @@ globalSearch: async (_, { searchTerm }) => {
       return Rating.find({}).populate("user").populate("ratedId");
     },
     restaurants: async () => {
-      return Restaurant.find({}).populate("menuItems").populate("combos").populate("owner");
+      return Restaurant.find({})
+        .populate("menuItems")
+        .populate("combos")
+        .populate("owner");
     },
-     myOrders: async (_, __, context) => {
-  if (!context.user) throw new AuthenticationError();
-  const orders = await Order.find({ customer: context.user._id })
-    .populate('restaurant')
-.populate({
-       path: 'items.itemReference',
-       model: 'MenuItems' 
-    })    
-    .sort({ createdAt: -1 });
-    return orders.filter(order => order.restaurant !== null);
-},
+    myOrders: async (_, __, context) => {
+      if (!context.user) throw new AuthenticationError();
+      const orders = await Order.find({ customer: context.user._id })
+        .populate("restaurant")
+        .populate({
+          path: "items.itemReference",
+          model: "MenuItems",
+        })
+        .sort({ createdAt: -1 });
+      return orders.filter((order) => order.restaurant !== null);
+    },
 
-   orders: async () => {
-  return await Order.find({})
-    .populate('customer restaurant')
-    .populate('items.itemReference');
-}
-  
-    
+    orders: async () => {
+      return await Order.find({})
+        .populate("customer restaurant")
+        .populate("items.itemReference");
+    },
   },
   Mutation: {
     toggleStockStatus: async (parent, { input }, context) => {
-  if (!context.user) {
-    throw new Error("You need to be logged in!");
-  }
+      if (!context.user) {
+        throw new Error("You need to be logged in!");
+      }
 
-  try {
-    const { id, inStock } = input; 
+      try {
+        const { id, inStock } = input;
 
-    const menuItem = await MenuItems.findByIdAndUpdate(
-      id,
-      { inStock: inStock },
-      { new: true }
-    );
+        const menuItem = await MenuItems.findByIdAndUpdate(
+          id,
+          { inStock: inStock },
+          { new: true },
+        );
 
-    if (!menuItem) {
-      return { code: "404", success: false, message: "Menu item not found" };
-    }
+        if (!menuItem) {
+          return {
+            code: "404",
+            success: false,
+            message: "Menu item not found",
+          };
+        }
 
-    return {
-      code: "200",
-      success: true,
-      message: "Stock status updated!",
-      menuItem: menuItem,
-    };
-  } catch (err) {
-    console.error(err);
-    return { code: "500", success: false, message: "Internal Server Error" };
-  }
-},
-    register: async (parent, args) => {
+        return {
+          code: "200",
+          success: true,
+          message: "Stock status updated!",
+          menuItem: menuItem,
+        };
+      } catch (err) {
+        console.error(err);
+        return {
+          code: "500",
+          success: false,
+          message: "Internal Server Error",
+        };
+      }
+    },
+    createUser: async (parent, { input }) => {
       console.log("Received input:", args.input);
       const { username, password, email } = args.input;
       const user = await User.create({ username, password, email });
@@ -141,8 +162,10 @@ globalSearch: async (_, { searchTerm }) => {
       if (!context.user) throw new AuthenticationError();
 
       const restaurant = await Restaurant.findById(id);
-      if (!restaurant) return { success: false, message: "Restaurant not found" };
-      if (restaurant.owner) return { success: false, message: "Restaurant already claimed" };
+      if (!restaurant)
+        return { success: false, message: "Restaurant not found" };
+      if (restaurant.owner)
+        return { success: false, message: "Restaurant already claimed" };
 
       restaurant.owner = context.user._id;
       await restaurant.save();
@@ -150,15 +173,16 @@ globalSearch: async (_, { searchTerm }) => {
       return {
         success: true,
         message: "Ownership successfully claimed",
-        restaurant: await restaurant.populate('owner')
+        restaurant: await restaurant.populate("owner"),
       };
     },
 
-    editRestaurant: async (_, { id, input }, context) => {
+    updateRestaurant: async (_, { id, input }, context) => {
       if (!context.user) throw new AuthenticationError();
       const restaurant = await Restaurant.findById(id);
 
-      if (!restaurant) return { success: false, message: "Restaurant not found" };
+      if (!restaurant)
+        return { success: false, message: "Restaurant not found" };
       if (restaurant.owner.toString() !== context.user._id) {
         return { success: false, message: "Not authorized" };
       }
@@ -169,39 +193,40 @@ globalSearch: async (_, { searchTerm }) => {
       return {
         success: true,
         message: "Restaurant updated",
-        restaurant
+        restaurant,
       };
     },
 
-    
-   removeFromCart: async (_, { input }, context) => {
-  if (!context.user) throw new AuthenticationError();
+    removeFromCart: async (_, { input }, context) => {
+      if (!context.user) throw new AuthenticationError();
 
-  const user = await User.findById(context.user._id);
-  user.cart.items = user.cart.items.filter(
-    item => !input.id.includes(item.menuItem?.toString()) && !input.id.includes(item.combo?.toString())
-  );
+      const user = await User.findById(context.user._id);
+      user.cart.items = user.cart.items.filter(
+        (item) =>
+          !input.id.includes(item.menuItem?.toString()) &&
+          !input.id.includes(item.combo?.toString()),
+      );
 
-  await user.save();
-  const populatedUser = await user.populate('cart.items.menuItem cart.items.combo');
-  
-  return {
-    code: "200",
-    success: true,
-    message: "Items removed from cart",
-    
-  };
-},
-    
+      await user.save();
+      const populatedUser = await user.populate(
+        "cart.items.menuItem cart.items.combo",
+      );
+
+      return {
+        code: "200",
+        success: true,
+        message: "Items removed from cart",
+      };
+    },
 
     updateOrderStatus: async (_, { orderId, status }, context) => {
       if (!context.user) throw new AuthenticationError();
-      
-      const order = await Order.findById(orderId).populate('restaurant');
-      if (!order) throw new Error('Order not found');
-      
+
+      const order = await Order.findById(orderId).populate("restaurant");
+      if (!order) throw new Error("Order not found");
+
       if (order.restaurant.owner.toString() !== context.user._id) {
-        throw new Error('Not authorized to update this order');
+        throw new Error("Not authorized to update this order");
       }
 
       order.status = status;
@@ -209,18 +234,18 @@ globalSearch: async (_, { searchTerm }) => {
       return order;
     },
     createCombos: async (parent, { input }, context) => {
-  if (!context.user) throw new AuthenticationError();
+      if (!context.user) throw new AuthenticationError();
 
-  const newCombo = await Combos.create({ ...input });
-  const populatedCombo = await newCombo.populate("menuItems");
+      const newCombo = await Combos.create({ ...input });
+      const populatedCombo = await newCombo.populate("menuItems");
 
-  return {
-    code: "201",
-    success: true,
-    message: "Combo created!",
-    combos: populatedCombo
-  };
-},
+      return {
+        code: "201",
+        success: true,
+        message: "Combo created!",
+        combos: populatedCombo,
+      };
+    },
     deleteCombos: async (parent, { title }, context) => {
       if (context.user) {
         const deletedCombos = await Combos.findOneAndDelete(
@@ -230,32 +255,32 @@ globalSearch: async (_, { searchTerm }) => {
           },
         );
         return {
-    code: deletedCombos ? "200" : "404",
-    success: !!deletedCombos,
-    message: deletedCombos ? "Combo deleted" : "Combo not found",
-    combos: deletedCombos
-  };
+          code: deletedCombos ? "200" : "404",
+          success: !!deletedCombos,
+          message: deletedCombos ? "Combo deleted" : "Combo not found",
+          combos: deletedCombos,
+        };
       }
       throw new AuthenticationError(
         "You need to be logged in to delete combos!",
       );
     },
     editCombos: async (parent, { input }, context) => {
-  if (!context.user) throw new AuthenticationError();
-  
-  const updatedCombos = await Combos.findByIdAndUpdate(
-    input.id,
-    { $set: input },
-    { new: true }
-  ).populate("menuItems");
+      if (!context.user) throw new AuthenticationError();
 
-  return {
-    code: "200",
-    success: true,
-    message: "Combo updated successfully",
-    combos: updatedCombos
-  };
-},
+      const updatedCombos = await Combos.findByIdAndUpdate(
+        input.id,
+        { $set: input },
+        { new: true },
+      ).populate("menuItems");
+
+      return {
+        code: "200",
+        success: true,
+        message: "Combo updated successfully",
+        combos: updatedCombos,
+      };
+    },
     login: async (parent, { input }) => {
       const { username, password } = input;
       console.log("Attempting login for username:", username);
@@ -278,9 +303,13 @@ globalSearch: async (_, { searchTerm }) => {
 
       const token = signToken(user);
 
-      return {code: "200",
-    success: true,
-    message: "Login successful", token, user: { username: user.username, id: user.id } };
+      return {
+        code: "200",
+        success: true,
+        message: "Login successful",
+        token,
+        user: { username: user.username, id: user.id },
+      };
     },
     createMenuItems: async (parent, { input }, context) => {
       const { restaurantId, ...itemData } = input;
@@ -294,11 +323,11 @@ globalSearch: async (_, { searchTerm }) => {
         let newMenuItem = await MenuItems.create({
           ...itemData,
         });
-await Restaurant.findByIdAndUpdate(
-    restaurantId,
-    { $push: { menuItems: newMenuItem._id } },
-    { new: true }
-  );
+        await Restaurant.findByIdAndUpdate(
+          restaurantId,
+          { $push: { menuItems: newMenuItem._id } },
+          { new: true },
+        );
         return {
           menuItem: {
             ...newMenuItem._doc,
@@ -309,8 +338,8 @@ await Restaurant.findByIdAndUpdate(
           message: "Menu item created successfully!",
         };
       } catch (err) {
-console.error("MONGOOSE ERROR:", err);
-       throw new Error(`Database Error: ${err.message}`);
+        console.error("MONGOOSE ERROR:", err);
+        throw new Error(`Database Error: ${err.message}`);
       }
     },
     deleteMenuItems: async (parent, { input }, context) => {
@@ -336,22 +365,22 @@ console.error("MONGOOSE ERROR:", err);
         menuItem: deletedItem,
       };
     },
-    editMenuItems: async (parent, { input }, context) => {
-  if (!context.user) throw new AuthenticationError();
+    updateMenuItems: async (parent, { input }, context) => {
+      if (!context.user) throw new AuthenticationError();
 
-  const updatedItem = await MenuItems.findByIdAndUpdate(
-    input.id,
-    { $set: input },
-    { new: true }
-  );
+      const updatedItem = await MenuItems.findByIdAndUpdate(
+        input.id,
+        { $set: input },
+        { new: true },
+      );
 
-  return {
-    code: "200",
-    success: true,
-    message: "Menu item updated successfully",
-    menuItem: updatedItem
-  };
-},
+      return {
+        code: "200",
+        success: true,
+        message: "Menu item updated successfully",
+        menuItem: updatedItem,
+      };
+    },
     createRating: async (parent, { input }, context) => {
       if (context.user) {
         let finalRatedId = input.ratedId;
@@ -366,11 +395,11 @@ console.error("MONGOOSE ERROR:", err);
           const foundRest = await Restaurant.findOne({ name: input.ratedId });
           if (foundRest) finalRatedId = foundRest.id;
         }
-if (input.onModel === "Combos" && input.ratedId.length !== 24) {
-    const foundCombo = await Combos.findOne({ title: input.ratedId });
-    if (foundCombo) finalRatedId = foundCombo.id;
-}
-        
+        if (input.onModel === "Combos" && input.ratedId.length !== 24) {
+          const foundCombo = await Combos.findOne({ title: input.ratedId });
+          if (foundCombo) finalRatedId = foundCombo.id;
+        }
+
         const newRating = await Rating.create({
           user: context.user._id || context.user.id,
           ratedId: finalRatedId,
@@ -426,7 +455,6 @@ if (input.onModel === "Combos" && input.ratedId.length !== 24) {
     createRestaurant: async (parent, { input }, context) => {
       if (!context.user) {
         throw new AuthenticationError(
-          
           "You need to be logged in to create restaurant!",
         );
       }
@@ -437,11 +465,11 @@ if (input.onModel === "Combos" && input.ratedId.length !== 24) {
         });
 
         return {
-      code: "201",
-      success: true,
-      message: "Restaurant created!",
-      restaurant: newRestaurant 
-    };
+          code: "201",
+          success: true,
+          message: "Restaurant created!",
+          restaurant: newRestaurant,
+        };
       } catch (err) {
         console.error(err);
         throw new Error("Failed to create restaurant");
@@ -472,7 +500,7 @@ if (input.onModel === "Combos" && input.ratedId.length !== 24) {
         restaurant: deletedItem,
       };
     },
-    addRestaurant: async (parent, {input}, context) => {
+    createRestaurant: async (parent, { input }, context) => {
       if (context.user) {
         const updatedRestaurant = await Restaurant.findByIdAndUpdate(
           input.id,
@@ -483,103 +511,112 @@ if (input.onModel === "Combos" && input.ratedId.length !== 24) {
           },
           { new: true },
         );
-return {
-    code: "200",
-    success: true,
-    message: "Restaurant updated",
-    restaurant: updatedRestaurant
-  }      }
+        return {
+          code: "200",
+          success: true,
+          message: "Restaurant updated",
+          restaurant: updatedRestaurant,
+        };
+      }
       throw new AuthenticationError(
         "You need to be logged in to add a restaurant!",
       );
     },
-    
-  
-createOrder: async (_, { input }, context) => {
-  if (!context.user) throw new AuthenticationError();
 
-  const { restaurantId, items } = input;
+    createOrder: async (_, { input }, context) => {
+      if (!context.user) throw new AuthenticationError();
 
-  try {
-    let total = 0;
-    
-    const itemsToSave = await Promise.all(items.map(async (item) => {
-      const dbItem = await MenuItems.findById(item.menuItemId);
-      if (!dbItem) throw new Error(`Item ${item.menuItemId} not found`);
-      if (!dbItem.inStock) throw new Error(`${dbItem.name} is out of stock`);
+      const { restaurantId, items } = input;
 
-      total += dbItem.price * item.quantity;
+      try {
+        let total = 0;
+
+        const itemsToSave = await Promise.all(
+          items.map(async (item) => {
+            const dbItem = await MenuItems.findById(item.menuItemId);
+            if (!dbItem) throw new Error(`Item ${item.menuItemId} not found`);
+            if (!dbItem.inStock)
+              throw new Error(`${dbItem.name} is out of stock`);
+
+            total += dbItem.price * item.quantity;
+
+            return {
+              itemReference: dbItem._id,
+              quantity: item.quantity,
+              priceAtPurchase: dbItem.price,
+            };
+          }),
+        );
+
+        const order = await Order.create({
+          customer: context.user._id,
+          restaurant: restaurantId,
+          items: itemsToSave,
+          totalPrice: total,
+          status: "PENDING",
+        });
+
+        await User.findByIdAndUpdate(context.user._id, {
+          $set: { "cart.items": [], "cart.totalPrice": 0 },
+        });
+
+        const populatedOrder = await order.populate([
+          "customer",
+          "restaurant",
+          "items.itemReference",
+        ]);
+
+        return {
+          code: "201",
+          success: true,
+          message: "Order placed successfully!",
+          order: populatedOrder,
+        };
+      } catch (err) {
+        return {
+          code: "400",
+          success: false,
+          message: err.message,
+          order: null,
+        };
+      }
+    },
+    deleteOrder: async (parent, { input }, context) => {
+      if (!context.user) throw new AuthenticationError();
+
+      const { orderId } = input;
+
+      const order = await Order.findById(orderId).populate("customer");
+
+      if (!order) {
+        return { code: "404", success: false, message: "Order not found" };
+      }
+
+      if (order.customer._id.toString() !== context.user._id.toString()) {
+        return { code: "403", success: false, message: "Not authorized" };
+      }
+
+      await Order.findByIdAndDelete(orderId);
 
       return {
-        itemReference: dbItem._id,
-        quantity: item.quantity,
-        priceAtPurchase: dbItem.price 
+        code: "200",
+        success: true,
+        message: "Order deleted successfully",
+        order: order,
       };
-    }));
-
-    const order = await Order.create({
-      customer: context.user._id,
-      restaurant: restaurantId,
-      items: itemsToSave,
-      totalPrice: total,
-      status: 'PENDING'
-    });
-
-    await User.findByIdAndUpdate(context.user._id, {
-      $set: { "cart.items": [], "cart.totalPrice": 0 }
-    });
-
-    const populatedOrder = await order.populate(['customer', 'restaurant', 'items.itemReference']);
-
-    return {
-      code: "201",
-      success: true,
-      message: "Order placed successfully!",
-      order: populatedOrder
-    };
-  } catch (err) {
-    return {
-      code: "400",
-      success: false,
-      message: err.message,
-      order: null
-    };
-  }
-},
-deleteOrder: async (parent, { input }, context) => {
-  if (!context.user) throw new AuthenticationError();
-
-  const { orderId } = input;
-  
-  const order = await Order.findById(orderId).populate('customer');
-
-  if (!order) {
-    return { code: "404", success: false, message: "Order not found" };
-  }
-
-  if (order.customer._id.toString() !== context.user._id.toString()) {
-    return { code: "403", success: false, message: "Not authorized" };
-  }
-
-  await Order.findByIdAndDelete(orderId);
-
-  return {
-    code: "200",
-    success: true,
-    message: "Order deleted successfully",
-    order: order 
-  };
-},
-        addToCart: async (_, { input }, context) => {
+    },
+    addToCart: async (_, { input }, context) => {
       const { id, itemType } = input;
-      
+
       if (!Cart) {
-        throw new Error("Internal Server Error: Cart model not found. Check your exports/imports.");
+        throw new Error(
+          "Internal Server Error: Cart model not found. Check your exports/imports.",
+        );
       }
 
       if (!context.user) throw new Error("You must be logged in");
 
-      const user = await User.findById(context.user._id).populate('cart');
+      const user = await User.findById(context.user._id).populate("cart");
       if (!user) throw new Error("User not found");
 
       let cart = user.cart;
@@ -590,18 +627,18 @@ deleteOrder: async (parent, { input }, context) => {
       }
 
       const normalizedType = itemType.toLowerCase();
-      let dbFieldName = '';
-      
-      if (normalizedType === 'menuitem' || normalizedType === 'menuitems') {
-        dbFieldName = 'menuItem';
-      } else if (normalizedType === 'combo') {
-        dbFieldName = 'combo';
+      let dbFieldName = "";
+
+      if (normalizedType === "menuitem" || normalizedType === "menuitems") {
+        dbFieldName = "menuItem";
+      } else if (normalizedType === "combo") {
+        dbFieldName = "combo";
       } else {
         throw new Error(`Invalid item type: ${itemType}`);
       }
 
-      const existingItemIndex = cart.items.findIndex(item => 
-        item[dbFieldName] && item[dbFieldName].toString() === id
+      const existingItemIndex = cart.items.findIndex(
+        (item) => item[dbFieldName] && item[dbFieldName].toString() === id,
       );
 
       if (existingItemIndex > -1) {
@@ -615,13 +652,9 @@ deleteOrder: async (parent, { input }, context) => {
       return {
         code: "200",
         success: true,
-        message: "Successfully added to cart"
+        message: "Successfully added to cart",
       };
-    },        
-
-        
-
-    
+    },
   },
   Rating: {
     ratedId: async (parent) => {
@@ -649,18 +682,18 @@ deleteOrder: async (parent, { input }, context) => {
     },
   },
   OrderItem: {
-  priceAtPurchase: (parent) => parent.priceAtPurchase ?? 0,
-  name: (parent) => {
-    if (parent.itemReference && typeof parent.itemReference === 'object') {
-      return parent.itemReference.name || "Unknown Item";
-    }
-    return "Unknown Item";
-  }
-},
-SearchResult: {
+    priceAtPurchase: (parent) => parent.priceAtPurchase ?? 0,
+    name: (parent) => {
+      if (parent.itemReference && typeof parent.itemReference === "object") {
+        return parent.itemReference.name || "Unknown Item";
+      }
+      return "Unknown Item";
+    },
+  },
+  SearchResult: {
     __resolveType(obj) {
-      if (obj.ingredients) return 'MenuItems';
-      if (obj.owner) return 'Restaurant';
+      if (obj.ingredients) return "MenuItems";
+      if (obj.owner) return "Restaurant";
       return null;
     },
   },

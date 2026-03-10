@@ -1,0 +1,603 @@
+type Query {
+  me: User
+  user(id: UUID!): User
+  allUsers: [User]
+  restaurant(id: UUID!): RestaurantType
+  allRestaurants: [RestaurantType]
+  restaurants: [RestaurantType]
+  restaurantsByCategory(category: String!): [RestaurantType]
+  menuItem(id: UUID!): MenuItems
+  allMenuItems: [MenuItems]
+  menuItems: [MenuItems]
+  menuItemsByRestaurant(restaurantId: UUID!): [MenuItems]
+  combo(id: UUID!): Combos
+  allCombos: [Combos]
+  combos: [Combos]
+  combosByRestaurant(restaurantId: UUID!): [Combos]
+  myOrders: [OrderType]
+  order(id: UUID!): OrderType
+  ratings: [Rating]
+  myFriends: [Friend]
+  friendRequests: [Friend]
+  myCart: CartType
+}
+
+type User {
+  """Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."""
+  username: String!
+  firstName: String!
+  lastName: String!
+  id: UUID!
+  email: String!
+  avatar: String
+  bio: String!
+  isActive: Boolean!
+  role: UsersCustomUserRoleChoices!
+}
+
+"""
+Leverages the internal Python implementation of UUID (uuid.UUID) to provide native UUID objects
+in fields, resolvers and input.
+"""
+scalar UUID
+
+"""An enumeration."""
+enum UsersCustomUserRoleChoices {
+  """Customer"""
+  CUSTOMER
+
+  """Restaurant Owner"""
+  RESTAURANT_OWNER
+
+  """Administrator"""
+  ADMIN
+
+  """Moderator"""
+  MODERATOR
+}
+
+type RestaurantType {
+  id: UUID!
+  name: String!
+  description: String!
+  phoneNumber: String!
+  email: String!
+  website: String!
+  category: RestaurantsRestaurantCategoryChoices!
+  isVerified: Boolean!
+  averageRating: Decimal!
+  location: String
+  images: [String!]!
+  owner: User
+  hours: String
+}
+
+"""An enumeration."""
+enum RestaurantsRestaurantCategoryChoices {
+  """Italian"""
+  ITALIAN
+
+  """Chinese"""
+  CHINESE
+
+  """Mexican"""
+  MEXICAN
+
+  """American"""
+  AMERICAN
+
+  """Indian"""
+  INDIAN
+
+  """Thai"""
+  THAI
+
+  """Japanese"""
+  JAPANESE
+
+  """Mediterranean"""
+  MEDITERRANEAN
+
+  """Soul"""
+  SOUL
+
+  """BBQ"""
+  BBQ
+}
+
+"""The `Decimal` scalar type represents a python Decimal."""
+scalar Decimal
+
+type MenuItems {
+  id: UUID!
+  name: String!
+  description: String!
+  category: MenuItemsMenuItemCategoryChoices!
+  price: Decimal!
+  discountPrice: Decimal
+  calories: Int
+  ingredients: String!
+  isVegetarian: Boolean!
+  isVegan: Boolean!
+  images: [String!]!
+  averageRating: Decimal!
+  caption: String
+  inStock: Boolean
+  ratings: [Rating]
+}
+
+"""An enumeration."""
+enum MenuItemsMenuItemCategoryChoices {
+  """Entree"""
+  ENTREE
+
+  """Side"""
+  SIDE
+
+  """Drink"""
+  DRINK
+
+  """Dessert"""
+  DESSERT
+
+  """Appetizer"""
+  APPETIZER
+}
+
+type Rating {
+  id: UUID!
+  user: User!
+  emoji: RatingsRatingEmojiChoices!
+  title: String!
+  comment: String!
+  ratingScore: Int!
+  helpfulCount: Int!
+  createdAt: String
+  ratingText: String
+  images: [String]
+}
+
+"""An enumeration."""
+enum RatingsRatingEmojiChoices {
+  """Mind Blown"""
+  A_
+
+  """Love It"""
+  A__1
+
+  """Neutral"""
+  A__2
+
+  """Dislike"""
+  A__3
+
+  """Hate It"""
+  A__4
+}
+
+type Combos {
+  id: UUID!
+  title: String!
+  description: String!
+  menuItems: [MenuItems!]!
+  price: Decimal!
+  originalPrice: Decimal!
+  isAvailable: Boolean!
+  averageRating: Decimal!
+}
+
+type OrderType {
+  id: UUID!
+  customer: User
+  restaurant: RestaurantType
+  orderNumber: String!
+  status: OrdersOrderStatusChoices!
+  totalPrice: Decimal!
+  paymentStatus: OrdersOrderPaymentStatusChoices!
+  createdAt: DateTime!
+  completedAt: DateTime
+  orderItems: [OrderItemType]
+}
+
+"""An enumeration."""
+enum OrdersOrderStatusChoices {
+  """Pending"""
+  PENDING
+
+  """Preparing"""
+  PREPARING
+
+  """Ready"""
+  READY
+
+  """Completed"""
+  COMPLETED
+
+  """Cancelled"""
+  CANCELLED
+
+  """Refunded"""
+  REFUNDED
+}
+
+"""An enumeration."""
+enum OrdersOrderPaymentStatusChoices {
+  """Pending"""
+  PENDING
+
+  """Processing"""
+  PROCESSING
+
+  """Completed"""
+  COMPLETED
+
+  """Failed"""
+  FAILED
+
+  """Refunded"""
+  REFUNDED
+}
+
+"""
+The `DateTime` scalar type represents a DateTime
+value as specified by
+[iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+"""
+scalar DateTime
+
+type OrderItemType {
+  id: UUID!
+  menuItem: MenuItems
+  combo: Combos
+  quantity: Int!
+  priceAtPurchase: Decimal!
+  total: Decimal!
+}
+
+type Friend {
+  id: UUID!
+  user: User!
+  friend: User!
+  status: FriendsFriendStatusChoices!
+  createdAt: DateTime!
+}
+
+"""An enumeration."""
+enum FriendsFriendStatusChoices {
+  """Pending"""
+  PENDING
+
+  """Accepted"""
+  ACCEPTED
+
+  """Blocked"""
+  BLOCKED
+}
+
+type CartType {
+  id: UUID!
+  user: User!
+  items: [CartItemType!]!
+  total: Float
+  totalPrice: Float
+}
+
+type CartItemType {
+  id: UUID!
+  menuItem: MenuItems
+  combo: Combos
+  quantity: Int!
+  specialInstructions: String!
+  unitPrice: Decimal!
+}
+
+
+
+type CreateUserPayload {
+  success: Boolean
+  code: String
+  message: String
+  user: User
+  token: String
+  clientMutationId: String
+}
+
+input CreateUserInput {
+  username: String!
+  email: String!
+  password: String!
+  clientMutationId: String
+}
+
+type LoginPayload {
+  success: Boolean
+  code: String
+  message: String
+  user: User
+  token: String
+  clientMutationId: String
+}
+
+input LoginInput {
+  username: String!
+  password: String!
+  clientMutationId: String
+}
+
+type CreateRestaurantPayload {
+  success: Boolean
+  code: String
+  message: String
+  restaurant: RestaurantType
+  clientMutationId: String
+}
+
+input CreateRestaurantInput {
+  name: String!
+  description: String
+  clientMutationId: String
+}
+
+type UpdateRestaurantPayload {
+  success: Boolean
+  code: String
+  message: String
+  restaurant: RestaurantType
+  clientMutationId: String
+}
+
+input UpdateRestaurantInput {
+  id: UUID!
+  name: String
+  clientMutationId: String
+}
+
+type DeleteRestaurantPayload {
+  success: Boolean
+  code: String
+  message: String
+  restaurant: RestaurantType
+  clientMutationId: String
+}
+
+input DeleteRestaurantInput {
+  id: UUID!
+  clientMutationId: String
+}
+
+type ClaimRestaurantOwnershipPayload {
+  success: Boolean
+  code: String
+  message: String
+  restaurant: RestaurantType
+  clientMutationId: String
+}
+
+input ClaimRestaurantOwnershipInput {
+  id: UUID!
+  clientMutationId: String
+}
+
+type CreateMenuItemPayload {
+  success: Boolean
+  code: String
+  message: String
+  menuItem: MenuItems
+  clientMutationId: String
+}
+
+input CreateMenuItemInput {
+  name: String!
+  clientMutationId: String
+}
+
+type UpdateMenuItemPayload {
+  success: Boolean
+  code: String
+  message: String
+  menuItem: MenuItems
+  clientMutationId: String
+}
+
+input UpdateMenuItemInput {
+  id: UUID!
+  clientMutationId: String
+}
+
+type DeleteMenuItemPayload {
+  success: Boolean
+  code: String
+  message: String
+  menuItem: MenuItems
+  clientMutationId: String
+}
+
+input DeleteMenuItemInput {
+  id: UUID!
+  clientMutationId: String
+}
+
+type ToggleStockStatusPayload {
+  success: Boolean
+  code: String
+  message: String
+  menuItem: MenuItems
+  clientMutationId: String
+}
+
+input ToggleStockStatusInput {
+  id: UUID!
+  clientMutationId: String
+}
+
+type CreateCombosPayload {
+  success: Boolean
+  code: String
+  message: String
+  combos: Combos
+  clientMutationId: String
+}
+
+input CreateCombosInput {
+  title: String!
+  clientMutationId: String
+}
+
+type EditCombosPayload {
+  success: Boolean
+  code: String
+  message: String
+  combos: Combos
+  clientMutationId: String
+}
+
+input EditCombosInput {
+  id: UUID!
+  clientMutationId: String
+}
+
+type DeleteCombosPayload {
+  success: Boolean
+  code: String
+  message: String
+  combos: Combos
+  clientMutationId: String
+}
+
+input DeleteCombosInput {
+  id: UUID!
+  clientMutationId: String
+}
+
+type CreateRatingPayload {
+  success: Boolean
+  code: String
+  message: String
+  rating: Rating
+  clientMutationId: String
+}
+
+input CreateRatingInput {
+  emoji: String!
+  ratingScore: Int
+  menuItemId: UUID
+  restaurantId: UUID
+  clientMutationId: String
+}
+
+type DeleteRatingPayload {
+  success: Boolean
+  code: String
+  message: String
+  rating: Rating
+  clientMutationId: String
+}
+
+input DeleteRatingInput {
+  id: UUID!
+  clientMutationId: String
+}
+
+type AddToCartPayload {
+  success: Boolean
+  code: String
+  message: String
+  cart: CartType
+  clientMutationId: String
+}
+
+input AddToCartInput {
+  menuItemId: UUID
+  quantity: Int
+  clientMutationId: String
+}
+
+type RemoveFromCartPayload {
+  success: Boolean
+  code: String
+  message: String
+  cart: CartType
+  clientMutationId: String
+}
+
+input RemoveFromCartInput {
+  cartItemId: UUID!
+  clientMutationId: String
+}
+
+type CreateOrderPayload {
+  success: Boolean
+  code: String
+  message: String
+  order: OrderType
+  clientMutationId: String
+}
+
+input CreateOrderInput {
+  restaurantId: UUID!
+  clientMutationId: String
+}
+
+type CheckoutPayload {
+  success: Boolean
+  code: String
+  message: String
+  order: OrderType
+  clientMutationId: String
+}
+
+input CheckoutInput {
+  cartId: UUID!
+  clientMutationId: String
+}
+
+type UpdateOrderStatusPayload {
+  success: Boolean
+  code: String
+  message: String
+  order: OrderType
+  clientMutationId: String
+}
+
+input UpdateOrderStatusInput {
+  id: UUID!
+  status: String
+  clientMutationId: String
+}
+
+type DeleteOrderPayload {
+  success: Boolean
+  code: String
+  message: String
+  order: OrderType
+  clientMutationId: String
+}
+
+input DeleteOrderInput {
+  id: UUID!
+  clientMutationId: String
+}
+
+type Mutation {
+  createUser(input: CreateUserInput!): CreateUserPayload
+  login(input: LoginInput!): LoginPayload
+  createRestaurant(input: CreateRestaurantInput!): CreateRestaurantPayload
+  updateRestaurant(input: UpdateRestaurantInput!): UpdateRestaurantPayload
+  deleteRestaurant(input: DeleteRestaurantInput!): DeleteRestaurantPayload
+  claimRestaurantOwnership(input: ClaimRestaurantOwnershipInput!): ClaimRestaurantOwnershipPayload
+  createMenuItems(input: CreateMenuItemInput!): CreateMenuItemPayload
+  updateMenuItem(input: UpdateMenuItemInput!): UpdateMenuItemPayload
+  deleteMenuItems(input: DeleteMenuItemInput!): DeleteMenuItemPayload
+  toggleStockStatus(input: ToggleStockStatusInput!): ToggleStockStatusPayload
+  createCombos(input: CreateCombosInput!): CreateCombosPayload
+  editCombos(input: EditCombosInput!): EditCombosPayload
+  deleteCombos(input: DeleteCombosInput!): DeleteCombosPayload
+  createRating(input: CreateRatingInput!): CreateRatingPayload
+  deleteRating(input: DeleteRatingInput!): DeleteRatingPayload
+  addToCart(input: AddToCartInput!): AddToCartPayload
+  removeFromCart(input: RemoveFromCartInput!): RemoveFromCartPayload
+  createOrder(input: CreateOrderInput!): CreateOrderPayload
+  checkout(input: CheckoutInput!): CheckoutPayload
+  updateOrderStatus(input: UpdateOrderStatusInput!): UpdateOrderStatusPayload
+  deleteOrder(input: DeleteOrderInput!): DeleteOrderPayload
+}

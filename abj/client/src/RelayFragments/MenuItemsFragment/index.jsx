@@ -1,3 +1,4 @@
+import graphql from 'babel-plugin-relay/macro';
 const MenuItemsFragment = graphql`
   fragment MenuItemsFragment on MenuItems {
     id

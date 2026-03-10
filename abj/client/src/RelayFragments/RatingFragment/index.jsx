@@ -1,3 +1,5 @@
+import graphql from 'babel-plugin-relay/macro';
+
 const RatingFragment = graphql`
   fragment RatingFragment on Rating {
     id
