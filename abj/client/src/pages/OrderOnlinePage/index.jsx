@@ -16,100 +16,79 @@ import {
 import "./OrderOnline.css";
 import { AddToCartMutation } from "../../utils/mutations/mutations";
 import MenuItemsFragment from "../../RelayFragments/MenuItemsFragment";
-// 1. Fragment for the individual menu item to unmask data
 
+
+// 1. Fragment for the individual menu item to unmask data
 const OrderOnlinePageQuery = graphql`
   query OrderOnlinePageQuery {
     menuItems {
       id
       ...MenuItemsFragment
-      name
-      ingredients
-      calories
-      price
-      caption
-      inStock
+      
     }
   }
 `;
 
 
 function MenuCard({ item, loggedIn, onAdd }) {
-  // Use fragment to ensure data is properly unmasked by Relay
   const data = useFragment(MenuItemsFragment, item);
+
+  if (!data) return null;
 
   return (
     <Card
+      // Change the border logic to avoid using a class name that matches 'inStock'
       sx={{
         width: 320,
+        minHeight: 450, // Force a minimum height
         display: "flex",
         flexDirection: "column",
-        height: "100%",
+        backgroundColor: "white", // Force white background
         border: data.inStock ? "4px solid #d0f0c0" : "4px solid #f0c0c0",
-        transition: "transform 0.2s",
-        "&:hover": { transform: "scale(1.02)" },
+        m: 1
       }}
     >
-      <CardActionArea sx={{ flexGrow: 1 }}>
+      <CardActionArea>
         <CardMedia
           component="img"
           height="200"
           image={`https://picsum.photos/seed/${data.id}/400/300`}
           alt={data.name}
         />
-        <CardContent>
-          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
-            <Typography variant="h6" sx={{ fontWeight: 700, maxWidth: "65%" }}>
-              {data.name}
-            </Typography>
-            <Box sx={{ textAlign: "right" }}>
-              <Typography variant="subtitle1" color="primary" sx={{ fontWeight: 800 }}>
-                ${data.price}
-              </Typography>
-              <Chip
-                label={`${data.calories} Cal`}
-                size="small"
-                variant="outlined"
-                sx={{ fontSize: "0.65rem", height: "20px" }}
-              />
-            </Box>
-          </Box>
-
-          {loggedIn && (
-            <Chip
-              label={data.inStock ? "Available" : "Out of Stock"}
-              size="small"
-              color={data.inStock ? "success" : "error"}
-              sx={{ mb: 1 }}
-            />
-          )}
-
-          <Typography variant="body2" color="text.secondary" sx={{ fontStyle: "italic", mb: 1 }}>
-            {data.caption || "No description available"}
+        <CardContent sx={{ color: "black !important" }}>
+          {/* Using standard h2/p tags inside Typography to bypass CSS collisions */}
+          <Typography component="div" variant="h6" sx={{ fontWeight: 700, color: "black" }}>
+            {data.name}
           </Typography>
           
-          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
-            <strong>Contains:</strong> {data.ingredients || "Not listed"}
+          <Typography component="div" variant="subtitle1" sx={{ color: "green", fontWeight: "bold" }}>
+            ${data.price}
+          </Typography>
+
+          <Typography component="div" variant="body2" sx={{ mt: 1, fontStyle: "italic", color: "#333" }}>
+            {data.caption || "Description here"}
+          </Typography>
+
+          <Typography component="div" variant="caption" sx={{ display: 'block', mt: 2, color: "#666" }}>
+            <strong>Ingredients:</strong> {data.ingredients}
           </Typography>
         </CardContent>
       </CardActionArea>
 
-      <Button
-        variant="contained"
-        fullWidth
-        disabled={!data.inStock && loggedIn}
-        onClick={() => (loggedIn ? onAdd(data) : window.location.assign("/register"))}
-        sx={{
-          borderRadius: 0,
-          py: 1.5,
-          background: "#1a1a1a",
-          color: "goldenrod",
-          fontWeight: "bold",
-          "&:hover": { bgcolor: "#333" },
-        }}
-      >
-        {loggedIn ? (data.inStock ? "ADD TO CART" : "OUT OF STOCK") : "REGISTER TO ORDER"}
-      </Button>
+      <Box sx={{ mt: 'auto', p: 1 }}>
+        <Button
+          variant="contained"
+          fullWidth
+          onClick={() => onAdd(data)}
+          sx={{
+            background: "#1a1a1a",
+            color: "goldenrod",
+            "&:hover": { background: "#333" }
+          }}
+        >
+          {data.inStock ? "ADD TO CART" : "OUT OF STOCK"}
+        </Button>
+      </Box>
     </Card>
   );
 }

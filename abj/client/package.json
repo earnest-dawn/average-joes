@@ -50,7 +50,7 @@
 "proxy": "http://localhost:3001",
   "relay": {
     "src": "./src",
-    "schema": "../schema.graphql",
+    "schema": "./schema.graphql",
     "language": "javascript",
     "eagerEsModules": true,
     "exclude": [

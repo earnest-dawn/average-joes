@@ -56,7 +56,7 @@ const resolvers = {
             calories: item.calories || 0,
             price: item.price || 0,
             caption: item.caption || "",
-            category: item.category || "entree",
+            category: (item.category || "ENTREE").toUpperCase(),
             inStock: item.inStock ?? true,
             restaurant: parentRestaurant,
           };
