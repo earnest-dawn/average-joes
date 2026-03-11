@@ -23,7 +23,7 @@ export default function TemplatePage2() {
             Just apps. Lots of mother flipping apps.</p>
           </header>
           <span className="image">
-            <img src={`${process.env.PUBLIC_URL}/assets/images/pic01.jpg`} alt="" />
+            <img src={`${process.env.PUBLIC_URL}/assets/images/averageLogo.png`} alt="" />
           </span>
         </div>
         <a href="#one" className="goto-next scrolly">Next</a>

@@ -1,0 +1,15 @@
+@import '../../../App.css';
+
+/* Update your CSS to target the inner input and label */
+.donations .MuiInputBase-input {
+    color: var(--col7) !important;
+}
+
+.donations .MuiInputLabel-root {
+    color: var(--col7) !important;
+}
+
+.donations .MuiOutlinedInput-root fieldset {
+    borderColor: rgba(255, 255, 255, 0.3) !important;
+}
+
