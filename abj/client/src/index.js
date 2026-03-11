@@ -14,7 +14,6 @@ import ManageCombosPage from './pages/AdminPages/ManageCombosPage';
 import ManageRestaurantsPage from './pages/AdminPages/ManageRestaurantsPage';
 import RegistrationPage from './pages/RegistrationPage';
 import ManageOrdersPage from './pages/AdminPages/ManageOrdersPage';
-import TemplatePage from './pages/TemplatePage';
 
 import environment from "./network";
 const router = createBrowserRouter([
@@ -23,7 +22,7 @@ const router = createBrowserRouter([
         element: <App />,
         errorElement: <ErrorPage />,
         children: [
-            { index: true, element: <TemplatePage /> },
+            { index: true, element: <HomePage /> },
             { path: '/orderOnline', element: <OrderOnline /> },
             { path: '/about', element: <About /> },
             { path: '/location', element: <LocationPage /> },

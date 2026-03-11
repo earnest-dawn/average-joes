@@ -1,139 +1,175 @@
-import denzelAward from "../../assets/images/denzelAward.jpg";
-import React, { useEffect, useState, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom"; 
-import denzelLogoBackground from "../../assets/images/denzelLogoBackground.png";
-import "./HomePage.css";
-import "../ContactPage";
-import StretchingHeader from "../../components/StretchingHeader";
-import StretchingFooter from "../../components/StretchingFooter";
-import Auth from "../../utils/auth";
-import ContactPage from "../ContactPage";
-import { Box } from "@mui/material";
-
-export default function HomePage() {
-  const [animateButton, setAnimateButton] = useState(false);
-  const hasNavigatedToAbout = useRef(false); 
-  const navigate = useNavigate(); 
-  const [isExiting, setIsExiting] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = React.useState(Auth.loggedIn()); 
-const [registrationForm, setRegistrationForm] = useState(false);
-
-    const [userFormData, setUserFormData] = useState({
-        username: '',
-        password: '',
-    });
-    const [showAlert, setShowAlert] = useState(false);
-    const [alertMessage, setAlertMessage] = useState('');
-    const [alertSeverity, setAlertSeverity] = useState('error');
-const handleInputChange = (event) => {
-        const { name, value } = event.target;
-        setUserFormData({ ...userFormData, [name]: value });
-    };
-    
-
-    const handleFormSubmit = async (event) => {
-        event.preventDefault();
-
-        setShowAlert(false); 
-        setAlertMessage('');
-        setAlertSeverity('error');
-
-        const form = event.currentTarget;
-        if (form.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
-            setAlertMessage("Please fill in all required fields.");
-            setShowAlert(true);
-            return;
-        }}
+import React, { useEffect } from 'react';
+import logo from '../../assets/images/averageLogo.png'
+export default function TemplatePage2() {
   
   useEffect(() => {
-    setAnimateButton(true);
+    // Check if the script has loaded and the function exists
+    if (window.initLanded) {
+      window.initLanded();
+    }
   }, []);
 
-  
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollThreshold = 100;
-      const isAtBottom =
-        window.innerHeight + window.scrollY >=
-        document.body.offsetHeight - scrollThreshold;
+  return (
+    <div id="page-wrapper" >
 
-      if (isAtBottom && !hasNavigatedToAbout.current) {
-        hasNavigatedToAbout.current = true;
-        setIsExiting(true); 
+     
 
-        
-        setTimeout(() => {
-          navigate("/about");
-          window.scrollTo(0, 130);
-        }, 800);
-      }
-    };
+      {/* Banner */}
+      <section id="banner">
+        <div className="content">
+          <header>
+            <h2>The future has landed</h2>
+            <p>And there are no hoverboards or flying cars.<br />
+            Just apps. Lots of mother flipping apps.</p>
+          </header>
+          <span className="image">
+            <img src={`${process.env.PUBLIC_URL}/assets/images/pic01.jpg`} alt="" />
+          </span>
+        </div>
+        <a href="#one" className="goto-next scrolly">Next</a>
+      </section>
 
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [navigate]); 
-
-  
-    
-    if (isLoggedIn) {
-      return (<>
-      <div id="wholeHome" className={isExiting ? "home-fade-out" : ""}>
-        <div className="home">
-          <div className="headerContainer">
-            <div className="orderLink">
-              <Link to="/orderOnline">
-                <button
-                  className={`orderNowButton${
-                    animateButton ? " animate-in" : ""
-                  }`}
-                >
-                  <span className="buttonText">ORDER NOW</span>
-                </button>
-              </Link>
+      {/* One */}
+      <section id="one" className="spotlight style1 bottom">
+        <span className="image fit main">
+          <img src={`${process.env.PUBLIC_URL}/assets/images/pic02.jpg`} alt="" />
+        </span>
+        <div className="content">
+          <div className="container">
+            <div className="row">
+              <div className="col-4 col-12-medium">
+                <header>
+                  <h2>Odio faucibus ipsum integer consequat</h2>
+                  <p>Nascetur eu nibh vestibulum amet gravida nascetur praesent</p>
+                </header>
+              </div>
+              <div className="col-4 col-12-medium">
+                <p>Feugiat accumsan lorem eu ac lorem amet sed accumsan donec.
+                Blandit orci porttitor semper. Arcu phasellus tortor enim mi
+                nisi praesent dolor adipiscing. Integer mi sed nascetur cep aliquet
+                augue varius tempus lobortis porttitor accumsan consequat
+                adipiscing lorem dolor.</p>
+              </div>
+              <div className="col-4 col-12-medium">
+                <p>Morbi enim nascetur et placerat lorem sed iaculis neque ante
+                adipiscing adipiscing metus massa. Blandit orci porttitor semper.
+                Arcu phasellus tortor enim mi mi nisi praesent adipiscing. Integer
+                mi sed nascetur cep aliquet augue varius tempus. Feugiat lorem
+                ipsum dolor nullam.</p>
+              </div>
             </div>
           </div>
         </div>
-     <Box>
-  <ContactPage />
-</Box>
-        <StretchingFooter pageName="About"/>
+        <a href="#two" className="goto-next scrolly">Next</a>
+      </section>
 
-        <div></div>
-      </div>
-      </>);
-    }
-    return (<>
-      <div id="wholeHome" className={isExiting ? "home-fade-out" : ""}>
-        <div className="home">
-          <div className="headerContainer">
-            <div className="orderLink">
-              
-                <button
-                  className={`orderNowButton${
-                    animateButton ? " animate-in" : ""
-                  }`}
-                  onClick={() => navigate("/register")}
-                >
-                  <span className="buttonText">Register To Order!</span>
-                </button>
+      {/* Two */}
+      <section id="two" className="spotlight style2 right">
+        <span className="image fit main">
+          <img src={`${process.env.PUBLIC_URL}/assets/images/pic03.jpg`} alt="" />
+        </span>
+        <div className="content">
+          <header>
+            <h2>Interdum amet non magna accumsan</h2>
+            <p>Nunc commodo accumsan eget id nisi eu col volutpat magna</p>
+          </header>
+          <p>Feugiat accumsan lorem eu ac lorem amet ac arcu phasellus tortor enim mi mi nisi praesent adipiscing. Integer mi sed nascetur cep aliquet augue varius tempus lobortis porttitor lorem et accumsan consequat adipiscing lorem.</p>
+          <ul className="actions">
+            <li><a href="#" className="button">Learn More</a></li>
+          </ul>
+        </div>
+        <a href="#three" className="goto-next scrolly">Next</a>
+      </section>
+
+      {/* Three */}
+      <section id="three" className="spotlight style3 left">
+        <span className="image fit main bottom">
+          <img src={`${process.env.PUBLIC_URL}/assets/images/pic01.jpg`} alt="" />
+        </span>
+        <div className="content">
+          <header>
+            <h2>Interdum felis blandit praesent sed augue</h2>
+            <p>Accumsan integer ultricies aliquam vel massa sapien phasellus</p>
+          </header>
+          <p>Feugiat accumsan lorem eu ac lorem amet ac arcu phasellus tortor enim mi mi nisi praesent adipiscing. Integer mi sed nascetur cep aliquet augue varius tempus lobortis porttitor lorem et accumsan consequat adipiscing lorem.</p>
+          <ul className="actions">
+            <li><a href="#" className="button">Learn More</a></li>
+          </ul>
+        </div>
+        <a href="#four" className="goto-next scrolly">Next</a>
+      </section>
+
+      {/* Four */}
+      <section id="four" className="wrapper style1 special fade-up">
+        <div className="container">
+          <header className="major">
+            <h2>Accumsan sed tempus adipiscing blandit</h2>
+            <p>Iaculis ac volutpat vis non enim gravida nisi faucibus posuere arcu consequat</p>
+          </header>
+          <div className="box alt">
+            <div className="row gtr-uniform">
+              <section className="col-4 col-6-medium col-12-xsmall">
+                <span className="icon solid alt major fa-chart-area"></span>
+                <h3>Ipsum sed commodo</h3>
+                <p>Feugiat accumsan lorem eu ac lorem amet accumsan donec. Blandit orci porttitor.</p>
+              </section>
+              <section className="col-4 col-6-medium col-12-xsmall">
+                <span className="icon solid alt major fa-comment"></span>
+                <h3>Eleifend lorem ornare</h3>
+                <p>Feugiat accumsan lorem eu ac lorem amet accumsan donec. Blandit orci porttitor.</p>
+              </section>
+              <section className="col-4 col-6-medium col-12-xsmall">
+                <span className="icon solid alt major fa-flask"></span>
+                <h3>Cubilia cep lobortis</h3>
+                <p>Feugiat accumsan lorem eu ac lorem amet accumsan donec. Blandit orci porttitor.</p>
+              </section>
+              <section className="col-4 col-6-medium col-12-xsmall">
+                <span className="icon solid alt major fa-paper-plane"></span>
+                <h3>Non semper interdum</h3>
+                <p>Feugiat accumsan lorem eu ac lorem amet accumsan donec. Blandit orci porttitor.</p>
+              </section>
+              <section className="col-4 col-6-medium col-12-xsmall">
+                <span className="icon solid alt major fa-file"></span>
+                <h3>Odio laoreet accumsan</h3>
+                <p>Feugiat accumsan lorem eu ac lorem amet accumsan donec. Blandit orci porttitor.</p>
+              </section>
+              <section className="col-4 col-6-medium col-12-xsmall">
+                <span className="icon solid alt major fa-lock"></span>
+                <h3>Massa arcu accumsan</h3>
+                <p>Feugiat accumsan lorem eu ac lorem amet accumsan donec. Blandit orci porttitor.</p>
+              </section>
             </div>
           </div>
+          <footer className="major">
+            <ul className="actions special">
+              <li><a href="#" className="button">Magna sed feugiat</a></li>
+            </ul>
+          </footer>
         </div>
-<Box >
-  <ContactPage />
-</Box>
-        <StretchingFooter pageName="About" onClick={() => navigate("/about")}/>
+      </section>
 
-        <div></div>
-      </div>
-      </>);
-    
-      
-    
- 
+      {/* Five */}
+      <section id="five" className="wrapper style2 special fade">
+        <div className="container">
+          <header>
+            <h2>Magna faucibus lorem diam</h2>
+            <p>Ante metus praesent faucibus ante integer id accumsan eleifend</p>
+          </header>
+          <form method="post" action="#" className="cta">
+            <div className="row gtr-uniform gtr-50">
+              <div className="col-8 col-12-xsmall">
+                <input type="email" name="email" id="email" placeholder="Your Email Address" />
+              </div>
+              <div className="col-4 col-12-xsmall">
+                <input type="submit" value="Get Started" className="fit primary" />
+              </div>
+            </div>
+          </form>
+        </div>
+      </section>
+
+
+
+    </div>
+  );
 }

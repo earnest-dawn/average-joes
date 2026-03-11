@@ -2,8 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import Layout from '../../components/Layout';
 import { Box, Typography, Button, Paper } from '@mui/material';
 import FoodBankIcon from '@mui/icons-material/FoodBank';
-import denzelAward from '../../assets/images/denzelAward.jpg';
-import denzelSuit from '../../assets/images/denzelSuit.jpg';
 import './AboutPage.css';
 import { useNavigate } from 'react-router-dom';
 import ContactPage from '../ContactPage';
@@ -128,12 +126,11 @@ export default function About() {
                         </Typography>
                         <Box className="about-section-spacing">
                            <Paper>
-                            <img
-                                src={denzelSuit}
-                                alt="Denzel Washington in a suit"
+                                      <img src={`${process.env.PUBLIC_URL}/assets/images/pic04.jpg`} 
+                                      alt="Denzel Washington in a suit"
                                 className="about-image"
-                                ref={image1Ref}
-                            />
+                                ref={image1Ref} />
+
                             </Paper> 
                             {/* RE-INTRODUCED NESTED PAPER HERE */}
                             <Paper className="about-paper-caption">
@@ -161,7 +158,7 @@ export default function About() {
                             </Paper>
 <Box>
                             <Paper>
-                                <img src={denzelAward} 
+                                      <img src={`${process.env.PUBLIC_URL}/assets/images/pic04.jpg`} 
                                 alt="my Accolade"
                                 ref={image2Ref} 
                                 className='about-image'/>

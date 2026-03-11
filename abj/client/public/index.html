@@ -14,38 +14,25 @@
 
     <link rel="manifest" href="/manifest.json" />
 
-    <style>
-      /* Changed to absolute path to ensure it works on sub-routes if you add them */
-      body {
-        background-image: url('/assets/images/bg.jpg') !important;
-        background-attachment: fixed;
-        background-size: cover;
-        background-position: center;
-      }
-    </style>
+    
     
     <title>Average Joe's Burgers</title>
 
     <!-- 1. Load jQuery First -->
-    <script src="/assets/js/jquery.min.js"></script>
-    
-    <!-- 2. Load Plugins (Using absolute paths) -->
-    <script src="/assets/js/jquery.scrollex.min.js"></script>
-    <script src="/assets/js/jquery.scrolly.min.js"></script>
+   
 </head>
-<body class="is-preload">
+<body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     
-    <div id="root">
-      
-    </div>
+    <div id="root"></div>
 
-    <!-- 3. Load Environment and Utility Scripts -->
-    <script src="/assets/js/browser.min.js"></script>
-    <script src="/assets/js/breakpoints.min.js"></script>
-    <script src="/assets/js/util.js"></script>
-    
-    <!-- 4. Load Main Logic last -->
-    <script src="/assets/js/main.js"></script>
+    <script src="%PUBLIC_URL%/assets/js/jquery.min.js"></script>
+<script src="%PUBLIC_URL%/assets/js/jquery.scrolly.min.js"></script>
+<script src="%PUBLIC_URL%/assets/js/jquery.dropotron.min.js"></script>
+<script src="%PUBLIC_URL%/assets/js/jquery.scrollex.min.js"></script>
+<script src="%PUBLIC_URL%/assets/js/browser.min.js"></script>
+<script src="%PUBLIC_URL%/assets/js/breakpoints.min.js"></script>
+<script src="%PUBLIC_URL%/assets/js/util.js"></script>
+<script src="%PUBLIC_URL%/assets/js/main.js"></script>
 </body>
-</html>
+</html>  
