@@ -1,6 +1,5 @@
 import Auth from "../../utils/auth";
 import React from "react";
-import Layout from "../../components/Layout";
 import { graphql } from "babel-plugin-relay/macro";
 import { useLazyLoadQuery, useMutation, useFragment } from "react-relay";
 import {
@@ -162,7 +161,6 @@ export default function OrderOnline() {
   const menuItems = data?.menuItems || [];
 
   return (
-    <Layout>
       <Box sx={{ backgroundColor: "#004c4c", minHeight: "100vh", py: 4, px: 2 }}>
         <Typography
           variant="h3"
@@ -198,6 +196,5 @@ export default function OrderOnline() {
           ))}
         </Box>
       </Box>
-    </Layout>
   );
 }

@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom"; 
 import denzelLogoBackground from "../../assets/images/denzelLogoBackground.png";
-import "./HomePage2.css";
 import "../ContactPage";
 import StretchingHeader from "../../components/StretchingHeader";
 import StretchingFooter from "../../components/StretchingFooter";

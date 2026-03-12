@@ -1,30 +1,56 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { Box, Paper } from "@mui/material";
+import "./manageCombos.css";
+import { graphql } from "babel-plugin-relay/macro";
+import { useLazyLoadQuery } from "react-relay";
+import AdminPageOptions from "../../../components/inputs/AdminPageOptionsInputs/index.jsx";
+
+const ManageCombosPageQuery = graphql`
+  query ManageCombosPageQuery {
+    combos {
+      id
+      title
+      price
+      # Including these in case your AdminPageOptions needs them for the rows
+      menuItems {
+        id
+        name
+        calories
+      }
+    }
+  }
+`;
 
 export default function ManageCombosPage() {
-  const [combos, setCombos] = useState([]);
+  const data = useLazyLoadQuery(ManageCombosPageQuery, {});
+  
+  // 1. Clean the data (Filter nulls)
+  // 2. Map 'title' to 'name' so your table columns find the data
+  const mongoMenu = (data?.combos || [])
+    .filter(item => item !== null)
+    .map(combo => ({
+      ...combo,
+      name: combo.title // This bridges the gap between your query and column key
+    }));
 
-  useEffect(() => {
-    fetch('/graphql/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: '{ combos { id title price } }' }),
-    })
-      .then((r) => r.json())
-      .then((data) => setCombos(data.data?.combos || []))
-      .catch(console.error);
-  }, []);
+  const comboColumns = [
+    { label: "Combo Name", key: "name" }, // Matches the mapped 'name' above
+    { label: "Price", key: "price" },
+    // Category/Calories might need to come from the first menuItem if not on the combo itself
+    { label: "Calories", key: "calories" }, 
+  ];
 
   return (
-      <div style={{ padding: 20 }}>
-        <h2>Combos</h2>
-        {combos.length === 0 && <p>No combos found.</p>}
-        <ul>
-          {combos.map((c) => (
-            <li key={c.id}>
-              {c.title} - ${c.price}
-            </li>
-          ))}
-        </ul>
-      </div>
+    <div id="wholeAbout">
+      <Box sx={{ m: 0 }}>
+        <Paper className="menuAdmin-paper-block">
+          <AdminPageOptions
+            title="Combo Management"
+            data={mongoMenu}
+            columns={comboColumns}
+          />
+        </Paper>
+      </Box>
+    </div>
   );
 }

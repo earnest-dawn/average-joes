@@ -27,16 +27,16 @@ export default function AdminPageOptions({ data = [], columns = [], title }) {
           </TableHead>
 
           <TableBody>
-            {/* 3. Use the 'data' prop here instead of the old 'rows' variable */}
-            {data.length > 0 ? (
-              data.map((row) => (
-                <TableRow key={row.id}>
-                  {columns.map((col) => (
-                    <TableCell key={col.key} sx={{ color: 'white' }}>
-                      {/* Access the value using the key (e.g., row['name']) */}
-                      {row[col.key]}
-                    </TableCell>
-                  ))}
+  {data.length > 0 ? (
+    data.map((row) => (
+      <TableRow key={row.id}>
+        {columns.map((col) => (
+          <TableCell key={col.key} sx={{ color: 'white' }}>
+            {/* FIX: Check if a render function exists, otherwise show the raw value */}
+            {col.render ? col.render(row) : row[col.key]}
+          </TableCell>
+        ))}
+        {/* ... keep the rest of your Edit/Delete buttons below ... */}
                   <TableCell align="right">
                     <Button size="small" variant="outlined" sx={{ color: 'goldenrod', borderColor: 'goldenrod' }}>
                       Edit
